@@ -17,6 +17,9 @@ const pool = new Pool({
 router.use(cors());
 router.use(express.json());
 
+//exportar route
+
+module.exports = router;
 
 //crear todo
 
@@ -70,10 +73,10 @@ router.put('/usuario/:id',async (req,res)=>{
 
 
 
-router.get('/usuario/:nick,contra',async (req,res) =>{
+router.get('/usuario/:nick',async (req,res) =>{
     try{
-        const { nick , contra } = req.params;
-        const arreglo = await pool.query(`SELECT * FROM usuario WHERE nickname = '${nick}' and contraseña = '${contra}'`);
+        const { nick } = req.params;
+        const arreglo = await pool.query(`SELECT * FROM usuario WHERE nickname = '${nick}'`);
         res.send(arreglo.rows);
          
     } catch(e){
@@ -305,17 +308,17 @@ router.get('/tipodoc/:idtipo',async (req,res) =>{
 });
 
 // ------------------------- Conexion --------------------
- 
+
 module.exports = router;
 router.listen(5000, () => {
     console.log("server has started on port 5000");
   });
 
 
-
-
-
 /*
+
+
+
 const getPacientes = async () =>{
     try{
         const res = await pool.query('SELECT * FROM pacientes');
