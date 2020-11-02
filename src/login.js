@@ -7,8 +7,7 @@ export default function Login() {
 
     const [usuario, setUsuario] = useState("");
     const [contraseña, setContraseña] = useState("");
-    const [data, setData] = useState([]);
-
+   
     function validaFormu() {
         return usuario.length > 0 && contraseña.length > 0;
     }
@@ -18,20 +17,19 @@ export default function Login() {
         try {
 
             fetch(`http://localhost:5000/usuario/${usuario}`)
-                .then(response => {
-                    if(response.status === 200) {
-                      return response.text();
-                    } else {
-                      alert("Respuesta incorrecta del servidor");
-                    }
-                  })
-                .then( responseText => {
-                    setData(JSON.parse(responseText).results);
-                    console.log('Este es el objeto de usuarios', data);
-                  })
-                .catch( err => {
-                    console.log(err);
-                  });
+            .then(response => response.json())
+            .then(usua => {if (usua.length === 0){
+
+                alert("No existe un usuario con ese nick");
+
+                }else{
+
+                    let usu = usua[0];
+                    if (usu.contraseña === contraseña)
+                        alert("Bienvenido " + usu.nickname)
+                    else 
+                        alert("Contraseña invalida intente de nuevo")
+            }});
 
             /*const res =  await fetch(`http://localhost:5000/usuario/${usuario}`);
             console.log(res);
