@@ -28,13 +28,22 @@ export default function Login() {
             let respuesta =  await fetch(`http://localhost:5000/usuario/${usuario}`, options);
             console.log(respuesta);
             if (respuesta){
-                let usu = await respuesta.json();
-                if (contraseña == usu.contaseña){
 
-                }else
-                    alert("Contraseña incorrecta");
+                if (respuesta.rowCount = 0){
+
+                    alert("No existe un usuario con ese nick");
+
+                }else{
+
+                    let usu = respuesta.rows[0];
+                    if (usu.contraseña == contraseña)
+                        alert("Bienvenido " + usu.nickname)
+                    else 
+                        alert("Contraseña invalida intente de nuevo")
+                }
+                    
             }else
-                alert("El usuario ingresado no existe");
+                alert("No hay respuesta de la base de datos. \nVerifique su conexion");
         } catch (e) {
             alert(e.message);
         }
