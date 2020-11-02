@@ -77,8 +77,7 @@ router.get('/usuario/:nick',async (req,res) =>{
     try{
         const { nick } = req.params;
         const arreglo = await pool.query(`SELECT * FROM usuario WHERE nickname = '${nick}'`);
-        res.send(arreglo);
-         
+        res.send(arreglo.rows);         
     } catch(e){
         console.log("MIS COJONES");
     } 

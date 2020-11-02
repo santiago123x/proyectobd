@@ -3,11 +3,11 @@ import { Button, Form } from "react-bootstrap";
 import './login.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-
 export default function Login() {
 
     const [usuario, setUsuario] = useState("");
     const [contraseña, setContraseña] = useState("");
+    const [data, setData] = useState([]);
 
     function validaFormu() {
         return usuario.length > 0 && contraseña.length > 0;
@@ -17,33 +17,45 @@ export default function Login() {
         event.preventDefault();
         try {
 
-            let myHeaders = new Headers();
+            fetch(`http://localhost:5000/usuario/${usuario}`)
+                .then(response => {
+                    if(response.status === 200) {
+                      return response.text();
+                    } else {
+                      alert("Respuesta incorrecta del servidor");
+                    }
+                  })
+                .then( responseText => {
+                    setData(JSON.parse(responseText).results);
+                    console.log('Este es el objeto de usuarios', data);
+                  })
+                .catch( err => {
+                    console.log(err);
+                  });
 
-            const options = {
-                method: 'GET',
-                headers: myHeaders
+            /*const res =  await fetch(`http://localhost:5000/usuario/${usuario}`);
+            console.log(res);
+            if (res){
+                const usua = await res.json();
+                setData(usua);
+                console.log(data)
+                alert("rowcout = " + data) ;
 
-            }
-
-            let respuesta =  await fetch(`http://localhost:5000/usuario/${usuario}`, options);
-            console.log(respuesta);
-            if (respuesta){
-
-                if (respuesta.rowCount = 0){
+                if (data.length === 0){
 
                     alert("No existe un usuario con ese nick");
 
                 }else{
 
-                    let usu = respuesta.rows[0];
-                    if (usu.contraseña == contraseña)
+                    let usu = data[0];
+                    if (usu.contraseña === contraseña)
                         alert("Bienvenido " + usu.nickname)
                     else 
                         alert("Contraseña invalida intente de nuevo")
                 }
                     
             }else
-                alert("No hay respuesta de la base de datos. \nVerifique su conexion");
+                alert("No hay respuesta de la base de datos. \nVerifique su conexion");*/
         } catch (e) {
             alert(e.message);
         }
