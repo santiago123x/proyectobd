@@ -1,6 +1,8 @@
 import React from "react";
 import loginImg from "../../LOGIN.svg";
-import { Button, Form, FormGroup, Label, Input, FormFeedback, Modal, ModalBody, ModalHeader, ModalFooter } from "reactstrap";
+import { Button, Form, FormGroup, Label, Input, InputGroup, InputGroupText, FormFeedback, Modal, ModalBody, ModalHeader, ModalFooter } from "reactstrap";
+import Swal from 'sweetalert2/dist/sweetalert2.js';
+import 'sweetalert2/src/sweetalert2.scss';
 
 export class Register extends React.Component {
   constructor(props) {
@@ -23,7 +25,10 @@ export class Register extends React.Component {
       codi: '',
       codigo: '4dm1n',
       modalInser: false,
-      personas: []
+      personas: [],
+      usuexi: false,
+      yaregis: false
+
     };
     this.handleChange = this.handleChange.bind(this);
   }
@@ -67,35 +72,104 @@ export class Register extends React.Component {
           });
         }
       )
+
+  }
+
+
+  async validainfo() {
+
+    await fetch(`http://localhost:5000/usuario/${this.state.usuario}`)
+      .then(response => response.json())
+      .then(usua => {
+        if (usua.length === 0) {
+          this.setState({
+            usuexi: false
+          });
+        } else {
+          this.setState({
+            usuexi: true
+          });
+        }
+      });
+    var index = document.getElementById('personas').selectedIndex - 1;
+    
+    if (index >= 0) {
+    var idpersona = this.state.personas[index].idpersona
+    await fetch(`http://localhost:5000/usuario2/${idpersona}`)
+      .then(response => response.json())
+      .then(usua => {
+        if (usua.length === 0) {
+          this.setState({
+            yaregis: false
+          });
+        } else {
+          this.setState({
+            yaregis: true
+          });
+        }
+      });
+    }
   }
 
   async crearUsuario() {
 
+    this.validainfo();
     if (window.confirm(`Desea agregar el Usuario:  ${this.state.usuario}`)) {
       try {
-        var index = document.getElementById('personas').selectedIndex
-        var nickname = this.state.usuario;
-        var contra = this.state.contraseña;
-        var idpersona = this.state.personas[index].idpersona;
-        var tipo_usu = this.state.tipousuario;
-        
-        const body = { nickname, contra, idpersona, tipo_usu };
+        var index = document.getElementById('personas').selectedIndex - 1;
+        if (index >= 0) {
+          if (!this.state.usuexi) {
+            if (!this.state.yaregis) {
+              var nickname = this.state.usuario;
+              var contra = this.state.contraseña;
+              var idpersona = this.state.personas[index].idpersona;
+              var tipo_usu = this.state.tipousuario;
 
-        await fetch('http://localhost:5000/usuario',
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(body)
-          });
-        alert(`Se ha agregado el Usuario con NickName ${this.state.usuario}`);
-        window.location.reload();
-        
+              const body = { nickname, contra, idpersona, tipo_usu };
+
+              await fetch('http://localhost:5000/usuario',
+                {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(body)
+                });
+              Swal.fire({
+                icon: 'success',
+                title: `Se ha agregado el Usuario con NickName ${this.state.usuario}`,
+                showConfirmButton: false,
+                timer: 1500
+              })
+              window.location.reload();
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Ya existe un Usuario asociado a esta Persona.',
+              })
+            }
+          } else
+            
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ya existe un Usuario con este Nickname por favor seleccione otro.',
+          })
+        } else {
+          Swal.fire(
+            'Debe seleccionar una Persona para Registrar',
+            'O Ingresar una nueva Persona',
+            'warning'
+          )
+        }
+
       } catch (err) {
         console.error(err.message);
       }
     }
 
   }
+
+
 
   mostrarForm() {
     if (this.state.codi == this.state.codigo) {
@@ -105,7 +179,11 @@ export class Register extends React.Component {
       document.getElementById('en').style.display = 'none';
 
     } else {
-      alert('El codigo de Admin no es correcto');
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'El Codigo de Admin no es Correcto'
+      })
     }
   }
   mostarInser() {
@@ -118,14 +196,14 @@ export class Register extends React.Component {
     return (
 
       <div className="base-container " ref={this.props.containerRef}>
-        <div className="header">Registro</div>
+        <div className="header mb-3 mt-4" type="button" id="register"><h2 className="m-2" >Registro</h2></div>
         <div className="content "  >
           <div className="image">
             <img src={loginImg} />
           </div>
 
           <Modal
-            size="lg"
+            size="md"
             centered isOpen={this.state.modalInser} id="insertar">
             <ModalHeader>
               <div><h3>Registrar Persona</h3></div>
@@ -140,7 +218,7 @@ export class Register extends React.Component {
                         placeholder="Nombre"
                         className="form-control"
                         name="nombre"
-                        bsSize="sm"
+                        bsSize="md"
                         type="text"
                         value={this.state.nombre}
                         onChange={this.handleChange} />
@@ -154,19 +232,19 @@ export class Register extends React.Component {
                         className="form-control"
                         name="apellido"
                         type="text"
-                        bsSize="sm"
+                        bsSize="md"
                         value={this.state.apellido}
                         onChange={this.handleChange} />
                     </FormGroup>
                   </div>
                   <FormGroup  >
-                    <Label>Tipo Doc</Label>
                     <Input id="tipodoc"
                       className="form-control"
                       name="identtipodocifacion"
                       type="select"
-                      bsSize="sm"
+                      bsSize="md"
                       onChange={this.handleChange}>
+                      <option>Tipo de Documento</option>
                       {this.state.tiposdoc.map(tipo => (
                         <option key={tipo.idtipo}>
                           {tipo.tipodocument}
@@ -182,21 +260,21 @@ export class Register extends React.Component {
                         className="form-control"
                         name="identifacion"
                         type="text"
-                        bsSize="sm"
+                        bsSize="md"
                         value={this.state.identifacion}
                         onChange={this.handleChange} />
                     </FormGroup>
                   </div>
                   <div className="mb-3">
                     <FormGroup  >
-                      <Label>Barrio</Label>
                       <Input id="barrio"
                         placeholder="Barrio"
                         className="form-control"
                         name="barrio"
                         type="select"
-                        bsSize="sm"
+                        bsSize="md"
                         onChange={this.handleChange}>
+                        <option>Barrios</option>
                         {this.state.barrios.map(bar => (
                           <option key={bar.id_barrio}>
                             {bar.nombre}
@@ -214,7 +292,7 @@ export class Register extends React.Component {
                         placeholder="date placeholder"
                         className="form-control"
                         name="fechaN"
-                        bsSize="sm"
+                        bsSize="md"
                         type="date"
 
                         onChange={this.handleChange}
@@ -228,7 +306,7 @@ export class Register extends React.Component {
                         placeholder="Email"
                         className="form-control"
                         name="email"
-                        bsSize="sm"
+                        bsSize="md"
                         type="email"
 
                         onChange={this.handleChange}
@@ -242,7 +320,7 @@ export class Register extends React.Component {
                         placeholder="Telefono"
                         className="form-control"
                         name="telefono"
-                        bsSize="sm"
+                        bsSize="md"
                         type="text"
 
                         onChange={this.handleChange}
@@ -260,6 +338,7 @@ export class Register extends React.Component {
             <Form id='en'  >
               <div className="mb-3">
                 <FormGroup  >
+
                   <Input id="codigo"
                     placeholder="Codigo"
                     className="form-control"
@@ -274,40 +353,42 @@ export class Register extends React.Component {
               <div id="regis" className="contRegis">
                 <div className="mb-3">
                   <FormGroup  >
-
-                    <Input id="usuario"
-                      placeholder="Usuario"
-                      className="form-control"
-                      name="usuario"
-                      type="text"
-                      bsSize="sm"
-                      value={this.state.usuario}
-                      onChange={this.handleChange} />
+                    <InputGroup>
+                      <InputGroupText><i class="fa fa-user"></i></InputGroupText>
+                      <Input id="usuario"
+                        placeholder="Usuario"
+                        className="form-control"
+                        name="usuario"
+                        type="text"
+                        bsSize="md"
+                        value={this.state.usuario}
+                        onChange={this.handleChange} /></InputGroup>
                   </FormGroup>
                 </div>
                 <div className="mb-3" >
                   <FormGroup  >
-
-                    <Input
-                      id="contraseña"
-                      placeholder="Contraseña"
-                      className="form-control"
-                      name="contraseña"
-                      type="password"
-                      bsSize="sm"
-                      value={this.state.contraseña}
-                      onChange={this.handleChange}
-                    /> </FormGroup>
+                    <InputGroup>
+                      <InputGroupText><i class="fa fa-lock"></i></InputGroupText>
+                      <Input
+                        id="contraseña"
+                        placeholder="Contraseña"
+                        className="form-control"
+                        name="contraseña"
+                        type="password"
+                        bsSize="md"
+                        value={this.state.contraseña}
+                        onChange={this.handleChange}
+                      /></InputGroup> </FormGroup>
                 </div>
-                <div className="mb-3">
+                <div className="mb-1">
                   <FormGroup  >
-                    <Label>Personas</Label>
                     <Input id="personas"
 
                       className="form-control"
                       name="personas"
                       type="select"
-                      bsSize="sm" >
+                      bsSize="md" >
+                      <option>Personas</option>
                       {this.state.personas.map(per => (
                         <option key={per.idpersona}>
                           {per.nombre}  {per.apellido} {per.numerodoc}

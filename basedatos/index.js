@@ -84,6 +84,17 @@ router.get('/usuario/:nick',async (req,res) =>{
     } 
 });
 
+router.get('/usuario2/:id',async (req,res) =>{
+    try{
+        const { id } = req.params;
+        const arreglo = await pool.query(`SELECT * FROM usuario WHERE idpersona = '${id}'`);
+        res.send(arreglo.rows);
+         
+    } catch(e){
+        console.log("MIS COJONES");
+    } 
+});
+
 
 //--------------------- Persona --------------------------
 

@@ -1,3 +1,4 @@
+
 .base-container {
     width: 100%;
     display: flex;
@@ -71,7 +72,7 @@
     }
   
     .footer {
-      margin-top: 3em;
+      margin-top: 1em;
     }
   }
 
@@ -103,4 +104,21 @@
   border-radius: 4px;
   margin-bottom: 31px;
   }
+
+  #login{
+    border: 5px inset #54A3E8;
+    border-radius: 15px;
+    font-family: "Candara";
+    box-shadow:2px 2px;
+    text-shadow:1px 1px;
+  }
+  
+  #register{
+    border: 5px inset #54A3E8;
+    border-radius: 15px;
+    font-family: "Candara";
+    box-shadow:2px 2px;
+    text-shadow:1px 1px;
+  }
+  
 
