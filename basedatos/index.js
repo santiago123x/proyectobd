@@ -77,7 +77,7 @@ router.get('/usuario/:nick',async (req,res) =>{
     try{
         const { nick } = req.params;
         const arreglo = await pool.query(`SELECT * FROM usuario WHERE nickname = '${nick}'`);
-        res.send(arreglo);
+        res.send(arreglo.rows);
          
     } catch(e){
         console.log("MIS COJONES");
@@ -90,10 +90,10 @@ router.get('/usuario/:nick',async (req,res) =>{
 
 router.post('/persona', async(req,res)=>{
     try{
-        const { nombre, apellido, tipodoc, numerodoc, barrio, fechanaci } = req.body;
+        const { nombre, apellido, tipodoc, numerodoc, barrio, fechanaci} = req.body;
         newTodo = await pool.query(
         `INSERT INTO persona ( nombre, apellido, tipodoc, numerodoc, barrio, fechanaci) 
-        VALUES('${nombre}','${apellido}',${tipodoc},'${numerodoc}',${barrio},'${fechanaci}' )`);
+        VALUES('${nombre}','${apellido}',${tipodoc},'${numerodoc}',${barrio},'${fechanaci}')`);
         res.json("INSERTADO 7W7");
     }catch(e){
         console.log(e);
@@ -292,6 +292,16 @@ router.get('/barrio/:id_barrio',async (req,res) =>{
     }
 });
 
+router.get('/barrio/',async (req,res) =>{
+    try{
+        const arreglo = await pool.query(`SELECT * FROM barrio ORDER BY nombre`);
+        res.send(arreglo.rows);
+         
+    } catch(e){
+        console.log("MIS COJONES");
+    }
+});
+
 
 //-------------------------- tipoDocumento ----------------------
 
@@ -300,6 +310,16 @@ router.get('/tipodoc/:idtipo',async (req,res) =>{
     try{
         const { idtipo } = req.params;
         const arreglo = await pool.query(`SELECT * FROM tipodocumento WHERE idtipo = ${idtipo}`);
+        res.send(arreglo.rows);
+         
+    } catch(e){
+        console.log("MIS COJONES");
+    }
+});
+
+router.get('/tipodoc/',async (req,res) =>{
+    try{
+        const arreglo = await pool.query(`SELECT * FROM tipodocumento ORDER BY idtipo`);
         res.send(arreglo.rows);
          
     } catch(e){

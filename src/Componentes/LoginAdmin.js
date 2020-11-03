@@ -1,9 +1,9 @@
 import React from "react";
-import "./App.scss";
-import { Login, Register } from "./Componentes/Login/index";
+import "../App.scss";
+import { Login, Register } from "./Login/index";
 import { Button } from "react-bootstrap";
 
-class AppL extends React.Component {
+class LoginAdmin extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -70,4 +70,4 @@ const RightSide = props => {
   );
 };
 
-export default AppL;
+export default LoginAdmin;

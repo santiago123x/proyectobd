@@ -1,12 +1,12 @@
 import React from "react";
 import "./App.scss";
-import AppL from "./AppL.js"
+import LoginAdmin from "./Componentes/LoginAdmin.js"
 import "./Componentes/Login/syle.scss";
 import { Login } from "./Componentes/Login/index.js"
 import { Nav, Button } from "react-bootstrap";
 
 
-class App extends React.Component {
+class LoginPrin extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -34,7 +34,7 @@ class App extends React.Component {
                     
                 </Nav>
                 <div className="contenedor" >
-                    <AppL />
+                    <LoginAdmin />
                 </div>
 
             </div>
@@ -68,4 +68,4 @@ class App extends React.Component {
 }
 
 
-export default App;
+export default LoginPrin;
