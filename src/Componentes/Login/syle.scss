@@ -4,6 +4,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    vertical-align: middle;
     
     
     
@@ -21,7 +22,7 @@
       
   
       .image {
-        width: 17em;
+        width: 20em;
         img {
           width: 75%;
           height: 75%;
@@ -78,19 +79,23 @@
 
   #regis{
     display: flex;
-    height: 16em;
-    width: 18em;
-    padding-right: 5%;
+    
+    
     flex-direction: column;
   }
 
     
 #envioR{
   
-  visibility:hidden;
+  display:none;
 }
 
-
+#epa{
+  
+        
+        flex-direction: column;
+        align-items: center;
+}
 
 #codigo{
   margin-top: 6px;
@@ -121,4 +126,22 @@
     text-shadow:1px 1px;
   }
   
+#bper{
+  display:inline;
+  height: 9%;
+  width: 10em;
+}
 
+
+.oculto{ 
+  display: none;
+  border: 2px inset #54A3E8;
+    border-radius: 15px;
+    font-family: "Candara";
+    margin-bottom:2px;
+    text-align: center;
+}
+
+.mensaje:hover .oculto {
+  display: block;
+}

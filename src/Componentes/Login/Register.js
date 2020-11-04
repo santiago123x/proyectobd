@@ -1,33 +1,24 @@
 import React from "react";
 import loginImg from "../../LOGIN.svg";
-import { Button, Form, FormGroup, Label, Input, InputGroup, InputGroupText, FormFeedback, Modal, ModalBody, ModalHeader, ModalFooter } from "reactstrap";
+import { Button, Form, FormGroup, Input, InputGroup, InputGroupText, Row, Col, Modal, ModalBody, ModalHeader, ModalFooter } from "reactstrap";
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import 'sweetalert2/src/sweetalert2.scss';
+import { CrearPersona } from './crearPersona';
 
 export class Register extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      nombre: '',
-      apellido: '',
       usuario: '',
       contraseña: '',
-      barrio: null,
       tipousuario: 'super',
-      identificacion: '',
-      tipodoc: null,
-      email: [],
-      telefono: [],
-      fechaN: '',
       idusu: [],
-      barrios: [],
-      tiposdoc: [],
       codi: '',
       codigo: '4dm1n',
-      modalInser: false,
       personas: [],
       usuexi: false,
-      yaregis: false
+      yaregis: false,
+
 
     };
     this.handleChange = this.handleChange.bind(this);
@@ -43,26 +34,10 @@ export class Register extends React.Component {
     });
   };
 
-  async componentDidMount() {
-    await fetch('http://localhost:5000/tipodoc/')
-      .then(res => res.json())
-      .then(
-        (result) => {
-          this.setState({
-            tiposdoc: result
-          });
-        }
-      )
 
-    await fetch('http://localhost:5000/barrio/')
-      .then(res => res.json())
-      .then(
-        (result) => {
-          this.setState({
-            barrios: result
-          });
-        }
-      )
+
+  async componentDidMount() {
+
     await fetch('http://localhost:5000/persona/')
       .then(res => res.json())
       .then(
@@ -92,22 +67,22 @@ export class Register extends React.Component {
         }
       });
     var index = document.getElementById('personas').selectedIndex - 1;
-    
+
     if (index >= 0) {
-    var idpersona = this.state.personas[index].idpersona
-    await fetch(`http://localhost:5000/usuario2/${idpersona}`)
-      .then(response => response.json())
-      .then(usua => {
-        if (usua.length === 0) {
-          this.setState({
-            yaregis: false
-          });
-        } else {
-          this.setState({
-            yaregis: true
-          });
-        }
-      });
+      var idpersona = this.state.personas[index].idpersona
+      await fetch(`http://localhost:5000/usuario2/${idpersona}`)
+        .then(response => response.json())
+        .then(usua => {
+          if (usua.length === 0) {
+            this.setState({
+              yaregis: false
+            });
+          } else {
+            this.setState({
+              yaregis: true
+            });
+          }
+        });
     }
   }
 
@@ -148,12 +123,12 @@ export class Register extends React.Component {
               })
             }
           } else
-            
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'Ya existe un Usuario con este Nickname por favor seleccione otro.',
-          })
+
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Ya existe un Usuario con este Nickname por favor seleccione otro.',
+            })
         } else {
           Swal.fire(
             'Debe seleccionar una Persona para Registrar',
@@ -173,9 +148,9 @@ export class Register extends React.Component {
 
   mostrarForm() {
     if (this.state.codi == this.state.codigo) {
-      document.getElementById('envioR').style.visibility = 'visible';
-      document.getElementById('mevoy').style.visibility = 'hidden';
-      document.getElementById('codigo').style.visibility = 'hidden';
+      document.getElementById('envioR').style.display = 'contents';
+      document.getElementById('mevoy').style.display = 'none';
+      document.getElementById('codigo').style.display = 'none';
       document.getElementById('en').style.display = 'none';
 
     } else {
@@ -186,11 +161,7 @@ export class Register extends React.Component {
       })
     }
   }
-  mostarInser() {
-    this.setState({
-      modalInser: !this.state.modalInser
-    });
-  }
+
 
   render() {
     return (
@@ -202,138 +173,6 @@ export class Register extends React.Component {
             <img src={loginImg} />
           </div>
 
-          <Modal
-            size="md"
-            centered isOpen={this.state.modalInser} id="insertar">
-            <ModalHeader>
-              <div><h3>Registrar Persona</h3></div>
-            </ModalHeader>
-            <ModalBody>
-              <Form>
-                <div id="regisM" className="contRegisM">
-                  <div className="mb-3">
-                    <FormGroup  >
-
-                      <Input id="nombre"
-                        placeholder="Nombre"
-                        className="form-control"
-                        name="nombre"
-                        bsSize="md"
-                        type="text"
-                        value={this.state.nombre}
-                        onChange={this.handleChange} />
-                    </FormGroup>
-                  </div>
-                  <div >
-                    <FormGroup  >
-
-                      <Input id="apellido"
-                        placeholder="Apellido"
-                        className="form-control"
-                        name="apellido"
-                        type="text"
-                        bsSize="md"
-                        value={this.state.apellido}
-                        onChange={this.handleChange} />
-                    </FormGroup>
-                  </div>
-                  <FormGroup  >
-                    <Input id="tipodoc"
-                      className="form-control"
-                      name="identtipodocifacion"
-                      type="select"
-                      bsSize="md"
-                      onChange={this.handleChange}>
-                      <option>Tipo de Documento</option>
-                      {this.state.tiposdoc.map(tipo => (
-                        <option key={tipo.idtipo}>
-                          {tipo.tipodocument}
-                        </option>
-                      ))}
-                    </Input>
-                  </FormGroup>
-                  <div >
-                    <FormGroup  >
-
-                      <Input id="identifacion"
-                        placeholder="Identifacion"
-                        className="form-control"
-                        name="identifacion"
-                        type="text"
-                        bsSize="md"
-                        value={this.state.identifacion}
-                        onChange={this.handleChange} />
-                    </FormGroup>
-                  </div>
-                  <div className="mb-3">
-                    <FormGroup  >
-                      <Input id="barrio"
-                        placeholder="Barrio"
-                        className="form-control"
-                        name="barrio"
-                        type="select"
-                        bsSize="md"
-                        onChange={this.handleChange}>
-                        <option>Barrios</option>
-                        {this.state.barrios.map(bar => (
-                          <option key={bar.id_barrio}>
-                            {bar.nombre}
-                          </option>
-                        ))}
-                      </Input>
-                    </FormGroup>
-                  </div>
-
-                  <div className="mb-3" >
-                    <FormGroup  >
-
-                      <Input
-                        id="fechaN"
-                        placeholder="date placeholder"
-                        className="form-control"
-                        name="fechaN"
-                        bsSize="md"
-                        type="date"
-
-                        onChange={this.handleChange}
-                      /> </FormGroup>
-                  </div>
-                  <div className="mb-3" >
-                    <FormGroup  >
-
-                      <Input
-                        id="email"
-                        placeholder="Email"
-                        className="form-control"
-                        name="email"
-                        bsSize="md"
-                        type="email"
-
-                        onChange={this.handleChange}
-                      /> </FormGroup>
-                  </div>
-                  <div className="mb-3" >
-                    <FormGroup  >
-
-                      <Input
-                        id="telefono"
-                        placeholder="Telefono"
-                        className="form-control"
-                        name="telefono"
-                        bsSize="md"
-                        type="text"
-
-                        onChange={this.handleChange}
-                      /> </FormGroup>
-                  </div>
-                </div>
-              </Form>
-            </ModalBody>
-            <ModalFooter >
-              <Button color="success" >Registrar</Button>
-              <Button color="danger" onClick={() => this.mostarInser()}>Cancelar</Button>
-            </ModalFooter>
-          </Modal>
           <div id='epa' >
             <Form id='en'  >
               <div className="mb-3">
@@ -349,6 +188,8 @@ export class Register extends React.Component {
                     onChange={this.handleChange} />
                 </FormGroup></div>
               <Button id='mevoy' onClick={() => this.mostrarForm()}>Verificar</Button></Form>
+
+
             <Form id='envioR'  >
               <div id="regis" className="contRegis">
                 <div className="mb-3">
@@ -399,17 +240,26 @@ export class Register extends React.Component {
                 </div>
               </div>
               <div className="footer">
-                <Button size="lg" color='primary' onClick={() => this.crearUsuario()} >
-                  Registro
+                <Row className="justify-content-md-center">
+                  <Col >
+                  <Button size="lg" color='primary' onClick={() => this.crearUsuario()} >
+                      Registro
               </Button>
-                <Button className="ml-3" size="lg" color='primary' onClick={() => this.mostarInser()} >
-                  Crear Persona
-              </Button>
+                  </Col>
+                  
+                  <Col>
+                    <CrearPersona />
+                  </Col>
+                </Row>
+                
               </div>
             </Form>
+
           </div>
         </div>
+
       </div>
+
 
     );
   }

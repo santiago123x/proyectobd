@@ -23,7 +23,9 @@ class LoginPrin extends React.Component {
         if(this.state.tipoLogin){          
         
         return (
-            <div className="barraNav">
+        
+                <div >
+                    <div className="barraNav">
                 <Nav variant="tabs" >
                     <Nav.Item>
                         <Button type="button"  size="md" onClick={()=> this.setState({tipoLogin: false})}>Doctor</Button>
@@ -33,11 +35,14 @@ class LoginPrin extends React.Component {
                     </Nav.Item>
                     
                 </Nav>
+                </div>
+                
                 <div className="contenedor" >
                     <LoginAdmin />
-                </div>
-
-            </div>
+                </div></div>
+            
+                
+            
 
         );}
         else{

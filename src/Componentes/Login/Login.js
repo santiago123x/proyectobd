@@ -1,7 +1,7 @@
 import React, { useState, ReactComponent } from "react";
 import loginImg from "../../LOGIN.svg";
 
-import { Button, Form, FormGroup, InputGroup, InputGroupText, InputGroupAddon, Input, Label } from "reactstrap";
+import { Button, Form, FormGroup, InputGroup, InputGroupText,  Input } from "reactstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import 'sweetalert2/src/sweetalert2.scss';
