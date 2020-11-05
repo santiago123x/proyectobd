@@ -114,7 +114,7 @@ export class Login extends React.Component {
                                         type="text"
                                         bsSize="lg"
                                         value={this.state.usuario}
-                                        onChange={this.handleChange} />
+                                        onChange={this.handleChange}  required  />
                                 </InputGroup>
                             </FormGroup>
                         </div>

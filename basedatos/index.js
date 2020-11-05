@@ -33,7 +33,7 @@ module.exports = router;
         const { nickname, contra, idpersona, tipo_usu } = req.body;
         newTodo = await pool.query(
         `INSERT INTO usuario(idpersona, contraseña, tipousuario, nickname) VALUES(${idpersona},'${contra}','${tipo_usu}','${nickname}')`);
-        res.json("INSERTADO 7W7");
+        res.send(newTodo);
     }catch(e){
         console.log(e);
     }
@@ -105,7 +105,7 @@ router.post('/persona', async(req,res)=>{
         newTodo = await pool.query(
         `INSERT INTO persona ( nombre, apellido, tipodoc, numerodoc, barrio, fechanaci) 
         VALUES('${nombre}','${apellido}',${tipodoc},'${numerodoc}',${barrio},'${fechanaci}')`);
-        res.json("INSERTADO 7W7");
+        res.send(newTodo);
     }catch(e){
         console.log(e);
     }
