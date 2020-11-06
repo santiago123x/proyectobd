@@ -10,15 +10,15 @@ export class CrearPersona extends React.Component {
     this.state = {
       nombre: '',
       apellido: '',
-      barrio: null,
+      barrio: '',
       identificacion: '',
-      tipodoc: null,
       email: [],
       telefono: [],
       fechaN: '',
       barrios: [],
       tiposdoc: [],
       modalInser: false
+      
     }
     this.handleChange = this.handleChange.bind(this);
   }
@@ -136,7 +136,67 @@ export class CrearPersona extends React.Component {
     });
   }
 
-  cancelar(){
+  async crearPerso() {
+
+
+    var nombre = this.state.nombre;
+    var apellido = this.state.apellido;
+    var numerodoc = this.state.identificacion;
+    var tipodoc = document.getElementById('tipodoc').selectedIndex;
+    var fechanaci = this.state.fechaN;
+    var barrio = this.state.barrios[document.getElementById('barrio').selectedIndex - 1].id_barrio;
+
+    console.log(nombre, apellido, tipodoc, numerodoc, barrio, fechanaci)
+    const body = { nombre, apellido, tipodoc, numerodoc, barrio, fechanaci };
+
+    /*await fetch('http://localhost:5000/persona',
+                {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(body)
+                });*/
+
+    await fetch(`http://localhost:5000/personaiden/${this.state.identificacion}`)
+      .then(response => response.json())
+      .then(usua => {
+        
+        if (usua.length === 0) {
+
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'No existe un usuario con ese nick',
+
+          })
+
+        } else {
+
+          let usu = usua[0];
+
+          if (usu.contraseña === this.state.contraseña) {
+
+            Swal.fire({
+              icon: 'success',
+              title: 'Bienvenido ' + usu.nickname,
+              showConfirmButton: false,
+              timer: 1500
+            })
+            this.state.idusu = usu;
+          } else
+
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Contraseña invalida intente de nuevo',
+
+            })
+        }
+      });
+
+
+  }
+
+  cancelar() {
     this.state.nombre = ''
     this.state.apellido = ''
     this.state.identificacion = ''
@@ -144,10 +204,10 @@ export class CrearPersona extends React.Component {
     this.state.email = []
 
     this.mostarInser();
-    
+
   }
 
-  superValidacion(){
+  superValidacion() {
     const nom = document.getElementById('nombre').value.trim();
     const apell = document.getElementById('apellido').value.trim();
     const tipod = document.getElementById('tipodoc').selectedIndex;
@@ -156,36 +216,36 @@ export class CrearPersona extends React.Component {
     const fecha = document.getElementById('fechaN').value;
     var ft = new Date(fecha)
     ft.setDate(ft.getDate() + 1);
-    if(nom!=""&&nom.length<=20){
+    if (nom != "" && nom.length <= 20) {
       document.getElementById('snombre').style.display = 'none';
-      if(apell!=""&&apell.length<=30){
-      document.getElementById('sapellido').style.display = 'none';
-      if(tipod!=0){
-        document.getElementById('stipodoc').style.display = 'none';
-        if(doc!=""&&doc.length<=30){
-          document.getElementById('sidentificacion').style.display = 'none';
-          if(barr!=0){
-            document.getElementById('sbarrio').style.display = 'none';
-            if(ft <= new Date()){
-              document.getElementById('sfechaN').style.display = 'none';
-              // Campo de la  Funcion para crear Persona
-            }else{
-              document.getElementById('sfechaN').style.display = 'contents';
+      if (apell != "" && apell.length <= 30) {
+        document.getElementById('sapellido').style.display = 'none';
+        if (tipod != 0) {
+          document.getElementById('stipodoc').style.display = 'none';
+          if (doc != "" && doc.length <= 30) {
+            document.getElementById('sidentificacion').style.display = 'none';
+            if (barr != 0) {
+              document.getElementById('sbarrio').style.display = 'none';
+              if (ft <= new Date()) {
+                document.getElementById('sfechaN').style.display = 'none';
+                this.crearPerso();
+              } else {
+                document.getElementById('sfechaN').style.display = 'contents';
+              }
+
+            } else {
+              document.getElementById('sbarrio').style.display = 'contents';
             }
-            
-          }else{
-            document.getElementById('sbarrio').style.display = 'contents';
+          } else {
+            document.getElementById('sidentificacion').style.display = 'contents';
           }
-        }else{
-          document.getElementById('sidentificacion').style.display = 'contents';
+        } else {
+          document.getElementById('stipodoc').style.display = 'contents';
         }
-      }else{
-        document.getElementById('stipodoc').style.display = 'contents';
+      } else {
+        document.getElementById('sapellido').style.display = 'contents';
       }
-    }else{
-      document.getElementById('sapellido').style.display = 'contents';
-    }
-  }else{
+    } else {
       document.getElementById('snombre').style.display = 'contents';
     }
   }
@@ -218,7 +278,7 @@ export class CrearPersona extends React.Component {
                       bsSize="md"
                       type="text"
                       value={this.state.nombre}
-                      onChange={this.handleChange}/>
+                      onChange={this.handleChange} />
                   </FormGroup>
                   <span className="span" id="snombre">Debe Ingresar un Nombre</span>
                 </div>
@@ -237,22 +297,22 @@ export class CrearPersona extends React.Component {
                   <span className="span" id="sapellido">Debe Ingresar un Apellido</span>
                 </div>
                 <div className="mb-3">
-                <FormGroup  >
-                  <Input id="tipodoc"
-                    className="form-control"
-                    name="identtipodocifacion"
-                    type="select"
-                    bsSize="md"
-                    onChange={this.handleChange}>
-                    <option>Tipo de Documento</option>
-                    {this.state.tiposdoc.map(tipo => (
-                      <option key={tipo.idtipo}>
-                        {tipo.tipodocument}
-                      </option>
-                    ))}
-                  </Input>
-                </FormGroup>
-                <span className="span" id="stipodoc">Seleccione un Tipo de Documento valido</span>
+                  <FormGroup  >
+                    <Input id="tipodoc"
+                      className="form-control"
+                      name="identtipodocifacion"
+                      type="select"
+                      bsSize="md"
+                      onChange={this.handleChange}>
+                      <option>Tipo de Documento</option>
+                      {this.state.tiposdoc.map(tipo => (
+                        <option key={tipo.idtipo}>
+                          {tipo.tipodocument}
+                        </option>
+                      ))}
+                    </Input>
+                  </FormGroup>
+                  <span className="span" id="stipodoc">Seleccione un Tipo de Documento valido</span>
                 </div>
                 <div className="mb-3">
                   <FormGroup  >
@@ -276,6 +336,7 @@ export class CrearPersona extends React.Component {
                       name="barrio"
                       type="select"
                       bsSize="md"
+                      selectedIndex={this.state.barrio}
                       onChange={this.handleChange}>
                       <option>Barrios</option>
                       {this.state.barrios.map(bar => (
@@ -287,7 +348,7 @@ export class CrearPersona extends React.Component {
                   </FormGroup>
                   <span className="span" id="sbarrio">Seleccione un Barrio</span>
                 </div>
-                        
+
                 <div className="mb-3" >
                   <FormGroup  >
                     <div className="mensaje">
@@ -299,10 +360,10 @@ export class CrearPersona extends React.Component {
                         name="fechaN"
                         bsSize="md"
                         type="date"
-
+                        value={this.state.fechaN}
                         onChange={this.handleChange}
                       /> </div></FormGroup>
-                      <span className="span" id="sfechaN">Debe Ingresar una Fecha Valida</span>
+                  <span className="span" id="sfechaN">Debe Ingresar una Fecha Valida</span>
                 </div>
                 <div className="mb-3" >
                   <FormGroup >

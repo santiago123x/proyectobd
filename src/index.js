@@ -1,14 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import LoginPrin from './LoginPrin';
+import App from './Routes.js';
 import reportWebVitals from './reportWebVitals';
 
 
 ReactDOM.render(
   <React.StrictMode>
   
-    <LoginPrin />
+    <App />
   </React.StrictMode>,
   document.getElementById('root')
 );

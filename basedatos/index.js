@@ -158,6 +158,19 @@ router.get('/persona/:idpersona',async (req,res) =>{
     } 
 });
 
+
+router.get('/personaiden/:numerodoc',async (req,res) =>{
+    try{
+        const { numerodoc } = req.params;
+        const arreglo = await pool.query(`SELECT * FROM persona WHERE numerodoc = ${numerodoc}`);
+        res.send(arreglo.rows);
+         
+    } catch(e){
+        console.log("MIS COJONES");
+    } 
+});
+
+
 router.get('/persona/',async (req,res) =>{
     try{
         
