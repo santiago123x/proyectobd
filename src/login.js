@@ -7,6 +7,7 @@ export default function Login() {
 
     const [usuario, setUsuario] = useState("");
     const [contraseña, setContraseña] = useState("");
+    
    
     function validaFormu() {
         return usuario.length > 0 && contraseña.length > 0;
