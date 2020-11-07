@@ -18,6 +18,7 @@ export class Register extends React.Component {
       personas: [],
       usuexi: false,
       yaregis: false,
+      idperso: ''
 
 
     };
@@ -97,7 +98,7 @@ export class Register extends React.Component {
             if (!this.state.yaregis) {
               var nickname = this.state.usuario;
               var contra = this.state.contraseña;
-              var idpersona = this.state.personas[index].idpersona;
+              var idpersona = this.state.idperso;
               var tipo_usu = this.state.tipousuario;
 
               const body = { nickname, contra, idpersona, tipo_usu };
@@ -228,10 +229,11 @@ export class Register extends React.Component {
                       className="form-control"
                       name="personas"
                       type="select"
-                      bsSize="md" >
+                      bsSize="md"
+                      selectedIndex = {this.state.idperso} >
                       <option>Personas</option>
                       {this.state.personas.map(per => (
-                        <option key={per.idpersona}>
+                        <option value={per.idpersona}>
                           {per.nombre}  {per.apellido} {per.numerodoc}
                         </option>
                       ))}

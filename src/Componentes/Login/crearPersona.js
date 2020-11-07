@@ -17,8 +17,9 @@ export class CrearPersona extends React.Component {
       fechaN: '',
       barrios: [],
       tiposdoc: [],
-      modalInser: false
-      
+      modalInser: false,
+      idperso: ''
+
     }
     this.handleChange = this.handleChange.bind(this);
   }
@@ -138,63 +139,74 @@ export class CrearPersona extends React.Component {
 
   async crearPerso() {
 
-
     var nombre = this.state.nombre;
     var apellido = this.state.apellido;
     var numerodoc = this.state.identificacion;
     var tipodoc = document.getElementById('tipodoc').selectedIndex;
     var fechanaci = this.state.fechaN;
-    var barrio = this.state.barrios[document.getElementById('barrio').selectedIndex - 1].id_barrio;
+    var barrio = this.state.barrio;
 
-    console.log(nombre, apellido, tipodoc, numerodoc, barrio, fechanaci)
     const body = { nombre, apellido, tipodoc, numerodoc, barrio, fechanaci };
 
-    /*await fetch('http://localhost:5000/persona',
-                {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify(body)
-                });*/
+    await fetch('http://localhost:5000/persona',
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      });
 
-    await fetch(`http://localhost:5000/personaiden/${this.state.identificacion}`)
+    await fetch(`http://localhost:5000/personaiden/${numerodoc}`)
       .then(response => response.json())
       .then(usua => {
-        
-        if (usua.length === 0) {
-
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'No existe un usuario con ese nick',
-
-          })
-
-        } else {
-
-          let usu = usua[0];
-
-          if (usu.contraseña === this.state.contraseña) {
-
-            Swal.fire({
-              icon: 'success',
-              title: 'Bienvenido ' + usu.nickname,
-              showConfirmButton: false,
-              timer: 1500
-            })
-            this.state.idusu = usu;
-          } else
-
-            Swal.fire({
-              icon: 'error',
-              title: 'Oops...',
-              text: 'Contraseña invalida intente de nuevo',
-
-            })
-        }
+        this.setState({
+          idperso: usua[0].idpersona
+        })
       });
 
 
+    var idpersona = this.state.idperso
+
+
+    if (this.state.email.length > 0) {
+      for (var i = 0; i < this.state.email.length; i++) {
+        var email = this.state.email[i];
+        let body = { email, idpersona }
+        await fetch('http://localhost:5000/email',
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body)
+          });
+        console.log(body);
+      }
+    }
+
+    if (this.state.telefono.length > 0) {
+      for (var i = 0; i < this.state.telefono.length; i++) {
+        var telefono = this.state.telefono[i];
+        let body = { telefono, idpersona }
+        await fetch('http://localhost:5000/telefono',
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body)
+          });
+        console.log(body);
+      }
+    }
+
+    await Swal.fire({
+      icon: 'success',
+      title: `Se ha agregado la Persona ${nombre} ${apellido}`,
+      showConfirmButton: false,
+      timer: 1500
+    })
+
+    this.cancelar();
+
   }
+
+
 
   cancelar() {
     this.state.nombre = ''
@@ -306,7 +318,7 @@ export class CrearPersona extends React.Component {
                       onChange={this.handleChange}>
                       <option>Tipo de Documento</option>
                       {this.state.tiposdoc.map(tipo => (
-                        <option key={tipo.idtipo}>
+                        <option value={tipo.idtipo}>
                           {tipo.tipodocument}
                         </option>
                       ))}
@@ -340,7 +352,7 @@ export class CrearPersona extends React.Component {
                       onChange={this.handleChange}>
                       <option>Barrios</option>
                       {this.state.barrios.map(bar => (
-                        <option key={bar.id_barrio}>
+                        <option value={bar.id_barrio}>
                           {bar.nombre}
                         </option>
                       ))}
@@ -431,4 +443,4 @@ export class CrearPersona extends React.Component {
 
     );
   }
-}
+}    
