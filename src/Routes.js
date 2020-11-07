@@ -3,12 +3,14 @@ import {
     BrowserRouter as Router,
     Switch,
     Route,
-    Link
+    Link,
+    Redirect
 } from "react-router-dom";
 import LoginPrin from './LoginPrin';
 import LoginAdmin from "./Componentes/LoginAdmin.js";
 import InformesDoc from "./Componentes/InterfazDoc/InformesDoc"
 import Registro from "./Componentes/InterfazDoc/Registro";
+import Medicamentos from "./Componentes/InterfazDoc/Medicamentos";
 
 
 function App() {
@@ -16,14 +18,18 @@ function App() {
         <Router>
             <Switch>
                 
+
                 <Route path="/RegistrarV">
-                <Registro />
+                    <Registro />
                 </ Route>
                 <Route path="/InformesDoc">
-                <InformesDoc />
+                    <InformesDoc />
+                </ Route>
+                <Route path="/Medicamentos">
+                    <Medicamentos />
                 </ Route>
                 <Route path="/">
-                <LoginPrin />
+                    <LoginPrin />
                 </Route>
             </Switch>
 

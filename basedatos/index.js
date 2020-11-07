@@ -351,6 +351,17 @@ router.get('/tipodoc/',async (req,res) =>{
     }
 });
 
+// ------------------------- Medicamentos ----------------
+
+router.get('/medicamentos/',async (req,res)=>{
+    try{
+        const arreglo = await pool.query(`SELECT * FROM medicamentos ORDER BY idmedicamento`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("F Medica");
+    }
+});
+
 // ------------------------- Conexion --------------------
 
 module.exports = router;

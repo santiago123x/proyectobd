@@ -2,7 +2,7 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import "../Login/syle.scss";
-import {Button} from 'reactstrap';
+
 
 export default class NavDoc extends React.Component {
     constructor(props) {
@@ -26,6 +26,9 @@ export default class NavDoc extends React.Component {
                         </li>
                         <li >
                             <Link className="btn font-weight-bold" to="/RegistrarV" activeClassName="active"> Registrar Visita</Link>
+                        </li>
+                        <li >
+                            <Link className="btn font-weight-bold" to="/Medicamentos" activeClassName="active"> Medicamentos</Link>
                         </li>
                         
                         
