@@ -12,7 +12,8 @@ export default class Registro extends React.Component {
         this.state = {
             modalInser: false,
             medicamentos: [],
-            medicamento:'',
+            medicamento:''
+           
         }
     }
 
@@ -52,7 +53,7 @@ export default class Registro extends React.Component {
         render() {
             return (
                 <div className="total">
-                    <NavDoc />
+                    <NavDoc nombre = "davis"/>
 
                     <div className="header mt-2 text-center " id="login"><h2 className="Titulo m-2 " >Registrar Visita</h2></div>
                     <div className="conteneT mt-2">

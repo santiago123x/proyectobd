@@ -1,13 +1,12 @@
 import React, { useState, ReactComponent } from "react";
 import loginImg from "../../LOGIN.svg";
-import {
-    Redirect
-} from "react-router-dom";
+import { Redirect } from "react-router-dom";
 
 import { Button, Form, FormGroup, InputGroup, InputGroupText,  Input } from "reactstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import 'sweetalert2/src/sweetalert2.scss';
+import Registro from "../InterfazDoc/Registro";
 
 export class Login extends React.Component {
     constructor(props) {
@@ -17,6 +16,8 @@ export class Login extends React.Component {
             contraseña: '',
             idusu: [],
             algo:false,
+            usu: null,
+            redirect: null
 
         };
         this.handleChange = this.handleChange.bind(this);
@@ -64,9 +65,9 @@ export class Login extends React.Component {
                                     showConfirmButton: false,
                                     timer: 1500
                                 })
-                                this.state.idusu = usu;
+                                this.state.usu = usu;
                                 
-                                
+                                this.setState({ redirect: "/RegistrarV" });
                                 
                             } else
 
@@ -98,9 +99,15 @@ export class Login extends React.Component {
     }
 
     render() {
-        
-       
-        
+         
+        if (this.state.redirect) {
+            return <Redirect to={{
+                pathname: this.state.redirect,
+                state:{
+                    usua: this.state.usu
+                }
+            } } />
+          }
         return (
             <div className="base-container" ref={this.props.containerRef}>
                 <div className="header mb-3 mt-4" id="login"><h2 className="m-2" >Login</h2></div>
