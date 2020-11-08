@@ -11,13 +11,16 @@ import LoginAdmin from "./Componentes/LoginAdmin.js";
 import InformesDoc from "./Componentes/InterfazDoc/InformesDoc"
 import Registro from "./Componentes/InterfazDoc/Registro";
 import Medicamentos from "./Componentes/InterfazDoc/Medicamentos";
+import NavDoc from './Componentes/InterfazDoc/navDoc';
 
 
 function App() {
     return (
         <Router>
             <Switch>
-                
+            <Route path="/NavDoc">
+                    <NavDoc />
+                </ Route>
 
                 <Route path="/RegistrarV">
                     <Registro />

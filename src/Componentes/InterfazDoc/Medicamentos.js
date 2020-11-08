@@ -15,7 +15,7 @@ export default class Medicamentos extends React.Component {
         return (
             <div>
                 <div>
-                    <NavDoc />
+                   
                 </div>
                 
 

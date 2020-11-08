@@ -6,7 +6,6 @@ import { Button, Form, FormGroup, InputGroup, InputGroupText,  Input } from "rea
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import 'sweetalert2/src/sweetalert2.scss';
-import Registro from "../InterfazDoc/Registro";
 
 export class Login extends React.Component {
     constructor(props) {
@@ -65,9 +64,9 @@ export class Login extends React.Component {
                                     showConfirmButton: false,
                                     timer: 1500
                                 })
-                                this.state.usu = usu;
+                                this.setState({ usu : usu})
                                 
-                                this.setState({ redirect: "/RegistrarV" });
+                                this.setState({ redirect: "/NavDoc" });
                                 
                             } else
 
@@ -104,7 +103,7 @@ export class Login extends React.Component {
             return <Redirect to={{
                 pathname: this.state.redirect,
                 state:{
-                    usua: this.state.usu
+                    nick: this.state.usu.nickname
                 }
             } } />
           }

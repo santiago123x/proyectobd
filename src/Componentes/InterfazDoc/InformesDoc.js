@@ -15,7 +15,7 @@ export default class InformesDoc extends React.Component {
         return (
             <div>
                 <div>
-                    <NavDoc />
+                    
                 </div>
                 <div>
                     <Informes />
