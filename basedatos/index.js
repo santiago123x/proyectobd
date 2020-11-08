@@ -33,7 +33,7 @@ module.exports = router;
         const { nickname, contra, idpersona, tipo_usu } = req.body;
         newTodo = await pool.query(
         `INSERT INTO usuario(idpersona, contraseña, tipousuario, nickname) VALUES(${idpersona},'${contra}','${tipo_usu}','${nickname}')`);
-        res.json("INSERTADO 7W7");
+        res.send(newTodo);
     }catch(e){
         console.log(e);
     }
@@ -77,7 +77,9 @@ router.get('/usuario/:nick',async (req,res) =>{
     try{
         const { nick } = req.params;
         const arreglo = await pool.query(`SELECT * FROM usuario WHERE nickname = '${nick}'`);
-        res.send(arreglo.rows);         
+        res.send(arreglo.rows);
+         
+>>>>>>> c6d25caa87b255b322a9a7791d8d5103f076df16
     } catch(e){
         console.log("MIS COJONES");
     } 
@@ -89,11 +91,11 @@ router.get('/usuario/:nick',async (req,res) =>{
 
 router.post('/persona', async(req,res)=>{
     try{
-        const { nombre, apellido, tipodoc, numerodoc, barrio, fechanaci } = req.body;
+        const { nombre, apellido, tipodoc, numerodoc, barrio, fechanaci} = req.body;
         newTodo = await pool.query(
         `INSERT INTO persona ( nombre, apellido, tipodoc, numerodoc, barrio, fechanaci) 
-        VALUES('${nombre}','${apellido}',${tipodoc},'${numerodoc}',${barrio},'${fechanaci}' )`);
-        res.json("INSERTADO 7W7");
+        VALUES('${nombre}','${apellido}',${tipodoc},'${numerodoc}',${barrio},'${fechanaci}')`);
+        res.send(newTodo);
     }catch(e){
         console.log(e);
     }
@@ -145,6 +147,19 @@ router.get('/persona/:idpersona',async (req,res) =>{
         console.log("MIS COJONES");
     } 
 });
+
+
+router.get('/personaiden/:numerodoc',async (req,res) =>{
+    try{
+        const { numerodoc } = req.params;
+        const arreglo = await pool.query(`SELECT * FROM persona WHERE numerodoc = '${numerodoc}'`);
+        res.send(arreglo.rows);
+         
+    } catch(e){
+        console.log("MIS COJONES");
+    } 
+});
+
 
 router.get('/persona/',async (req,res) =>{
     try{
@@ -291,6 +306,16 @@ router.get('/barrio/:id_barrio',async (req,res) =>{
     }
 });
 
+router.get('/barrio/',async (req,res) =>{
+    try{
+        const arreglo = await pool.query(`SELECT * FROM barrio ORDER BY nombre`);
+        res.send(arreglo.rows);
+         
+    } catch(e){
+        console.log("MIS COJONES");
+    }
+});
+
 
 //-------------------------- tipoDocumento ----------------------
 
@@ -303,6 +328,27 @@ router.get('/tipodoc/:idtipo',async (req,res) =>{
          
     } catch(e){
         console.log("MIS COJONES");
+    }
+});
+
+router.get('/tipodoc/',async (req,res) =>{
+    try{
+        const arreglo = await pool.query(`SELECT * FROM tipodocumento ORDER BY idtipo`);
+        res.send(arreglo.rows);
+         
+    } catch(e){
+        console.log("MIS COJONES");
+    }
+});
+
+// ------------------------- Medicamentos ----------------
+
+router.get('/medicamentos/',async (req,res)=>{
+    try{
+        const arreglo = await pool.query(`SELECT * FROM medicamentos ORDER BY idmedicamento`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("F Medica");
     }
 });
 
