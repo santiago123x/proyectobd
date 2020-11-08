@@ -78,13 +78,22 @@ router.get('/usuario/:nick',async (req,res) =>{
         const { nick } = req.params;
         const arreglo = await pool.query(`SELECT * FROM usuario WHERE nickname = '${nick}'`);
         res.send(arreglo.rows);
-         
->>>>>>> c6d25caa87b255b322a9a7791d8d5103f076df16
     } catch(e){
         console.log("MIS COJONES");
     } 
 });
 
+
+router.get('/usuario2/:id',async (req,res) =>{
+    try{
+        const { id } = req.params;
+        const arreglo = await pool.query(`SELECT * FROM usuario WHERE idpersona = '${id}'`);
+        res.send(arreglo.rows);
+         
+    } catch(e){
+        console.log("MIS COJONES");
+    } 
+});
 
 //--------------------- Persona --------------------------
 
