@@ -1,10 +1,12 @@
 import React from 'react';
-import { BrowserRouter, Switch, Route, Link } from 'react-router-dom';
+import { BrowserRouter, Switch, Route, Link, Redirect } from 'react-router-dom';
 import "../Login/syle.scss";
 import CrearDoctor from './crearDoctor';
 import '../InterfazDoc/style.scss';
 import InformesAdmin from './informesAdmin';
-
+import {Button} from 'reactstrap';
+import Swal from 'sweetalert2/dist/sweetalert2.js';
+import 'sweetalert2/src/sweetalert2.scss';
 
 export default class NavAdmin extends React.Component {
     constructor(props) {
@@ -18,6 +20,7 @@ export default class NavAdmin extends React.Component {
             idusuario: '',
             doc: '',
             match: null,
+            redirect: null,
 
 
 
@@ -46,12 +49,36 @@ export default class NavAdmin extends React.Component {
 
     }
 
-
+    logOut(){
+        Swal.fire({
+            title: 'Esta Seguro?',
+            text: "Desea Cerrar Sesión ?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si!'
+          }).then((result) => {
+            if (result.isConfirmed) {
+                this.setState({redirect:'/'})
+            }
+          })
+        
+    }
 
 
     render() {
         const { match } = this.props;
         this.state.match = match.params.id;
+
+        if (this.state.redirect)  {
+            
+            return <Redirect  to={
+               this.state.redirect
+            } />
+            
+          }
+
         return (
             <BrowserRouter >
                 <div className="total">
@@ -68,6 +95,9 @@ export default class NavAdmin extends React.Component {
                                 </li>
                                 <li >
                                     <Link className="btn font-weight-bold" to={`/NavAdmin/${match.params.id}`} activeClassName="active"> Crear Doctor o Paciente <i class="fa fa-hospital-o" aria-hidden="true"></i></Link>
+                                </li>
+                                <li >
+                                    <Button color='info' className="btn font-weight-bold ml-2" onClick={() => this.logOut()} activeClassName="active"> LogOut <i class="fa fa-sign-out" aria-hidden="true"></i></Button>
                                 </li>
 
 

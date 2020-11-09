@@ -1,10 +1,13 @@
 import React from 'react';
-import {BrowserRouter, Switch, Route, Link} from 'react-router-dom';
+import {BrowserRouter, Switch, Route, Link, Redirect} from 'react-router-dom';
 import "../Login/syle.scss";
+import {Button} from 'reactstrap';
 import InformesDoc from './InformesDoc';
 import Registro from './Registro';
 import Medicamentos from './Medicamentos';
 import './style.scss';
+import Swal from 'sweetalert2/dist/sweetalert2.js';
+import 'sweetalert2/src/sweetalert2.scss';
 
 
 export default class NavDoc extends React.Component {
@@ -12,21 +15,47 @@ export default class NavDoc extends React.Component {
         super(props);
         this.state = {
             
-      
+            redirect: null,
+            
       
           }
 
     }
 
 
+    logOut(){
+        Swal.fire({
+            title: 'Esta Seguro?',
+            text: "Desea Cerrar Sesión ?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si!'
+          }).then((result) => {
+            if (result.isConfirmed) {
+                this.setState({redirect:'/'})
+            }
+          })
+        
+    }
+   
     
-
     
-
 
     render() {
         const {match} =this.props;
+
+        if (this.state.redirect)  {
+            
+            return <Redirect  to={
+               this.state.redirect
+            } />
+            
+          }
+
         return (
+
             <BrowserRouter >
             <div className="total">
             <nav class="navbar navbar-expand-lg navbar-light bg-primary">
@@ -46,6 +75,10 @@ export default class NavDoc extends React.Component {
                         <li >
                             <Link className="btn font-weight-bold" to="/NavDoc/Medicamentos" activeClassName="active"> Medicamentos <i class="fa fa-heartbeat" aria-hidden="true"></i></Link>
                         </li>
+                        <li >
+                            <Button color='info' className="btn font-weight-bold ml-2" onClick={() => this.logOut()} activeClassName="active"> LogOut <i class="fa fa-sign-out" aria-hidden="true"></i></Button>
+                        </li>
+                        
                                                 
                     </ul>
                 </div>
