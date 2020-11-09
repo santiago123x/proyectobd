@@ -49,7 +49,7 @@ router.get('/usuariopersox/:idper', async(req,res)=>{
         `INSERT INTO usuario(idpersona, contraseña, tipousuario, nickname) VALUES(${idpersona},'${contra}','${tipo_usu}','${nickname}')`);
         res.send(newTodo);
     }catch(e){
-        console.log(e);
+        console.log('F :asdasd');
     }
       
   });
