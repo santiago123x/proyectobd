@@ -23,8 +23,22 @@ module.exports = router;
 
 //crear todo
 
+// ------------  Usuario * Persona ------------------------- 
 
-
+router.get('/usuariopersox/:idper', async(req,res)=>{
+    try{
+        const { idper } = req.params;
+        const arreglo = await pool.query(`SELECT  per.idpersona,idusuario,contraseña,nickname,tipousuario,
+        nombre,apellido,tipodoc,numerodoc,barrio,fechanaci
+		FROM usuario usu
+		INNER JOIN persona per
+		ON usu.idpersona=per.idpersona
+		WHERE (per.idpersona= ${idper})`);
+        res.send(arreglo.rows);
+    } catch(e){
+        console.log("MIS COJONES");
+    } 
+});
 
 // -------------------- Usuario ---------------------------------
 

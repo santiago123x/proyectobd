@@ -9,12 +9,13 @@ export default class CrearDoctor extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            admin:[],
             personas: [],
             persona: null,
             modalInserD: false,
             modalInserP: false,
             nombrePa:'',
-            apellidoPa:'',
+            
         };
         this.handleChange = this.handleChange.bind(this);
     }
@@ -45,10 +46,12 @@ export default class CrearDoctor extends React.Component {
     }
 
 
+
     validaM(x) {
         const index = document.getElementById('personas').selectedIndex - 1;
         if (index >= 0) {
             if (x === 'P') {
+                
                 this.modalPaciente();
             }
             else {
@@ -131,32 +134,23 @@ export default class CrearDoctor extends React.Component {
                                 </Form>
                             </div>
                             <div className="formD mt-3 ">
-                                <div className="inputsFA">
+                                <div className="inputsFA mb-4">
                                     <Label className="ml-3 mr-3 mt-3 font-weight-bold">Informacion del Admin</Label>
-                                    <FormGroup className="inputF ml-3 mr-3 mt-3">
+                                    <FormGroup className="inputF ml-3 mr-3 mt-3 ">
                                         <Label className="font-weight-bold"> Id Admin: </Label>
                                         <Input id="identificacion"
 
                                             className="form-control"
                                             name="identificacion"
                                             type="text"
-                                            bsSize="md" readOnly>
+                                            bsSize="md" 
+                                            value={this.props.id}
+                                            readOnly>
 
 
                                         </Input>
                                     </FormGroup>
-                                    <FormGroup className="inputF ml-3 mr-3 mt-3 mt-3" >
-                                        <Label className="font-weight-bold"> Nombre: </Label>
-                                        <Input id="nombre"
-
-                                            className="form-control"
-                                            name="nombre"
-                                            type="text"
-                                            bsSize="md" readOnly >
-
-
-                                        </Input>
-                                    </FormGroup>
+                                    
                                 </div>
                             </div>
 

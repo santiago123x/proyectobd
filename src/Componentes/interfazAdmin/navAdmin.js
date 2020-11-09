@@ -10,6 +10,14 @@ export default class NavAdmin extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            nickname: '',
+            contraseña: '',
+            nombre: '',
+            apellido: '',
+            idpersona: '',
+            idusuario: '',
+            doc: '',
+            match: null,
 
 
 
@@ -18,19 +26,38 @@ export default class NavAdmin extends React.Component {
     }
 
 
+    async componentDidMount() {
+        console.log(this.state.match);
+        await fetch(`http://localhost:5000/usuariopersox/${this.state.match}`)
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    this.setState({
+                        nickname: result[0].nickname,
+                        contraseña: result[0].contraseña,
+                        nombre: result[0].nombre,
+                        apellido: result[0].apellido,
+                        idpersona: result[0].idpersona,
+                        idusuario: result[0].idusuario,
+                        doc: result[0].numerodoc
+                    });
+                }
+            )
 
+    }
 
 
 
 
     render() {
         const { match } = this.props;
+        this.state.match = match.params.id;
         return (
             <BrowserRouter >
                 <div className="total">
                     <nav class="navbar navbar-expand-lg navbar-light bg-primary">
 
-                        <h1 class="navbar-brand ml-3 font-weight-bold " >Bienvenido Admin {match.params.id}</h1>
+                        <h1 class="navbar-brand ml-3 font-weight-bold " >Bienvenido Admin {this.state.nombre}  {this.state.apellido} </h1>
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                         </button>
@@ -54,7 +81,7 @@ export default class NavAdmin extends React.Component {
                             <InformesAdmin />
                         </Route>
                         <Route exact path="/NavAdmin/:id">
-                            <CrearDoctor />
+                            <CrearDoctor id={this.state.doc} />
                         </Route>
 
 
