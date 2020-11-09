@@ -1,5 +1,6 @@
 .total{
     background-color: #47DEC4;
+    
 }
 
 .Titulo{
@@ -17,6 +18,8 @@
     background-repeat: no-repeat;
 
 }
+
+
 .contene{
     float: left;
     width: 40%;
@@ -26,6 +29,14 @@
     
 }
 
+.conteneA{
+    margin-left: 2.4%;
+    width: 95%;
+    outline: none;
+    box-shadow: 0px 0px 12px 0.8px #3474dbb2;
+    text-align: center;
+    
+}
 
 
 .form{
@@ -51,6 +62,19 @@
     outline: none;
     box-shadow: 0px 0px 12px 0.8px #3474dbb2;
     margin-bottom: 3%;
+}
+.inputsFA{
+    width: 40%;
+    text-align: center;
+    align-items: center;
+    display: inline-block;
+}
+.selP{
+    width: 40%;
+    text-align: center;
+    align-items: center;
+    display: inline-block;
+   
 }
 
 .formularioP{

@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import LoginPrin from './LoginPrin';
 import NavDoc from './Componentes/InterfazDoc/navDoc';
+import NavAdmin from './Componentes/interfazAdmin/navAdmin';
 import NoMatch from './Componentes/noMatch';
 
 
@@ -13,11 +14,12 @@ function App() {
     return (
         <Router>
             <Switch>
-            <Route exact path="/NavDoc/:id" component={NavDoc} />
-                    
+                <Route exact path="/NavDoc/:id" component={NavDoc} />
+                <Route exact path="/NavAdmin/:id" component={NavAdmin} />
+
                 <Route path="/" component={LoginPrin} />
-                  
-               
+
+
             </Switch>
 
         </Router>

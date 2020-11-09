@@ -4,7 +4,7 @@ import Swal from 'sweetalert2/dist/sweetalert2.js';
 import 'sweetalert2/src/sweetalert2.scss';
 import "./syle.scss";
 
-export class CrearPersona extends React.Component {
+export  class CrearPersona extends React.Component {
   constructor(props) {
     super(props);
     this.state = {

@@ -1,6 +1,5 @@
 import React from 'react';
 import {BrowserRouter, Switch, Route, Link} from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css'
 import "../Login/syle.scss";
 import InformesDoc from './InformesDoc';
 import Registro from './Registro';
