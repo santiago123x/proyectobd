@@ -3,37 +3,21 @@ import {
     BrowserRouter as Router,
     Switch,
     Route,
-    Link,
-    Redirect
 } from "react-router-dom";
 import LoginPrin from './LoginPrin';
-import LoginAdmin from "./Componentes/LoginAdmin.js";
-import InformesDoc from "./Componentes/InterfazDoc/InformesDoc"
-import Registro from "./Componentes/InterfazDoc/Registro";
-import Medicamentos from "./Componentes/InterfazDoc/Medicamentos";
 import NavDoc from './Componentes/InterfazDoc/navDoc';
+import NoMatch from './Componentes/noMatch';
 
 
 function App() {
     return (
         <Router>
             <Switch>
-            <Route path="/NavDoc">
-                    <NavDoc />
-                </ Route>
-
-                <Route path="/RegistrarV">
-                    <Registro />
-                </ Route>
-                <Route path="/InformesDoc">
-                    <InformesDoc />
-                </ Route>
-                <Route path="/Medicamentos">
-                    <Medicamentos />
-                </ Route>
-                <Route path="/">
-                    <LoginPrin />
-                </Route>
+            <Route exact path="/NavDoc/:id" component={NavDoc} />
+                    
+                <Route path="/" component={LoginPrin} />
+                  
+               
             </Switch>
 
         </Router>

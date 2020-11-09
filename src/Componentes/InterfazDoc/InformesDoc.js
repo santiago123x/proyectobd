@@ -1,5 +1,4 @@
 import React from 'react';
-import NavDoc from './navDoc.js';
 import Informes from '../Informes';
 
 

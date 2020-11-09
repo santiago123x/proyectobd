@@ -1,6 +1,6 @@
 import React from "react";
 import loginImg from "../../LOGIN.svg";
-import { Button, Form, FormGroup, Input, InputGroup, InputGroupText, Row, Col, Modal, ModalBody, ModalHeader, ModalFooter } from "reactstrap";
+import { Button, Form, FormGroup, Input, InputGroup, InputGroupText, Row, Col } from "reactstrap";
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import 'sweetalert2/src/sweetalert2.scss';
 import { CrearPersona } from './crearPersona';
@@ -148,7 +148,7 @@ export class Register extends React.Component {
 
 
   mostrarForm() {
-    if (this.state.codi == this.state.codigo) {
+    if (this.state.codi === this.state.codigo) {
       document.getElementById('envioR').style.display = 'contents';
       document.getElementById('mevoy').style.display = 'none';
       document.getElementById('codigo').style.display = 'none';

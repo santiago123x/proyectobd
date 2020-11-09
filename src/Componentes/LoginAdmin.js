@@ -1,7 +1,7 @@
 import React from "react";
 import "../App.scss";
 import { Login, Register } from "./Login/index";
-import { Button } from "react-bootstrap";
+
 
 class LoginAdmin extends React.Component {
   constructor(props) {

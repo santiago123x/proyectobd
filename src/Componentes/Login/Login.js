@@ -1,11 +1,13 @@
-import React, { useState, ReactComponent } from "react";
+import React from "react";
 import loginImg from "../../LOGIN.svg";
 import { Redirect } from "react-router-dom";
+
 
 import { Button, Form, FormGroup, InputGroup, InputGroupText,  Input } from "reactstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import 'sweetalert2/src/sweetalert2.scss';
+
 
 export class Login extends React.Component {
     constructor(props) {
@@ -66,7 +68,7 @@ export class Login extends React.Component {
                                 })
                                 this.setState({ usu : usu})
                                 
-                                this.setState({ redirect: "/NavDoc" });
+                                this.setState({ redirect: "/NavDoc/"+this.state.usu.idusuario });
                                 
                             } else
 
@@ -98,14 +100,13 @@ export class Login extends React.Component {
     }
 
     render() {
-         
-        if (this.state.redirect) {
-            return <Redirect to={{
-                pathname: this.state.redirect,
-                state:{
-                    nick: this.state.usu.nickname
-                }
-            } } />
+        
+        if (this.state.redirect)  {
+            console.log('hola '+this.state.usu.idusuario)
+            return <Redirect from='/' to={
+               this.state.redirect
+            } />
+            
           }
         return (
             <div className="base-container" ref={this.props.containerRef}>
