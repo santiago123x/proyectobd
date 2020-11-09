@@ -21,8 +21,6 @@ class LoginPrin extends React.Component {
 
     render() {
 
-        if (this.state.tipoLogin) {
-
             return (
 
                 <div className="barraNav" >
@@ -36,15 +34,7 @@ class LoginPrin extends React.Component {
                                 <span className="navbar-toggler-icon"></span>
                             </button>
                             <div className="collapse navbar-collapse" id="navbarNav">
-                                <ul className="navbar-nav ml-auto">
-                                    <li className="nav-item active">
-                                        <Button className ="font-weight-bold " type="button" size="md" onClick={() => this.setState({ tipoLogin: false })}>Doctor</Button>
-                                    </li>
-                                    <li className="nav-item">
-                                        <Button className ="font-weight-bold " type="button" size="md" onClick={() => this.setState({ tipoLogin: true })} disabled>Admin</Button>
-                                    </li>
-
-                                </ul>
+                               
                             </div>
                         </div>
                     </nav>
@@ -55,47 +45,8 @@ class LoginPrin extends React.Component {
 
             );
         }
-        else {
-            return (
-                <div className="barraNav">
-
-                    <nav className="navbar navbar-expand-lg navbar-light bg-primary" id="nave">
-                    <h2 className="navbar-brand ml-4 font-weight-bold" >
-                                Login
-                        </h2>
-                        <div className="container">
-                            
-                            <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                                <span className="navbar-toggler-icon"></span>
-                            </button>
-                            <div className="collapse navbar-collapse" id="navbarNav">
-                                <ul className="navbar-nav ml-auto">
-                                    <li className="nav-item active">
-                                        <Button className ="font-weight-bold " type="button" size="md" onClick={() => this.setState({ tipoLogin: false })} disabled>Doctor</Button>
-                                    </li>
-                                    <li className="nav-item">
-                                        <Button className ="font-weight-bold " type="button" size="md" onClick={() => this.setState({ tipoLogin: true })}>Admin</Button>
-                                    </li>
-
-                                </ul>
-                            </div>
-                        </div>
-                    </nav>
-
-                    <div className="contenedor">
-                        <div className="login">
-                            <div className="container " >
-                                <Login />
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-            );
-        }
     }
-}
+
 
 
 export default LoginPrin;

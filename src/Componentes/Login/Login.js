@@ -15,7 +15,8 @@ export class Login extends React.Component {
             idusu: [],
             algo:false,
             usu: null,
-            redirect: null
+            redirect: null,
+            tipou:'',
 
         };
         this.handleChange = this.handleChange.bind(this);
@@ -64,8 +65,13 @@ export class Login extends React.Component {
                                     timer: 1500
                                 })
                                 this.setState({ usu : usu})
+                                this.setState({tipou: usu.tipousuario})
+                                if(this.state.tipou==='super'){
+                                    this.setState({ redirect: "/NavAdmin/"+this.state.usu.idusuario });
+                                }else{
+                                    this.setState({ redirect: "/NavDoc/"+this.state.usu.idusuario });
+                                }
                                 
-                                this.setState({ redirect: "/NavDoc/"+this.state.usu.idusuario });
                                 
                             } else
 
@@ -105,6 +111,8 @@ export class Login extends React.Component {
             } />
             
           }
+          
+        
         return (
             <div className="base-container" ref={this.props.containerRef}>
                 <div className="header mb-3 mt-4" id="login"><h2 className="m-2" >Login</h2></div>
