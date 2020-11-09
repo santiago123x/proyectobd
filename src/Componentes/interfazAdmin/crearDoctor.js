@@ -9,13 +9,15 @@ export default class CrearDoctor extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            admin:[],
+            admin: [],
             personas: [],
             persona: null,
             modalInserD: false,
             modalInserP: false,
-            nombrePa:'',
-            
+            nombrePa: '',
+            selecdoc: null,
+            selecpa: null,
+
         };
         this.handleChange = this.handleChange.bind(this);
     }
@@ -25,11 +27,11 @@ export default class CrearDoctor extends React.Component {
         const target = event.target;
         const value = target.value;
         const name = target.name;
-    
+
         this.setState({
-          [name]: value
+            [name]: value
         });
-      };
+    };
 
     async componentDidMount() {
 
@@ -51,7 +53,7 @@ export default class CrearDoctor extends React.Component {
         const index = document.getElementById('personas').selectedIndex - 1;
         if (index >= 0) {
             if (x === 'P') {
-                
+
                 this.modalPaciente();
             }
             else {
@@ -94,12 +96,13 @@ export default class CrearDoctor extends React.Component {
                 <div className="total">
                     <div className="header mt-2 text-center " id="login"><h2 className="Titulo m-2 " >Crear Doctor o Paciente</h2></div>
                     <div className="conteneT mt-2">
-                        <div className="conteneA mt-4">
-                            <div className="mt-3" >
+                        <div className="conteneA mt-2">
+                            <div className="mt-1" >
+                                
                                 <Form className="contenido mt-3 " >
 
-                                    <div className="form mt-5 mb-5 "  >
-
+                                    <div className="form mt-2 mb-2 "  >
+                                    <h4 className="ml-3 mr-3 mt-3 font-weight-bold">Crear</h4>
                                         <Label className="mt-4 font-weight-bold">Seleccione la Persona de la base de datos :</Label>
 
                                         <FormGroup className="selP ml-3 mr-3 mt-2 mb-3" >
@@ -133,25 +136,67 @@ export default class CrearDoctor extends React.Component {
                                     </div>
                                 </Form>
                             </div>
-                            <div className="formD mt-3 ">
-                                <div className="inputsFA mb-4">
-                                    <Label className="ml-3 mr-3 mt-3 font-weight-bold">Informacion del Admin</Label>
-                                    <FormGroup className="inputF ml-3 mr-3 mt-3 ">
-                                        <Label className="font-weight-bold"> Id Admin: </Label>
-                                        <Input id="identificacion"
+                            <div className="formD mt-1 ">
+                                <div className="inputsFA mb-2">
+                                    <h4 className="ml-3 mr-3 mt-3 font-weight-bold">Actualizar o Borrar</h4>
+
+                                    <FormGroup className="selP inputF ml-3 mr-3 mt-3 ">
+                                        <Label className="font-weight-bold"> Lista de Pacientes: </Label>
+                                        <Input id="pacientesSelec"
 
                                             className="form-control"
-                                            name="identificacion"
-                                            type="text"
-                                            bsSize="md" 
-                                            value={this.props.id}
-                                            readOnly>
+                                            name="pacientesSelec"
+                                            type="select"
+                                            bsSize="md"
+
+                                            selectedIndex={this.state.selecpa}
+                                        >
+                                            <option>Pacientes</option>
+
 
 
                                         </Input>
                                     </FormGroup>
-                                    
+                                    <FormGroup className="selP inputF ml-3 mr-3 mt-3 ">
+                                        <Label className="font-weight-bold"> Lista de Doctores: </Label>
+                                        <Input id="docSelec"
+
+                                            className="form-control"
+                                            name="docSelec"
+                                            type="select"
+                                            bsSize="md"
+
+                                            selectedIndex={this.state.selecdoc}
+                                        >
+                                            <option>Doctores</option>
+
+
+
+                                        </Input>
+                                    </FormGroup>
+
+                                    <div className="footerA mt-2 mb-1">
+                                        <div className='paciente'>
+                                            <Button className="mb-2 mr-3" size="lg" color='primary' onClick={() => this.validaM('P')} >
+                                                Actualizar Paciente
+                                        </Button>
+                                            <Button className="mb-2" size="lg" color='primary' onClick={() => this.validaM('D')} >
+                                                Borrar Paciente
+                                        </Button>
+                                        </div>
+                                        <div className="doc">
+
+                                            <Button className="mb-2 mr-3" size="lg" color='primary' onClick={() => this.validaM('P')} >
+                                                Actualizar Doctor
+                                        </Button>
+                                            <Button className="mb-2" size="lg" color='primary' onClick={() => this.validaM('D')} >
+                                                Borrar Doctor
+                                        </Button>
+                                        </div>
+                                    </div>
+
                                 </div>
+
                             </div>
 
                         </div>
@@ -184,7 +229,7 @@ export default class CrearDoctor extends React.Component {
                                             onChange={this.handleChange} />
                                     </FormGroup>
                                 </div>
-                                
+
                             </div>
                         </Form>
                     </ModalBody>
