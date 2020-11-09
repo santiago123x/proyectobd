@@ -98,11 +98,11 @@ export default class CrearDoctor extends React.Component {
                     <div className="conteneT mt-2">
                         <div className="conteneA mt-2">
                             <div className="mt-1" >
-                                
+
                                 <Form className="contenido mt-3 " >
 
                                     <div className="form mt-2 mb-2 "  >
-                                    <h4 className="ml-3 mr-3 mt-3 font-weight-bold">Crear</h4>
+                                        <h4 className="ml-3 mr-3 mt-3 font-weight-bold">Crear</h4>
                                         <Label className="mt-4 font-weight-bold">Seleccione la Persona de la base de datos :</Label>
 
                                         <FormGroup className="selP ml-3 mr-3 mt-2 mb-3" >
@@ -181,13 +181,13 @@ export default class CrearDoctor extends React.Component {
                                                 Actualizar Paciente
                                         </Button>
                                             <Button className="mb-2" size="lg" color='primary' onClick={() => this.validaM('D')} >
-                                                Borrar Paciente
+                                                Actualizar Doctor
                                         </Button>
                                         </div>
                                         <div className="doc">
 
                                             <Button className="mb-2 mr-3" size="lg" color='primary' onClick={() => this.validaM('P')} >
-                                                Actualizar Doctor
+                                                Borrar Paciente
                                         </Button>
                                             <Button className="mb-2" size="lg" color='primary' onClick={() => this.validaM('D')} >
                                                 Borrar Doctor
