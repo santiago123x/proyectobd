@@ -204,7 +204,7 @@ export class Register extends React.Component {
                     value={this.state.codi}
                     onChange={this.handleChange} />
                 </FormGroup></div>
-              <Button id='mevoy' onClick={() => this.mostrarForm()}>Verificar</Button></Form>
+              <Button id='mevoy' onClick={() => this.mostrarForm()}>Verificar <i class="fa fa-lock" aria-hidden="true"></i></Button></Form>
 
 
             <Form id='envioR'  >
@@ -277,7 +277,7 @@ export class Register extends React.Component {
                 <Row className="justify-content-md-center">
                   <Col >
                     <Button size="lg" color='primary' onClick={() => this.crearUsuario()} >
-                      Registro
+                      Registro <i class="fa fa-users" aria-hidden="true"></i>
               </Button>
                   </Col>
 

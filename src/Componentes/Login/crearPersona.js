@@ -269,7 +269,7 @@ export  class CrearPersona extends React.Component {
 
 
         <Button id="bper" className="ml-3" size="lg" color='primary' onClick={() => this.mostarInser()} >
-          Crear Persona
+          Crear Persona <i class="fa fa-user-plus" aria-hidden="true"></i>
         </Button>
 
         <Modal

@@ -158,7 +158,7 @@ export class Login extends React.Component {
 
                         <div className="footer">
                             <Button className="mt-5" size="lg" color='primary' onClick={() => this.login()} >
-                                Login
+                                Login <i class="fa fa-sign-in" aria-hidden="true"></i>
         </Button>
                         </div>
                     </Form>

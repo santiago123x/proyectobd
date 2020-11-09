@@ -38,13 +38,13 @@ export default class NavDoc extends React.Component {
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ml-auto mr-5">
                     <li className="nav-item">
-                            <Link className="btn font-weight-bold" to="/NavDoc/InformesDoc" activeClassName="active"> Informes</Link>
+                            <Link className="btn font-weight-bold" to="/NavDoc/InformesDoc" activeClassName="active"> Informes <i class="fa fa-info-circle" aria-hidden="true"></i></Link>
                         </li>
                         <li >
-                            <Link className="btn font-weight-bold" to={`/NavDoc/${match.params.id}`} activeClassName="active"> Registrar Visita</Link>
+                            <Link className="btn font-weight-bold" to={`/NavDoc/${match.params.id}`} activeClassName="active"> Registrar Visita <i class="fa fa-folder-open-o" aria-hidden="true"></i></Link>
                         </li>
                         <li >
-                            <Link className="btn font-weight-bold" to="/NavDoc/Medicamentos" activeClassName="active"> Medicamentos</Link>
+                            <Link className="btn font-weight-bold" to="/NavDoc/Medicamentos" activeClassName="active"> Medicamentos <i class="fa fa-heartbeat" aria-hidden="true"></i></Link>
                         </li>
                                                 
                     </ul>

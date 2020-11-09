@@ -64,10 +64,10 @@ export default class NavAdmin extends React.Component {
                         <div class="collapse navbar-collapse" id="navbarNav">
                             <ul class="navbar-nav ml-auto mr-5">
                                 <li className="nav-item">
-                                    <Link className="btn font-weight-bold" to="/NavAdmin/InformesAdmin" activeClassName="active"> Informes</Link>
+                                    <Link className="btn font-weight-bold" to="/NavAdmin/InformesAdmin" activeClassName="active"> Informes <i class="fa fa-info-circle" aria-hidden="true"></i></Link>
                                 </li>
                                 <li >
-                                    <Link className="btn font-weight-bold" to={`/NavAdmin/${match.params.id}`} activeClassName="active"> Crear Doctor o Paciente</Link>
+                                    <Link className="btn font-weight-bold" to={`/NavAdmin/${match.params.id}`} activeClassName="active"> Crear Doctor o Paciente <i class="fa fa-hospital-o" aria-hidden="true"></i></Link>
                                 </li>
 
 
