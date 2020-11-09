@@ -18,9 +18,7 @@ function App() {
     return (
         <Router>
             <Switch>
-            <Route path="/NavDoc">
-                    <NavDoc />
-                </ Route>
+            <Route path="/NavDoc/:id" component={NavDoc}/>
 
                 <Route path="/RegistrarV">
                     <Registro />

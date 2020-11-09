@@ -87,7 +87,7 @@ router.get('/usuario/:nick',async (req,res) =>{
 router.get('/usuario2/:id',async (req,res) =>{
     try{
         const { id } = req.params;
-        const arreglo = await pool.query(`SELECT * FROM usuario WHERE idpersona = '${id}'`);
+        const arreglo = await pool.query(`SELECT * FROM usuario WHERE idpersona = ${id}`);
         res.send(arreglo.rows);
          
     } catch(e){
@@ -360,6 +360,21 @@ router.get('/medicamentos/',async (req,res)=>{
         console.log("F Medica");
     }
 });
+
+
+// -------------------------- Doctor ----------------------
+
+router.get('/doctor/:iddoctor',async (req,res)=>{
+    try{
+        const { iddoctor } = req.params;
+        const arreglo = await pool.query(`SELECT * FROM tipodocumento WHERE idtipo = ${iddoctor}`);
+        res.send(arreglo.rows[0]);
+    }catch(e){
+        console.log("F Medica");
+    }
+}); 
+
+
 
 // ------------------------- Conexion --------------------
 

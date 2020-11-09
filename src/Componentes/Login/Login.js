@@ -66,7 +66,7 @@ export class Login extends React.Component {
                                 })
                                 this.setState({ usu : usu})
                                 
-                                this.setState({ redirect: "/NavDoc" });
+                                this.setState({ redirect: `/NavDoc/:${usu.idusuario}` });
                                 
                             } else
 
@@ -100,12 +100,7 @@ export class Login extends React.Component {
     render() {
          
         if (this.state.redirect) {
-            return <Redirect to={{
-                pathname: this.state.redirect,
-                state:{
-                    nick: this.state.usu.nickname
-                }
-            } } />
+            return <Redirect to={this.state.redirect} />
           }
         return (
             <div className="base-container" ref={this.props.containerRef}>

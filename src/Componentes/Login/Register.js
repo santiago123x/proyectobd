@@ -17,10 +17,7 @@ export class Register extends React.Component {
       codigo: '4dm1n',
       personas: [],
       usuexi: false,
-      yaregis: false,
-      idperso: ''
-
-
+      yaregis: false
     };
     this.handleChange = this.handleChange.bind(this);
   }
@@ -97,12 +94,13 @@ export class Register extends React.Component {
           if (!this.state.usuexi) {
             if (!this.state.yaregis) {
               var nickname = this.state.usuario;
-              var contra = this.state.contraseña;
-              var idpersona = this.state.idperso;
+              var contraseña = this.state.contraseña;
+              var idpersona = this.state.personas[index].idpersona;
               var tipo_usu = this.state.tipousuario;
 
-              const body = { nickname, contra, idpersona, tipo_usu };
+              const body = { nickname, contraseña, idpersona, tipo_usu };
 
+              console.log(body)
               await fetch('http://localhost:5000/usuario',
                 {
                   method: "POST",
@@ -225,16 +223,14 @@ export class Register extends React.Component {
                 <div className="mb-1">
                   <FormGroup  >
                     <Input id="personas"
-
                       className="form-control"
                       name="personas"
                       type="select"
-                      bsSize="md"
-                      selectedIndex = {this.state.idperso} >
+                      bsSize="md">
                       <option>Personas</option>
                       {this.state.personas.map(per => (
                         <option value={per.idpersona}>
-                          {per.nombre}  {per.apellido} {per.numerodoc}
+                          {per.nombre} {per.apellido} {per.numerodoc}
                         </option>
                       ))}
                     </Input>
