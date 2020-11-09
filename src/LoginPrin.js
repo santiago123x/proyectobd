@@ -3,8 +3,8 @@ import "./App.scss";
 import LoginAdmin from "./Componentes/LoginAdmin.js"
 import "./Componentes/Login/syle.scss";
 import { Login } from "./Componentes/Login/index.js"
-import { Nav, Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import {  Button } from "react-bootstrap";
+
 
 
 class LoginPrin extends React.Component {
@@ -27,7 +27,7 @@ class LoginPrin extends React.Component {
 
                 <div className="barraNav" >
                     <nav className="navbar navbar-expand-lg navbar-light bg-primary" id="nave">
-                    <h2 className="navbar-brand ml-4"  >
+                    <h2 className="navbar-brand ml-4 font-weight-bold"  >
                                 Login
                         </h2>
                         <div className="container">
@@ -38,10 +38,10 @@ class LoginPrin extends React.Component {
                             <div className="collapse navbar-collapse" id="navbarNav">
                                 <ul className="navbar-nav ml-auto">
                                     <li className="nav-item active">
-                                        <Button type="button" size="md" onClick={() => this.setState({ tipoLogin: false })}>Doctor</Button>
+                                        <Button className ="font-weight-bold " type="button" size="md" onClick={() => this.setState({ tipoLogin: false })}>Doctor</Button>
                                     </li>
                                     <li className="nav-item">
-                                        <Button type="button" size="md" onClick={() => this.setState({ tipoLogin: true })} disabled>Admin</Button>
+                                        <Button className ="font-weight-bold " type="button" size="md" onClick={() => this.setState({ tipoLogin: true })} disabled>Admin</Button>
                                     </li>
 
                                 </ul>
@@ -60,7 +60,7 @@ class LoginPrin extends React.Component {
                 <div className="barraNav">
 
                     <nav className="navbar navbar-expand-lg navbar-light bg-primary" id="nave">
-                    <h2 className="navbar-brand ml-4" >
+                    <h2 className="navbar-brand ml-4 font-weight-bold" >
                                 Login
                         </h2>
                         <div className="container">
@@ -71,10 +71,10 @@ class LoginPrin extends React.Component {
                             <div className="collapse navbar-collapse" id="navbarNav">
                                 <ul className="navbar-nav ml-auto">
                                     <li className="nav-item active">
-                                        <Button type="button" size="md" onClick={() => this.setState({ tipoLogin: false })} disabled>Doctor</Button>
+                                        <Button className ="font-weight-bold " type="button" size="md" onClick={() => this.setState({ tipoLogin: false })} disabled>Doctor</Button>
                                     </li>
                                     <li className="nav-item">
-                                        <Button type="button" size="md" onClick={() => this.setState({ tipoLogin: true })}>Admin</Button>
+                                        <Button className ="font-weight-bold " type="button" size="md" onClick={() => this.setState({ tipoLogin: true })}>Admin</Button>
                                     </li>
 
                                 </ul>
@@ -82,7 +82,7 @@ class LoginPrin extends React.Component {
                         </div>
                     </nav>
 
-                    <div className="App">
+                    <div className="contenedor">
                         <div className="login">
                             <div className="container " >
                                 <Login />
