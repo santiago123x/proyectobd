@@ -22,6 +22,93 @@ router.use(express.json());
 module.exports = router;
 
 //crear todo
+// ------------ Crear Doctor -------------------------------
+
+router.post('/doctor', async(req,res)=>{
+    try{
+        const { idpersona, identidadsalud, iduniversidad } = req.body;
+        newTodo = await pool.query(
+        `INSERT INTO doctor(idperona, identidadsalud, iduniversidad) VALUES(${idpersona}, ${identidadsalud}, ${iduniversidad})`);
+        res.send(newTodo);
+    }catch(e){
+        console.log('sigue intentando');
+    }
+
+});
+
+//------------- Universidades ------------------------------
+
+router.get('/universidades/',async (req,res)=>{
+    try{
+        const arreglo = await pool.query(`SELECT * FROM universidades ORDER BY nombreuni`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("no hay universidades");
+    }
+});
+
+
+// ------------ Si esta persona es Doctor ------------------
+
+router.get('/doctor/:idper',async (req,res)=>{
+    try{
+        const { idper } = req.params;
+        const arreglo = await pool.query(`SELECT * FROM doctor WHERE idperona = ${idper}`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("upppsss paila le dio error");
+    }
+});
+
+// ------------ Eps ----------------------------------------
+
+router.get('/eps/',async (req,res)=>{
+    try{
+        const arreglo = await pool.query(`SELECT * FROM eps ORDER BY nombreeps`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("ninguna eps es buena");
+    }
+});
+
+// ------------ Info Doctor --------------------------------
+
+router.get('/doctores', async(req,res)=>{
+    try{
+        const arreglo = await pool.query(`select iddoctor, idpersona, per.nombre, apellido, idtipo, tipodocument, numerodoc,
+        fechanaci, id_barrio, b.nombre as barrio, uni.iduniversidad, nombreuni, ideps, nombreeps
+        from doctor d 
+        join persona per on d.idperona = per.idpersona 
+        join barrio b on per.barrio = b.id_barrio
+        join tipodocumento ti on per.tipodoc = ti.idtipo
+        join universidades uni on d.iduniversidad = uni.iduniversidad
+        join eps e on d.identidadsalud = e.ideps`);
+        res.send(arreglo.rows);
+    } catch(e){
+        console.log("MIS COJONES");
+    } 
+});
+
+
+// ------------ Usuario Doctor(Trae Su Persona) ------------
+
+router.get('/usudoctor/:idusu', async(req,res)=>{
+    try{
+        const { idusu } = req.params;
+        const arreglo = await pool.query(`select idusuario, u.idpersona, per.nombre, apellido, tipodocument, numerodoc, b.nombre as barrio, iddoctor, nombreuni as univer, nombreeps as eps
+        from usuario u 
+        join persona per on u.idpersona = per.idpersona 
+        join barrio b on per.barrio = b.id_barrio
+        join tipodocumento ti on per.tipodoc = ti.idtipo
+        join doctor d on u.idpersona = d.idperona
+        join universidades uni on d.iduniversidad = uni.iduniversidad
+        join eps e on d.identidadsalud = e.ideps
+        where idusuario = ${idusu}`);
+        res.send(arreglo.rows[0]);
+    } catch(e){
+        console.log("MIS COJONES");
+    } 
+});
 
 // ------------  Usuario * Persona ------------------------- 
 

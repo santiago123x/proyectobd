@@ -19,6 +19,7 @@ export default class Registro extends React.Component {
 
 
 
+
   mostarInser() {
     this.setState({
       modalInser: !this.state.modalInser
@@ -96,6 +97,7 @@ export default class Registro extends React.Component {
                   className="form-control"
                   name="identificacion"
                   type="text"
+                  value={this.props.tipodD +' :    '+ this.props.numerdD}
                   bsSize="md" readOnly>
 
 
@@ -108,6 +110,7 @@ export default class Registro extends React.Component {
                   className="form-control"
                   name="entidadS"
                   type="text"
+                  value={this.props.eps}
                   bsSize="md" readOnly >
 
 

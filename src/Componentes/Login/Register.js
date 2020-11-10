@@ -266,7 +266,7 @@ export class Register extends React.Component {
                       <option>Personas</option>
                       {this.state.personas.map(per => (
                         <option value={per.idpersona}>
-                          {per.nombre}  {per.apellido} {per.numerodoc}
+                          {per.nombre} {per.apellido} - {per.numerodoc}
                         </option>
                       ))}
                     </Input>

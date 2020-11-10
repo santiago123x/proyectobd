@@ -51,13 +51,13 @@ export default class NavAdmin extends React.Component {
 
     logOut(){
         Swal.fire({
-            title: 'Esta Seguro?',
+            title: 'Esta Seguro ?',
             text: "Desea Cerrar Sesión ?",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Si!'
+            confirmButtonText: 'Si !'
           }).then((result) => {
             if (result.isConfirmed) {
                 this.setState({redirect:'/'})

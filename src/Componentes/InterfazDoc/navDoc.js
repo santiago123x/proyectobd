@@ -16,22 +16,52 @@ export default class NavDoc extends React.Component {
         this.state = {
             
             redirect: null,
+            match:null,
+            //Datos Doc
+            idusuD:null,
+            idpD:null,
+            nombreD:null,
+            apellidoD:null,
+            tipodD:null,
+            numerdD:null,
+            idDoc:null,
+            eps:null,
+            //
+
             
       
           }
 
     }
 
+    async componentDidMount(){
+        await fetch(`http://localhost:5000/usudoctor/${this.state.match}`)
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    this.setState({
+                        idusuD: result.idusuario,
+                        idpD: result.idpersona,
+                        nombreD: result.nombre,
+                        apellidoD: result.apellido,
+                        tipodD: result.tipodocument,
+                        numerdD: result.numerodoc,
+                        idDoc: result.iddoctor,
+                        eps: result.eps
+                    });
+                }
+            )
+    }
 
     logOut(){
         Swal.fire({
-            title: 'Esta Seguro?',
+            title: 'Esta Seguro ?',
             text: "Desea Cerrar Sesión ?",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Si!'
+            confirmButtonText: 'Si !'
           }).then((result) => {
             if (result.isConfirmed) {
                 this.setState({redirect:'/'})
@@ -45,6 +75,7 @@ export default class NavDoc extends React.Component {
 
     render() {
         const {match} =this.props;
+        this.state.match = match.params.id;
 
         if (this.state.redirect)  {
             
@@ -60,7 +91,7 @@ export default class NavDoc extends React.Component {
             <div className="total">
             <nav class="navbar navbar-expand-lg navbar-light bg-primary">
                
-                <h1 class="navbar-brand ml-3 font-weight-bold " >Bienvenido Doctor {match.params.id}</h1>
+        <h1 class="navbar-brand ml-3 font-weight-bold " >Bienvenido Doctor {this.state.nombreD} {this.state.apellidoD}</h1>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -93,7 +124,8 @@ export default class NavDoc extends React.Component {
             <Medicamentos />
           </Route>
           <Route exact path="/NavDoc/:id">
-              <Registro />
+              <Registro idpD={this.state.idpD} idDoc={this.state.idDoc} tipodD={this.state.tipodD} 
+              numerdD={this.state.numerdD} eps={this.state.eps}/>
             
           </Route>
         </Switch>
