@@ -23,11 +23,7 @@ module.exports = router;
 
 //crear todo
 
-
-
-
-
-
+//--------------------- usuario doctor por idusu ------------------------------
 
 router.get('/usudoctor/:idusu', async(req,res)=>{
     try{
@@ -47,6 +43,10 @@ router.get('/usudoctor/:idusu', async(req,res)=>{
     } 
 });
 
+
+//------------------- doctores info completa -------------------
+
+
 router.get('/doctores', async(req,res)=>{
     try{
         const arreglo = await pool.query(`select iddoctor, idpersona, per.nombre, apellido, idtipo, tipodocument, numerodoc,
@@ -61,6 +61,44 @@ router.get('/doctores', async(req,res)=>{
     } catch(e){
         console.log("MIS COJONES");
     } 
+});
+
+//--------------------- doctor por idpersona ------------------
+
+router.get('/doctor/:idper',async (req,res)=>{
+    try{
+        const { idper } = req.params;
+        const arreglo = await pool.query(`SELECT * FROM doctor WHERE idperona = ${idper}`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("upppsss paila le dio error");
+    }
+});
+
+
+router.post('/doctor', async(req,res)=>{
+    try{
+        const { idpersona, identidadsalud, iduniversidad } = req.body;
+        newTodo = await pool.query(
+        `INSERT INTO doctor(idpersona, identidadsalud, iduniversidad) VALUES(${idpersona}, ${identidadsalud}, ${iduniversidad})`);
+        res.send(newTodo);
+    }catch(e){
+        console.log('sigue intentando');
+    }
+      
+});
+
+
+//--------------------- paciente por idpersona ------------------
+
+router.get('/paciente/:idper',async (req,res)=>{
+    try{
+        const { idper } = req.params;
+        const arreglo = await pool.query(`SELECT * FROM paciente WHERE idperona = ${idper}`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("no encontramos lo que querias");
+    }
 });
 
 
