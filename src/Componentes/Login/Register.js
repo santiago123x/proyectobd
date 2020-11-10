@@ -1,9 +1,10 @@
 import React from "react";
 import loginImg from "../../LOGIN.svg";
-import { Button, Form, FormGroup, Input, InputGroup, InputGroupText, Row, Col, Modal, ModalBody, ModalHeader, ModalFooter } from "reactstrap";
+import { Button, Form, FormGroup, Input, InputGroup, InputGroupText, Row, Col } from "reactstrap";
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import 'sweetalert2/src/sweetalert2.scss';
 import { CrearPersona } from './crearPersona';
+
 
 export class Register extends React.Component {
   constructor(props) {
@@ -11,7 +12,8 @@ export class Register extends React.Component {
     this.state = {
       usuario: '',
       contraseña: '',
-      tipousuario: 'super',
+      tipousuario: '',
+      tipousuario2: '',
       idusu: [],
       codi: '',
       codigo: '4dm1n',
@@ -64,6 +66,7 @@ export class Register extends React.Component {
           });
         }
       });
+
     var index = document.getElementById('personas').selectedIndex - 1;
 
     if (index >= 0) {
@@ -82,6 +85,9 @@ export class Register extends React.Component {
           }
         });
     }
+
+
+
   }
 
   async crearUsuario() {
@@ -90,52 +96,61 @@ export class Register extends React.Component {
     if (window.confirm(`Desea agregar el Usuario:  ${this.state.usuario}`)) {
       try {
         var index = document.getElementById('personas').selectedIndex - 1;
-        if (index >= 0) {
-          if (!this.state.usuexi) {
-            if (!this.state.yaregis) {
-              var nickname = this.state.usuario;
-              var contraseña = this.state.contraseña;
-              var idpersona = this.state.personas[index].idpersona;
-              var tipo_usu = this.state.tipousuario;
+        var tip = document.getElementById('tipousu').selectedIndex - 1;
+        if (tip >= 0) {
+          if (index >= 0) {
+            if (!this.state.usuexi) {
+              if (!this.state.yaregis) {
+                var nickname = this.state.usuario;
+                var contra = this.state.contraseña;
+                var idpersona = document.getElementById('personas').value;
+                var tipo_usu = document.getElementById('tipousu').value
 
-              const body = { nickname, contraseña, idpersona, tipo_usu };
-
-              console.log(body)
-              await fetch('http://localhost:5000/usuario',
-                {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify(body)
-                });
-              Swal.fire({
-                icon: 'success',
-                title: `Se ha agregado el Usuario con NickName ${this.state.usuario}`,
-                showConfirmButton: false,
-                timer: 1500
-              })
-              window.location.reload();
+                const body = { nickname, contra, idpersona, tipo_usu };
+                console.log(body);
+                await fetch('http://localhost:5000/usuario',
+                  {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(body)
+                  });
+                Swal.fire({
+                  icon: 'success',
+                  title: `Se ha agregado el Usuario con NickName ${this.state.usuario}`,
+                  showConfirmButton: false,
+                  timer: 1500
+                })
+                window.location.reload();
+              } else {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: 'Ya existe un Usuario asociado a esta Persona.',
+                })
+              }
             } else {
+
               Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'Ya existe un Usuario asociado a esta Persona.',
+                text: 'Ya existe un Usuario con este Nickname por favor seleccione otro.',
               })
             }
-          } else
+          } else {
+            Swal.fire(
+              'Debe seleccionar una Persona para Registrar',
+              'O Ingresar una nueva Persona',
+              'warning'
+            )
+          }
 
-            Swal.fire({
-              icon: 'error',
-              title: 'Oops...',
-              text: 'Ya existe un Usuario con este Nickname por favor seleccione otro.',
-            })
         } else {
           Swal.fire(
-            'Debe seleccionar una Persona para Registrar',
-            'O Ingresar una nueva Persona',
+            'Debe seleccionar un Tipo de Usuario',
+            'Para Realizar el Registro',
             'warning'
           )
         }
-
       } catch (err) {
         console.error(err.message);
       }
@@ -146,7 +161,7 @@ export class Register extends React.Component {
 
 
   mostrarForm() {
-    if (this.state.codi == this.state.codigo) {
+    if (this.state.codi === this.state.codigo) {
       document.getElementById('envioR').style.display = 'contents';
       document.getElementById('mevoy').style.display = 'none';
       document.getElementById('codigo').style.display = 'none';
@@ -166,7 +181,7 @@ export class Register extends React.Component {
     return (
 
       <div className="base-container " ref={this.props.containerRef}>
-        <div className="header mb-3 mt-4" type="button" id="register"><h2 className="m-2" >Registro</h2></div>
+        <div className="header mb-1 mt-4" type="button" id="register"><h2 className="m-2" >Registro</h2></div>
         <div className="content "  >
           <div className="image">
             <img src={loginImg} />
@@ -174,7 +189,7 @@ export class Register extends React.Component {
 
           <div id='epa' >
             <Form id='en'  >
-              <div className="mb-3">
+              <div className="mb-1">
                 <FormGroup  >
 
                   <Input id="codigo"
@@ -186,12 +201,12 @@ export class Register extends React.Component {
                     value={this.state.codi}
                     onChange={this.handleChange} />
                 </FormGroup></div>
-              <Button id='mevoy' onClick={() => this.mostrarForm()}>Verificar</Button></Form>
+              <Button id='mevoy' onClick={() => this.mostrarForm()}>Verificar <i class="fa fa-lock" aria-hidden="true"></i></Button></Form>
 
 
             <Form id='envioR'  >
               <div id="regis" className="contRegis">
-                <div className="mb-3">
+                <div className="mb-1">
                   <FormGroup  >
                     <InputGroup>
                       <InputGroupText><i class="fa fa-user"></i></InputGroupText>
@@ -205,7 +220,7 @@ export class Register extends React.Component {
                         onChange={this.handleChange} /></InputGroup>
                   </FormGroup>
                 </div>
-                <div className="mb-3" >
+                <div className="mb-1" >
                   <FormGroup  >
                     <InputGroup>
                       <InputGroupText><i class="fa fa-lock"></i></InputGroupText>
@@ -222,11 +237,28 @@ export class Register extends React.Component {
                 </div>
                 <div className="mb-1">
                   <FormGroup  >
+                    <Input id="tipousu"
+
+                      className="form-control"
+                      name="tipousu"
+                      type="select"
+                      bsSize="md"
+                      selectedIndex={this.state.tipousuario}
+                      onChange={this.handleChange} >
+                        <option>Tipo de Usuario</option>
+                        <option value="super">Admin</option>
+                        <option value="doctor">Doctor</option>
+                    </Input>
+                  </FormGroup>
+                </div>
+                <div className="mb-1">
+                  <FormGroup  >
                     <Input id="personas"
                       className="form-control"
                       name="personas"
                       type="select"
-                      bsSize="md">
+                      bsSize="md"
+                      selectedIndex={this.state.idperso} >
                       <option>Personas</option>
                       {this.state.personas.map(per => (
                         <option value={per.idpersona}>
@@ -240,16 +272,16 @@ export class Register extends React.Component {
               <div className="footer">
                 <Row className="justify-content-md-center">
                   <Col >
-                  <Button size="lg" color='primary' onClick={() => this.crearUsuario()} >
-                      Registro
+                    <Button size="lg" color='primary' onClick={() => this.crearUsuario()} >
+                      Registro <i class="fa fa-users" aria-hidden="true"></i>
               </Button>
                   </Col>
-                  
+
                   <Col>
                     <CrearPersona />
                   </Col>
                 </Row>
-                
+
               </div>
             </Form>
 

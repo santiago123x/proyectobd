@@ -2,7 +2,7 @@ import React from 'react';
 import Informes from '../Informes';
 
 
-export default class InformesDoc extends React.Component {
+export default class InformesAdmin extends React.Component {
     constructor(props) {
         super(props);
 
@@ -27,10 +27,5 @@ export default class InformesDoc extends React.Component {
         );
     }
 }
-
-
-
-
-
 
 

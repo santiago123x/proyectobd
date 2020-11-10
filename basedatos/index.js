@@ -26,6 +26,83 @@ module.exports = router;
 
 
 
+
+
+
+router.get('/usudoctor/:idusu', async(req,res)=>{
+    try{
+        const { idusu } = req.params;
+        const arreglo = await pool.query(`select idusuario, u.idpersona, per.nombre, apellido, tipodocument, numerodoc, b.nombre as barrio, iddoctor, nombreuni as univer, nombreeps as eps
+        from usuario u 
+        join persona per on u.idpersona = per.idpersona 
+        join barrio b on per.barrio = b.id_barrio
+        join tipodocumento ti on per.tipodoc = ti.idtipo
+        join doctor d on u.idpersona = d.idperona
+        join universidades uni on d.iduniversidad = uni.iduniversidad
+        join eps e on d.identidadsalud = e.ideps
+        where idusuario = ${idusu}`);
+        res.send(arreglo.rows[0]);
+    } catch(e){
+        console.log("MIS COJONES");
+    } 
+});
+
+router.get('/doctores', async(req,res)=>{
+    try{
+        const arreglo = await pool.query(`select iddoctor, idpersona, per.nombre, apellido, idtipo, tipodocument, numerodoc,
+        fechanaci, id_barrio, b.nombre as barrio, uni.iduniversidad, nombreuni, ideps, nombreeps
+        from doctor d 
+        join persona per on d.idperona = per.idpersona 
+        join barrio b on per.barrio = b.id_barrio
+        join tipodocumento ti on per.tipodoc = ti.idtipo
+        join universidades uni on d.iduniversidad = uni.iduniversidad
+        join eps e on d.identidadsalud = e.ideps`);
+        res.send(arreglo.rows);
+    } catch(e){
+        console.log("MIS COJONES");
+    } 
+});
+
+
+//-------------------------- universidades -----------------------
+
+router.get('/universidades/',async (req,res)=>{
+    try{
+        const arreglo = await pool.query(`SELECT * FROM universidades ORDER BY nombreuni`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("no hay universidades");
+    }
+});
+
+//---------------------------- EPS --------------------------------
+
+router.get('/eps/',async (req,res)=>{
+    try{
+        const arreglo = await pool.query(`SELECT * FROM eps ORDER BY nombreeps`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("ninguna eps es buena");
+    }
+});
+
+// ------------  Usuario * Persona ------------------------- 
+
+router.get('/usuariopersox/:idper', async(req,res)=>{
+    try{
+        const { idper } = req.params;
+        const arreglo = await pool.query(`SELECT  per.idpersona,idusuario,contraseña,nickname,tipousuario,
+        nombre,apellido,tipodoc,numerodoc,barrio,fechanaci
+		FROM usuario usu
+		INNER JOIN persona per
+		ON usu.idpersona=per.idpersona
+		WHERE (per.idpersona= ${idper})`);
+        res.send(arreglo.rows);
+    } catch(e){
+        console.log("MIS COJONES");
+    } 
+});
+
 // -------------------- Usuario ---------------------------------
 
   router.post('/usuario', async(req,res)=>{
@@ -35,7 +112,7 @@ module.exports = router;
         `INSERT INTO usuario(idpersona, contraseña, tipousuario, nickname) VALUES(${idpersona},'${contra}','${tipo_usu}','${nickname}')`);
         res.send(newTodo);
     }catch(e){
-        console.log(e);
+        console.log('F :asdasd');
     }
       
   });

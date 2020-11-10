@@ -1,6 +1,5 @@
 import React from 'react';
-import NavDoc from './navDoc';
-import { Form, Input, FormGroup, Button, Label, Modal, ModalHeader, ModalBody, ModalFooter, InputGroupText, InputGroup } from 'reactstrap';
+import { Form, Input, FormGroup, Button, Label, Modal, ModalHeader, ModalBody, ModalFooter,  InputGroup } from 'reactstrap';
 import './style.scss';
 import { FormControl } from 'react-bootstrap';
 
@@ -53,6 +52,7 @@ export default class Registro extends React.Component {
   }
   render() {
     return (
+        
       <div className="total">
         <div className="header mt-2 text-center " id="login"><h2 className="Titulo m-2 " >Registrar Visita</h2></div>
         <div className="conteneT mt-2">

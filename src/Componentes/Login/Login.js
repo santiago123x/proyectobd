@@ -1,11 +1,10 @@
-import React, { useState, ReactComponent } from "react";
+import React from "react";
 import loginImg from "../../LOGIN.svg";
 import { Redirect } from "react-router-dom";
-
 import { Button, Form, FormGroup, InputGroup, InputGroupText,  Input } from "reactstrap";
-import 'bootstrap/dist/css/bootstrap.min.css';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import 'sweetalert2/src/sweetalert2.scss';
+
 
 export class Login extends React.Component {
     constructor(props) {
@@ -16,7 +15,8 @@ export class Login extends React.Component {
             idusu: [],
             algo:false,
             usu: null,
-            redirect: null
+            redirect: null,
+            tipou:'',
 
         };
         this.handleChange = this.handleChange.bind(this);
@@ -65,8 +65,13 @@ export class Login extends React.Component {
                                     timer: 1500
                                 })
                                 this.setState({ usu : usu})
+                                this.setState({tipou: usu.tipousuario})
+                                if(this.state.tipou==='super'){
+                                    this.setState({ redirect: "/NavAdmin/"+this.state.usu.idusuario });
+                                }else{
+                                    this.setState({ redirect: "/NavDoc/"+this.state.usu.idusuario });
+                                }
                                 
-                                this.setState({ redirect: `/NavDoc/:${usu.idusuario}` });
                                 
                             } else
 
@@ -98,10 +103,16 @@ export class Login extends React.Component {
     }
 
     render() {
-         
-        if (this.state.redirect) {
-            return <Redirect to={this.state.redirect} />
+        
+        if (this.state.redirect)  {
+            console.log('hola '+this.state.usu.idusuario)
+            return <Redirect from='/' to={
+               this.state.redirect
+            } />
+            
           }
+          
+        
         return (
             <div className="base-container" ref={this.props.containerRef}>
                 <div className="header mb-3 mt-4" id="login"><h2 className="m-2" >Login</h2></div>
@@ -147,7 +158,7 @@ export class Login extends React.Component {
 
                         <div className="footer">
                             <Button className="mt-5" size="lg" color='primary' onClick={() => this.login()} >
-                                Login
+                                Login <i class="fa fa-sign-in" aria-hidden="true"></i>
         </Button>
                         </div>
                     </Form>

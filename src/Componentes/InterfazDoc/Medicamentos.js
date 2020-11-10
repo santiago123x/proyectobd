@@ -1,5 +1,7 @@
 import React from 'react';
-import NavDoc from './navDoc.js';
+import './style.scss';
+
+
 
 
 
@@ -13,9 +15,12 @@ export default class Medicamentos extends React.Component {
 
     render() {
         return (
-            <div>
-                <div>
+            <div className="total">
+                
+                <div className="header mt-2 text-center " id="login"><h2 className="Titulo m-2 " >Medicamentos</h2></div>
                    
+                <div className="conteneT mt-2">
+                    
                 </div>
                 
 

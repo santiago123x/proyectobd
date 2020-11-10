@@ -4,7 +4,7 @@ import Swal from 'sweetalert2/dist/sweetalert2.js';
 import 'sweetalert2/src/sweetalert2.scss';
 import "./syle.scss";
 
-export class CrearPersona extends React.Component {
+export  class CrearPersona extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -59,7 +59,7 @@ export class CrearPersona extends React.Component {
     var valor = document.getElementById('email').value;
 
     this.setState({
-      email: this.state.email.filter(mail => mail != valor)
+      email: this.state.email.filter(mail => mail !== valor)
     });
   }
 
@@ -67,7 +67,7 @@ export class CrearPersona extends React.Component {
     var letras = 'abcdefghyjklmnñopqrstuvwxyz!"}#$%&+)@.,-{/(=?¡';
     texto = texto.toLowerCase();
     for (var i = 0; i < texto.length; i++) {
-      if (letras.indexOf(texto.charAt(i), 0) != -1) {
+      if (letras.indexOf(texto.charAt(i), 0) !== -1) {
         return false;
       }
     }
@@ -107,7 +107,7 @@ export class CrearPersona extends React.Component {
     var valor = document.getElementById('telefono').value;
 
     this.setState({
-      telefono: this.state.telefono.filter(tele => tele != valor)
+      telefono: this.state.telefono.filter(tele => tele !== valor)
     });
   }
   async componentDidMount() {
@@ -228,15 +228,15 @@ export class CrearPersona extends React.Component {
     const fecha = document.getElementById('fechaN').value;
     var ft = new Date(fecha)
     ft.setDate(ft.getDate() + 1);
-    if (nom != "" && nom.length <= 20) {
+    if (nom !== "" && nom.length <= 20) {
       document.getElementById('snombre').style.display = 'none';
-      if (apell != "" && apell.length <= 30) {
+      if (apell !== "" && apell.length <= 30) {
         document.getElementById('sapellido').style.display = 'none';
-        if (tipod != 0) {
+        if (tipod !== 0) {
           document.getElementById('stipodoc').style.display = 'none';
-          if (doc != "" && doc.length <= 30) {
+          if (doc !== "" && doc.length <= 30) {
             document.getElementById('sidentificacion').style.display = 'none';
-            if (barr != 0) {
+            if (barr !== 0) {
               document.getElementById('sbarrio').style.display = 'none';
               if (ft <= new Date()) {
                 document.getElementById('sfechaN').style.display = 'none';
@@ -269,7 +269,7 @@ export class CrearPersona extends React.Component {
 
 
         <Button id="bper" className="ml-3" size="lg" color='primary' onClick={() => this.mostarInser()} >
-          Crear Persona
+          Crear Persona <i class="fa fa-user-plus" aria-hidden="true"></i>
         </Button>
 
         <Modal
