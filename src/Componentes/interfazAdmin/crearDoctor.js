@@ -413,16 +413,19 @@ export default class CrearDoctor extends React.Component {
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Si, Borrar!'
-        }).then((result) => {
+        }).then(async (result)  => {
             if (result.isConfirmed) {
-                /*await fetch (`/doctor/${id}`, {
-                    method: "DELETE"
-                })      */
-                Swal.fire(
-                    'Borrado!',
-                    'Se ha Borrado el Doctor.',
-                    'success'
-                )
+                await fetch (`http://localhost:5000/doctor/${id}`, {
+                    method: 'DELETE',
+                    headers: { "Content-Type": "application/json" }
+                })      
+                await Swal.fire({
+                    icon: 'success',
+                    title: `Se ha Eliminado el Doctor`,
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+                window.location.reload();
             }
         })
 
