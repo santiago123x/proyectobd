@@ -22,6 +22,7 @@ router.use(express.json());
 module.exports = router;
 
 //crear todo
+
 // ------------ Crear Doctor -------------------------------
 
 router.post('/doctor', async(req,res)=>{
@@ -35,6 +36,36 @@ router.post('/doctor', async(req,res)=>{
     }
 
 });
+
+// ------------ Actualizar Doctor -------------------------------
+
+router.put('/doctor/:id',async (req,res)=>{
+    try{
+        const { id } = req.params;
+     const { identidadsalud, iduniversidad} = req.body;
+   await pool.query(
+     `UPDATE doctor SET  identidadsalud = ${identidadsalud}, iduniversidad= ${iduniversidad}
+     WHERE iddoctor = ${id}`
+   );
+   res.json('ACTUALIZADO');
+    }catch(e){
+     console.log("F");
+    }
+ });
+// ------------ Borrar Doctor -------------------------------
+
+router.delete('/doctor/:iddoc', async (req,res)=>{
+    try{
+        const { iddoc } = req.params;
+        await pool.query(`DELETE FROM doctor WHERE iddoctor = ${iddoc}`);
+        res.json('ELIMINADO');
+    }
+    catch(err){
+        console.error(err);
+    }
+});
+
+
 
 //------------- Universidades ------------------------------
 
@@ -88,6 +119,27 @@ router.get('/doctores', async(req,res)=>{
         console.log("MIS COJONES");
     } 
 });
+
+
+
+router.get('/doctorinfo/:iddoctor', async(req,res)=>{
+    try{
+        const { iddoctor } = req.params;
+        const arreglo = await pool.query(`select iddoctor, idpersona, per.nombre, apellido, idtipo, tipodocument, numerodoc,
+        fechanaci, id_barrio, b.nombre as barrio, uni.iduniversidad, nombreuni, ideps, nombreeps
+        from doctor d 
+        join persona per on d.idperona = per.idpersona 
+        join barrio b on per.barrio = b.id_barrio
+        join tipodocumento ti on per.tipodoc = ti.idtipo
+        join universidades uni on d.iduniversidad = uni.iduniversidad
+        join eps e on d.identidadsalud = e.ideps
+        where iddoctor = ${iddoctor}`);
+        res.send(arreglo.rows[0]);
+    } catch(e){
+        console.log("MIS COJONES");
+    } 
+});
+
 
 
 // ------------ Usuario Doctor(Trae Su Persona) ------------

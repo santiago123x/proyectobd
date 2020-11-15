@@ -16,6 +16,7 @@ export default class CrearDoctor extends React.Component {
             //Modals
             modalInserD: false,
             modalInserP: false,
+            modalActuD: false,
             //
             nombrePa: '',
             selecdoc: null,
@@ -27,6 +28,22 @@ export default class CrearDoctor extends React.Component {
             eps: null,
             epss: [],
             //
+            //Actu Modal Doc
+            nombreAD: '',
+            apellidoAD: '',
+            tipoD_AD: null,
+            idenAD: '',
+            barrioAD: null,
+            fechaAD: null,
+            emailAD: [],
+            emailBAD: [],
+            telAD: [],
+            uniAD: null,
+            epsAD: null,
+            idPerDoc: null,
+            //Barrios y TiposID
+            barrios: [],
+            tiposDOC: [],
             //Info Modal Pac
 
             //
@@ -46,6 +63,8 @@ export default class CrearDoctor extends React.Component {
             [name]: value
         });
     };
+
+    // Inicializacion
 
     async componentDidMount() {
 
@@ -92,7 +111,29 @@ export default class CrearDoctor extends React.Component {
                 }
             )
 
+        await fetch('http://localhost:5000/tipodoc/')
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    this.setState({
+                        tiposDOC: result
+                    });
+                }
+            )
+
+        await fetch('http://localhost:5000/barrio/')
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    this.setState({
+                        barrios: result
+                    });
+                }
+            )
+
     }
+
+    // Crear Doctores y Pacientes
 
     async hayDoctor() {
         await fetch(`http://localhost:5000/doctor/${this.state.persona}`)
@@ -140,17 +181,249 @@ export default class CrearDoctor extends React.Component {
             })
             this.cancelarD();
             window.location.reload();
-        }else{
+        } else {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
                 text: 'Seleccione una Universidad y una Eps Valida.',
             })
         }
+    }
+
+    //Actualizar Doctor
+
+    async actuDoc(){
+        const id = document.getElementById('docSelec').value;
+        var nombre = this.state.nombreAD;
+        var apellido = this.state.apellidoAD;
+        var tipodoc = this.state.tipoD_AD;
+        var numerodoc = this.state.idenAD;
+        var barrio = this.state.barrioAD;
+        var fechanaci = this.state.fechaAD;
+        var email = this.state.emailAD;
+        var tel = this.state.telAD;
+        var iduniversidad = this.state.uniAD;
+        var identidadsalud = this.state.epsAD;
+        var idpersona = this.state.idPerDoc;
+        
+        const body = { nombre, apellido, tipodoc, numerodoc, barrio, fechanaci }
+
+        await fetch(`http://localhost:5000/persona/${idpersona}`,
+        {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body)
+        })
+
+        const bodyD = { identidadsalud, iduniversidad }
+
+        await fetch(`http://localhost:5000/doctor/${id}`,
+        {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(bodyD)
+        })
+        /*
+        for(var i=0;i<this.state.emailAD.length;i++){
+            if(!false){
+                await fetch(`http://localhost:5000/`)
+            }
+        }
+        for(var i=0;i<this.state.emailBAD.length;i++){
+            if(true){
+                await fetch(`http://localhost:5000/`)
+            } 
+        }*/
+        
 
 
     }
 
+
+    //Cargar Datos ActuDoc
+
+    async cargarDatosActuDoc() {
+        const id = document.getElementById('docSelec').value;
+
+        await fetch(`http://localhost:5000/doctorinfo/${id}`)
+            .then(response => response.json())
+            .then((result) => {
+
+                this.setState({
+                    nombreAD: result.nombre,
+                    apellidoAD: result.apellido,
+                    idenAD: result.numerodoc,
+                    tipoD_AD: result.idtipo,
+                    barrioAD: result.id_barrio,
+                    uniAD: result.iduniversidad,
+                    epsAD: result.ideps,
+                    fechaAD: result.fechanaci.substr(0,10),
+                    idPerDoc: result.idpersona,
+
+                });
+                console.log(this.state.fechaAD)
+
+            });
+
+        await fetch(`http://localhost:5000/email/${this.state.idPerDoc}`)
+            .then(response => response.json())
+            .then((result) => {
+                console.log(result)
+                for(var i=0;i<result.length;i++){
+                    this.setState({
+                        emailAD: [result[i].email]
+                    })
+                }
+            });
+
+        
+            await fetch(`http://localhost:5000/telefono/${this.state.idPerDoc}`)
+            .then(response => response.json())
+            .then((result) => {
+                console.log(result)
+                for(var i=0;i<result.length;i++){
+                    this.setState({
+                        telAD: [result[i].telefono]
+                    })
+                }
+            });
+
+    }
+
+
+
+    // Eliminar Doctor
+
+    async borrarDoctor() {
+        const id = document.getElementById('docSelec').value;
+        Swal.fire({
+            title: 'Esta Seguro ?',
+            text: "No se podra Recuperar!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, Borrar!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                /*await fetch (`/doctor/${id}`, {
+                    method: "DELETE"
+                })      */
+                Swal.fire(
+                    'Borrado!',
+                    'Se ha Borrado el Doctor.',
+                    'success'
+                )
+            }
+        })
+
+    }
+
+
+    // ---------------- Email --------------------
+
+    async agregarEmail(x) {
+        var { value: email } = await Swal.fire({
+            title: 'Ingrese su Email',
+            input: 'email',
+            inputLabel: 'Su Correo Electronico es : ',
+            showCancelButton: true,
+            inputPlaceholder: 'Email'
+
+        })
+        if (email && x === 'D') {
+            var corritos = this.state.emailAD
+            corritos.push(email)
+            this.setState({
+                emailAD: corritos
+            });
+
+            Swal.fire(`Email Ingresado: ${email}`)
+        }
+        if (email === 'P') {
+            var corritos = this.state.emailAD
+            corritos.push(email)
+            this.setState({
+                emailAD: corritos
+            });
+
+            Swal.fire(`Email Ingresado: ${email}`)
+        }
+    }
+
+    borrarEmailAD() {
+
+        var valor = document.getElementById('emailAD').value;
+        var corritos = []
+        corritos.push(valor)
+        this.setState({
+            emailBAD : corritos,
+            emailAD: this.state.emailAD.filter(mail => mail !== valor)
+        });
+    }
+
+
+    // ---------------- Telefono --------------------
+
+
+    tiene_letras(texto) {
+        var letras = 'abcdefghyjklmnñopqrstuvwxyz!"}#$%&+)@.,-{/(=?¡';
+        texto = texto.toLowerCase();
+        for (var i = 0; i < texto.length; i++) {
+            if (letras.indexOf(texto.charAt(i), 0) !== -1) {
+                return false;
+            }
+        }
+        return true;
+    }
+    async agregarTel(x) {
+        var { value: tel } = await Swal.fire({
+            title: 'Ingrese su Telefono',
+            input: 'text',
+            inputLabel: 'Su Telefono es : ',
+            inputPlaceholder: 'Telefonos',
+            showCancelButton: true,
+            inputValidator: (value) => {
+                return new Promise((resolve) => {
+                    if ((value.length === 10 || value.length === 7) && this.tiene_letras(value)) {
+                        resolve()
+                    } else {
+                        resolve('Debe tener 10(Celular) o 7(Fijo)  Digitos y estos deben ser Numeros')
+                    }
+                }
+
+                )
+            }
+        })
+        if (tel && tel.length <= 10 && x === 'D') {
+            var corritos = this.state.telAD
+            corritos.push(tel)
+            this.setState({
+                telAD: corritos
+            });
+
+            Swal.fire(`Telefono Ingresado: ${tel}`)
+        }
+        if (tel && tel.length <= 10 && x === 'P') {
+            var corritos = this.state.telefonoAD
+            corritos.push(tel)
+            this.setState({
+                telAD: corritos
+            });
+
+            Swal.fire(`Telefono Ingresado: ${tel}`)
+        }
+    }
+
+    borrarTelAD() {
+        var valor = document.getElementById('telAD').value;
+
+        this.setState({
+            telAD: this.state.telAD.filter(tele => tele !== valor)
+        });
+    }
+
+    // Validaciones y Modals
 
     async validaM(x) {
 
@@ -183,6 +456,30 @@ export default class CrearDoctor extends React.Component {
         }
     }
 
+    async validaActuD(x) {
+        const index = document.getElementById('docSelec').selectedIndex - 1;
+
+        if (index >= 0 && x === 'A') {
+            await this.cargarDatosActuDoc();
+            this.modalActuD();
+            document.getElementById('tipoD_AD').value = this.state.tipoD_AD;
+            document.getElementById('barrioAD').value = this.state.barrioAD;
+            document.getElementById('epsAD').value = this.state.epsAD;
+            document.getElementById('uniAD').value = this.state.uniAD;
+            document.getElementById('fechaAD').value = this.state.fechaAD;
+        }
+        else if (index >= 0 && x === 'D') {
+            this.borrarDoctor();
+        }
+        else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Seleccione un Doctor.',
+            })
+        }
+    }
+
     modalPaciente() {
 
         this.setState({
@@ -194,6 +491,29 @@ export default class CrearDoctor extends React.Component {
         this.setState({
             modalInserD: !this.state.modalInserD
         });
+    }
+
+    modalActuD() {
+        this.setState({
+            modalActuD: !this.state.modalActuD
+        });
+    }
+    cancelarActuD() {
+        this.modalActuD();
+        this.setState({
+            nombreAD: '',
+            apellido: '',
+            tipoD_AD: null,
+            idenAD: '',
+            barrioAD: null,
+            fechaAD: null,
+            emailAD: [],
+            telAD: [],
+            uniAD: null,
+            epsAD: null,
+            idPerDoc: null,
+            emailBAD: [],
+        })
     }
 
     cancelarP() {
@@ -233,7 +553,7 @@ export default class CrearDoctor extends React.Component {
                                                 bsSize="md"
 
                                                 onChange={this.handleChange} >
-                                                <option>Personas</option>
+                                                <option selected="true" disabled="disabled">Personas</option>
                                                 {this.state.personas.map(per => (
                                                     <option value={per.idpersona}>
                                                         {per.nombre}  {per.apellido} - {per.numerodoc}
@@ -280,7 +600,7 @@ export default class CrearDoctor extends React.Component {
 
                                                 selectedIndex={this.state.selecpa}
                                             >
-                                                <option>Pacientes</option>
+                                                <option selected="true" disabled="disabled">Pacientes</option>
 
 
 
@@ -300,7 +620,7 @@ export default class CrearDoctor extends React.Component {
 
                                                 selectedIndex={this.state.selecdoc}
                                             >
-                                                <option>Doctores</option>
+                                                <option selected="true" disabled="disabled">Doctores</option>
                                                 {this.state.listDoc.map(doc => (
                                                     <option value={doc.iddoctor}>
                                                         {doc.nombre} {doc.apellido} - {doc.numerodoc}
@@ -311,8 +631,8 @@ export default class CrearDoctor extends React.Component {
 
                                             <InputGroupAddon addonType="prepend">
                                                 <ButtonGroup>
-                                                    <Button color="primary" ><i class="fa fa-wrench" /></Button>
-                                                    <Button color="primary" ><i class="fa fa-trash-o " /></Button>
+                                                    <Button color="primary" onClick={() => this.validaActuD('A')}><i class="fa fa-wrench" /></Button>
+                                                    <Button color="primary" onClick={() => this.validaActuD('D')}><i class="fa fa-trash-o " /></Button>
                                                 </ButtonGroup>
                                             </InputGroupAddon>
                                         </InputGroup>
@@ -428,6 +748,227 @@ export default class CrearDoctor extends React.Component {
                             <Button color="danger" onClick={() => this.cancelarD()}>Cancelar</Button>
                         </ModalFooter>
                     </Form>
+                </Modal>
+
+                {/* Modal Actu Doc */}
+
+                <Modal
+                    size="md"
+                    centered isOpen={this.state.modalActuD} id="insertar">
+                    <ModalHeader>
+                        <div><h3>Actualizar Doctor</h3></div>
+                    </ModalHeader>
+                    <ModalBody>
+                        <Form>
+                            <div id="regisM" className="contRegisM">
+                                <div className="mb-3">
+                                    <FormGroup  >
+                                        <Input id="nombreAD"
+                                            placeholder="Nombre"
+                                            className="form-control"
+                                            name="nombreAD"
+                                            bsSize="md"
+                                            type="text"
+                                            value={this.state.nombreAD}
+                                            onChange={this.handleChange} />
+                                    </FormGroup>
+                                    <span className="span" id="snombre">Debe Ingresar un Nombre</span>
+                                </div>
+                                <div className="mb-3">
+                                    <FormGroup  >
+
+                                        <Input id="apellidoAD"
+                                            placeholder="Apellido"
+                                            className="form-control"
+                                            name="apellidoAD"
+                                            type="text"
+                                            bsSize="md"
+                                            value={this.state.apellidoAD}
+                                            onChange={this.handleChange} />
+                                    </FormGroup>
+                                    <span className="span" id="sapellido">Debe Ingresar un Apellido</span>
+                                </div>
+                                <div className="mb-3">
+                                    <FormGroup  >
+                                        <Input id="tipoD_AD"
+                                            className="form-control"
+                                            name="tipoD_AD"
+                                            type="select"
+                                            bsSize="md"
+                                            onChange={this.handleChange}>
+                                            <option selected="true" disabled="disabled">Tipo de Documento</option>
+
+                                            {this.state.tiposDOC.map(tipo => (
+
+                                                <option value={tipo.idtipo}>
+                                                    {tipo.tipodocument}
+                                                </option>
+                                            ))}
+                                        </Input>
+                                    </FormGroup>
+                                    <span className="span" id="stipodoc">Seleccione un Tipo de Documento valido</span>
+                                </div>
+                                <div className="mb-3">
+                                    <FormGroup  >
+
+                                        <Input id="idenAD"
+                                            placeholder="Identificación"
+                                            className="form-control"
+                                            name="idenAD"
+                                            type="text"
+                                            bsSize="md"
+                                            value={this.state.idenAD}
+                                            onChange={this.handleChange} />
+                                    </FormGroup>
+                                    <span className="span" id="sidentificacion">Debe Ingresar una Identificación Valida</span>
+                                </div>
+                                <div className="mb-3">
+                                    <FormGroup  >
+                                        <Input id="barrioAD"
+                                            placeholder="Barrio"
+                                            className="form-control"
+                                            name="barrioAD"
+                                            type="select"
+                                            bsSize="md"
+                                            selectedIndex={this.state.barrioAD}
+                                            onChange={this.handleChange}>
+                                            <option selected="true" disabled="disabled">Barrios</option>
+                                            {this.state.barrios.map(bar => (
+                                                <option value={bar.id_barrio}>
+                                                    {bar.nombre}
+                                                </option>
+                                            ))}
+                                        </Input>
+                                    </FormGroup>
+                                    <span className="span" id="sbarrio">Seleccione un Barrio</span>
+                                </div>
+
+                                <div className="mb-3" >
+                                    <FormGroup  >
+                                        <div className="mensaje">
+                                            <p className="oculto">Fecha de Nacimiento</p>
+                                            <Input
+                                                id="fechaAD"
+                                                placeholder="date placeholder"
+                                                className="form-control"
+                                                name="fechaAD"
+                                                bsSize="md"
+                                                type="date"
+                                                value={this.state.fechaN}
+                                                onChange={this.handleChange}
+                                            /> </div></FormGroup>
+                                    <span className="span" id="sfechaN">Debe Ingresar una Fecha Valida</span>
+                                </div>
+                                <FormGroup className=" mb-3   mt-3 ">
+
+                                    <InputGroup>
+
+                                        <Input id="uniAD"
+
+                                            className="form-control"
+                                            name="uniAD"
+                                            type="select"
+                                            bsSize="md"
+                                            onChange={this.handleChange}
+
+                                        >
+                                            <option selected="true" disabled="disabled">Universidad</option>
+                                            {this.state.universidades.map(uni => (
+                                                <option value={uni.iduniversidad}>
+                                                    {uni.nombreuni}
+                                                </option>
+                                            ))}
+
+                                        </Input>
+                                    </InputGroup>
+                                </FormGroup>
+                                <FormGroup className=" mb-3  mt-3 ">
+
+                                    <InputGroup>
+
+                                        <Input id="epsAD"
+
+                                            className="form-control"
+                                            name="epsAD"
+                                            type="select"
+                                            bsSize="md"
+                                            onChange={this.handleChange}
+                                            selectedIndex={this.state.epsAD}
+                                        >
+                                            <option selected="true" disabled="disabled">Eps</option>
+                                            {this.state.epss.map(ep => (
+                                                <option value={ep.ideps}>
+                                                    {ep.nombreeps}
+                                                </option>
+                                            ))}
+
+                                        </Input>
+                                    </InputGroup>
+                                </FormGroup>
+                                <div className="mb-3" >
+                                    <FormGroup >
+                                        <InputGroup>
+                                            <InputGroupAddon addonType="prepend">
+                                                <ButtonGroup>
+                                                    <Button color="primary" onClick={() => this.agregarEmail('D')}><i class="fa fa-plus" /></Button>
+                                                    <Button color="primary" onClick={() => this.borrarEmailAD()}><i class="fa fa-minus" /></Button>
+                                                </ButtonGroup>
+                                            </InputGroupAddon>
+                                            <Input
+                                                id="emailAD"
+                                                type="select"
+                                                placeholder="Email"
+                                                className="form-control"
+                                                name="emailAD"
+                                                bsSize="md"
+
+                                            >
+                                                <option>Email</option>
+                                                {this.state.emailAD.map(mail => (
+                                                    <option >
+                                                    {mail}
+                                                </option>
+                                                ))}
+                                            </Input>
+                                        </InputGroup>
+                                    </FormGroup>
+                                </div>
+                                <div className="mb-3" >
+                                    <FormGroup >
+                                        <InputGroup>
+                                            <InputGroupAddon addonType="prepend">
+                                                <ButtonGroup>
+                                                    <Button color="primary" onClick={() => this.agregarTel('D')}><i class="fa fa-plus" /></Button>
+                                                    <Button color="primary" onClick={() => this.borrarTelAD()}><i class="fa fa-minus" /></Button>
+                                                </ButtonGroup>
+                                            </InputGroupAddon>
+                                            <Input
+                                                id="telAD"
+                                                placeholder="Telefono"
+                                                className="form-control"
+                                                name="telAD"
+                                                bsSize="md"
+                                                type="select">
+
+                                                <option>Telefonos</option>
+                                                {this.state.telAD.map(tel => (
+                                                    <option >
+                                                        {tel}
+                                                    </option>
+                                                ))}
+                                            </Input>
+                                        </InputGroup>
+                                    </FormGroup>
+                                </div>
+
+
+                            </div>
+                        </Form>
+                    </ModalBody>
+                    <ModalFooter >
+                        <Button color="success" >Actualizar</Button>
+                        <Button color="danger" onClick={() => this.cancelarActuD()}>Cancelar</Button>
+                    </ModalFooter>
                 </Modal>
             </Fragment >
         );
