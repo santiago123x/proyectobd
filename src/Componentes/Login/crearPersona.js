@@ -316,7 +316,7 @@ export  class CrearPersona extends React.Component {
                       type="select"
                       bsSize="md"
                       onChange={this.handleChange}>
-                      <option>Tipo de Documento</option>
+                      <option  selected="true" disabled="disabled">Tipo de Documento</option>
                       {this.state.tiposdoc.map(tipo => (
                         <option value={tipo.idtipo}>
                           {tipo.tipodocument}
@@ -350,7 +350,7 @@ export  class CrearPersona extends React.Component {
                       bsSize="md"
                       selectedIndex={this.state.barrio}
                       onChange={this.handleChange}>
-                      <option>Barrios</option>
+                      <option  selected="true" disabled="disabled">Barrios</option>
                       {this.state.barrios.map(bar => (
                         <option value={bar.id_barrio}>
                           {bar.nombre}

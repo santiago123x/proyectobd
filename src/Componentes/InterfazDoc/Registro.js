@@ -72,7 +72,7 @@ export default class Registro extends React.Component {
                       name="personas"
                       type="select"
                       bsSize="md" >
-                      <option>Pacientes</option>
+                      <option selected="true" disabled="disabled">Pacientes</option>
 
                     </Input>
                   </FormGroup>
@@ -242,7 +242,7 @@ export default class Registro extends React.Component {
                             type="select"
                             bsSize="md"
                             selectedIndex={this.state.medicamento}>
-                            <option>Medicamento</option>
+                            <option selected="true" disabled="disabled">Medicamento</option>
                             {this.state.medicamentos.map(med => (
                               <option value={med.idmedicamento}>
                                 {med.medicamento}

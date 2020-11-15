@@ -393,6 +393,29 @@ router.get('/email/:idpersona',async (req,res) =>{
     } 
 });
 
+router.get('/emailhay/:idpersona/:email',async (req,res) =>{
+    try{
+        const { idpersona, email } = req.params;
+        const arreglo = await pool.query(`SELECT * FROM email 
+        WHERE idpersona = ${idpersona} and email ILIKE '${email}'`);
+        res.send(arreglo.rows);
+         
+    } catch(e){
+        console.log("Email no encontrado");
+    } 
+});
+
+router.delete('/emaildel/:idpersona/:email', async (req,res)=>{
+    try{
+        const { idpersona, email } = req.params;
+        await pool.query(`DELETE FROM email WHERE idpersona = ${idpersona} and email ILIKE '${email}'`);
+        res.json('ELIMINADO');
+    }
+    catch(err){
+        console.error(err);
+    }
+});
+
 
 // ------------------------- Telefono --------------------
 
@@ -452,6 +475,28 @@ router.get('/telefono/:idpersona',async (req,res) =>{
     } 
 });
 
+router.get('/telhay/:idpersona/:telefono',async (req,res) =>{
+    try{
+        const { idpersona, telefono } = req.params;
+        const arreglo = await pool.query(`SELECT * FROM telefono 
+        WHERE idpersona = ${idpersona} and telefono = '${telefono}'`);
+        res.send(arreglo.rows);
+         
+    } catch(e){
+        console.log("Telefono no encontrado");
+    } 
+});
+
+router.delete('/teldel/:idpersona/:telefono', async (req,res)=>{
+    try{
+        const { idpersona, telefono } = req.params;
+        await pool.query(`DELETE FROM telefono WHERE idpersona = ${idpersona} and telefono = '${telefono}'`);
+        res.json('ELIMINADO');
+    }
+    catch(err){
+        console.error(err);
+    }
+});
 
 
 //-------------------------- Barrio ----------------------

@@ -248,7 +248,7 @@ export class Register extends React.Component {
                       bsSize="md"
                       selectedIndex={this.state.tipousuario}
                       onChange={this.handleChange} >
-                        <option>Tipo de Usuario</option>
+                        <option  selected="true" disabled="disabled">Tipo de Usuario</option>
                         <option value="super">Admin</option>
                         <option value="doctor">Doctor</option>
                     </Input>
@@ -263,7 +263,7 @@ export class Register extends React.Component {
                       type="select"
                       bsSize="md"
                       selectedIndex={this.state.idperso} >
-                      <option>Personas</option>
+                      <option  selected="true" disabled="disabled">Personas</option>
                       {this.state.personas.map(per => (
                         <option value={per.idpersona}>
                           {per.nombre} {per.apellido} - {per.numerodoc}

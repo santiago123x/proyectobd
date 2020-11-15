@@ -38,9 +38,13 @@ export default class CrearDoctor extends React.Component {
             emailAD: [],
             emailBAD: [],
             telAD: [],
+            telBAD: [],
             uniAD: null,
             epsAD: null,
             idPerDoc: null,
+            //Hay Email y Tell
+            hayEmail: false,
+            hayTel: false,
             //Barrios y TiposID
             barrios: [],
             tiposDOC: [],
@@ -192,7 +196,9 @@ export default class CrearDoctor extends React.Component {
 
     //Actualizar Doctor
 
-    async actuDoc(){
+    async actuDoc() {
+
+
         const id = document.getElementById('docSelec').value;
         var nombre = this.state.nombreAD;
         var apellido = this.state.apellidoAD;
@@ -200,45 +206,146 @@ export default class CrearDoctor extends React.Component {
         var numerodoc = this.state.idenAD;
         var barrio = this.state.barrioAD;
         var fechanaci = this.state.fechaAD;
-        var email = this.state.emailAD;
-        var tel = this.state.telAD;
         var iduniversidad = this.state.uniAD;
         var identidadsalud = this.state.epsAD;
         var idpersona = this.state.idPerDoc;
-        
+
         const body = { nombre, apellido, tipodoc, numerodoc, barrio, fechanaci }
 
+
         await fetch(`http://localhost:5000/persona/${idpersona}`,
-        {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(body)
-        })
+            {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(body)
+            })
 
         const bodyD = { identidadsalud, iduniversidad }
 
+
         await fetch(`http://localhost:5000/doctor/${id}`,
-        {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(bodyD)
-        })
-        /*
-        for(var i=0;i<this.state.emailAD.length;i++){
-            if(!false){
-                await fetch(`http://localhost:5000/`)
+            {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(bodyD)
+            })
+
+
+
+        //Email inser
+
+        for (var i = 0; i < this.state.emailAD.length; i++) {
+            await this.hayEmail(idpersona, this.state.emailAD[i])
+            if (!this.state.hayEmail) {
+
+                var email = this.state.emailAD[i]
+                const body = { email, idpersona }
+
+                await fetch(`http://localhost:5000/email`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(body)
+                });
             }
         }
-        for(var i=0;i<this.state.emailBAD.length;i++){
-            if(true){
-                await fetch(`http://localhost:5000/`)
-            } 
-        }*/
-        
+
+        //Email Delet
+
+        for (var i = 0; i < this.state.emailBAD.length; i++) {
+            await this.hayEmail(idpersona, this.state.emailAD[i])
+            if (this.state.hayEmail) {
+
+                var email = this.state.emailBAD[i]
+
+                await fetch(`http://localhost:5000/emaildel/${idpersona}/${email}`,
+                    {
+                        method: "DELETE",
+                        headers: { "Content-Type": "application/json" },
+
+                    });
+            }
+        }
+
+        //Tel Inser
+
+        for (var i = 0; i < this.state.telAD.length; i++) {
+            await this.hayTel(idpersona, this.state.telAD[i])
+            if (!this.state.hayTel) {
+
+                var telefono = this.state.telAD[i]
+                const body = { telefono, idpersona }
+
+                await fetch(`http://localhost:5000/telefono`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(body)
+                });
+            }
+        }
+
+        //Tel Delete
+
+        for (var i = 0; i < this.state.telBAD.length; i++) {
+            await this.hayTel(idpersona, this.state.telBAD[i])
+            if (this.state.hayTel) {
+
+                var telefono = this.state.telBAD[i]
+
+                await fetch(`http://localhost:5000/teldel/${idpersona}/${telefono}`,
+                    {
+                        method: "DELETE",
+                        headers: { "Content-Type": "application/json" },
+
+                    });
+            }
+        }
+
+        await Swal.fire({
+            icon: 'success',
+            title: `Se ha Actualizado el Doctor ${nombre} ${apellido}`,
+            showConfirmButton: false,
+            timer: 1500
+        })
+        this.cancelarActuD();
+        window.location.reload();
 
 
     }
 
+    // Hay Email y Tel
+
+    async hayEmail(idp, email) {
+
+        await fetch(`http://localhost:5000/emailhay/${idp}/${email}`)
+            .then(response => response.json())
+            .then(result => {
+                if (result.length === 0) {
+                    this.setState({
+                        hayEmail: false
+                    });
+                } else {
+                    this.setState({
+                        hayEmail: true
+                    });
+                }
+            });
+    }
+
+    async hayTel(idp, tel) {
+        await fetch(`http://localhost:5000/telhay/${idp}/${tel}`)
+            .then(response => response.json())
+            .then(result => {
+                if (result.length === 0) {
+                    this.setState({
+                        hayTel: false
+                    });
+                } else {
+                    this.setState({
+                        hayTel: true
+                    });
+                }
+            });
+    }
 
     //Cargar Datos ActuDoc
 
@@ -257,33 +364,35 @@ export default class CrearDoctor extends React.Component {
                     barrioAD: result.id_barrio,
                     uniAD: result.iduniversidad,
                     epsAD: result.ideps,
-                    fechaAD: result.fechanaci.substr(0,10),
+                    fechaAD: result.fechanaci.substr(0, 10),
                     idPerDoc: result.idpersona,
 
                 });
-                console.log(this.state.fechaAD)
+
 
             });
 
         await fetch(`http://localhost:5000/email/${this.state.idPerDoc}`)
             .then(response => response.json())
             .then((result) => {
-                console.log(result)
-                for(var i=0;i<result.length;i++){
+
+                for (var i = 0; i < result.length; i++) {
+
                     this.setState({
-                        emailAD: [result[i].email]
+                        emailAD: [...this.state.emailAD, result[i].email]
                     })
                 }
             });
 
-        
-            await fetch(`http://localhost:5000/telefono/${this.state.idPerDoc}`)
+
+
+        await fetch(`http://localhost:5000/telefono/${this.state.idPerDoc}`)
             .then(response => response.json())
             .then((result) => {
-                console.log(result)
-                for(var i=0;i<result.length;i++){
+
+                for (var i = 0; i < result.length; i++) {
                     this.setState({
-                        telAD: [result[i].telefono]
+                        telAD: [...this.state.telAD, result[i].telefono]
                     })
                 }
             });
@@ -357,7 +466,7 @@ export default class CrearDoctor extends React.Component {
         var corritos = []
         corritos.push(valor)
         this.setState({
-            emailBAD : corritos,
+            emailBAD: [...this.state.emailBAD, corritos],
             emailAD: this.state.emailAD.filter(mail => mail !== valor)
         });
     }
@@ -417,8 +526,10 @@ export default class CrearDoctor extends React.Component {
 
     borrarTelAD() {
         var valor = document.getElementById('telAD').value;
-
+        var corritos = []
+        corritos.push(valor)
         this.setState({
+            telBAD: [...this.state.telBAD, corritos],
             telAD: this.state.telAD.filter(tele => tele !== valor)
         });
     }
@@ -480,6 +591,63 @@ export default class CrearDoctor extends React.Component {
         }
     }
 
+    // Valida Actu campos
+
+    superValidacionActuDoc() {
+        const nom = document.getElementById('nombreAD').value.trim();
+        const apell = document.getElementById('apellidoAD').value.trim();
+        const tipod = document.getElementById('tipoD_AD').selectedIndex;
+        const doc = document.getElementById('idenAD').value.trim();
+        const barr = document.getElementById('barrioAD').selectedIndex;
+        const fecha = document.getElementById('fechaAD').value;
+        const uni = document.getElementById('uniAD').selectedIndex;
+        const eps = document.getElementById('epsAD').selectedIndex;
+        var ft = new Date(fecha)
+        ft.setDate(ft.getDate() + 1);
+        if (nom !== "" && nom.length <= 20) {
+            document.getElementById('snombreAD').style.display = 'none';
+            if (apell !== "" && apell.length <= 30) {
+                document.getElementById('sapellidoAD').style.display = 'none';
+                if (tipod !== 0) {
+                    document.getElementById('stipoD_AD').style.display = 'none';
+                    if (doc !== "" && doc.length <= 30) {
+                        document.getElementById('sidenAD').style.display = 'none';
+                        if (barr !== 0) {
+                            document.getElementById('sbarrioAD').style.display = 'none';
+                            if (ft <= new Date()) {
+                                document.getElementById('sfechaAD').style.display = 'none';
+                                if (uni !== 0) {
+                                    document.getElementById('suniAD').style.display = 'none';
+                                    if (eps !== 0) {
+                                        document.getElementById('sepsAD').style.display = 'none';
+                                        this.actuDoc();
+                                    } else {
+                                        document.getElementById('sepsAD').style.display = 'contents';
+                                    }
+                                } else {
+                                    document.getElementById('suniAD').style.display = 'contents';
+                                }
+                            } else {
+                                document.getElementById('sfechaAD').style.display = 'contents';
+                            }
+
+                        } else {
+                            document.getElementById('sbarrioAD').style.display = 'contents';
+                        }
+                    } else {
+                        document.getElementById('sidenAD').style.display = 'contents';
+                    }
+                } else {
+                    document.getElementById('stipoD_AD').style.display = 'contents';
+                }
+            } else {
+                document.getElementById('sapellidoAD').style.display = 'contents';
+            }
+        } else {
+            document.getElementById('snombreAD').style.display = 'contents';
+        }
+    }
+
     modalPaciente() {
 
         this.setState({
@@ -513,6 +681,7 @@ export default class CrearDoctor extends React.Component {
             epsAD: null,
             idPerDoc: null,
             emailBAD: [],
+            hayEmail: false,
         })
     }
 
@@ -708,7 +877,7 @@ export default class CrearDoctor extends React.Component {
                                         onChange={this.handleChange}
 
                                     >
-                                        <option>Universidad</option>
+                                        <option selected="true" disabled="disabled">Universidad</option>
                                         {this.state.universidades.map(uni => (
                                             <option value={uni.iduniversidad}>
                                                 {uni.nombreuni}
@@ -731,7 +900,7 @@ export default class CrearDoctor extends React.Component {
                                         onChange={this.handleChange}
                                         selectedIndex={this.state.eps}
                                     >
-                                        <option>Eps</option>
+                                        <option selected="true" disabled="disabled">Eps</option>
                                         {this.state.epss.map(ep => (
                                             <option value={ep.ideps}>
                                                 {ep.nombreeps}
@@ -772,7 +941,7 @@ export default class CrearDoctor extends React.Component {
                                             value={this.state.nombreAD}
                                             onChange={this.handleChange} />
                                     </FormGroup>
-                                    <span className="span" id="snombre">Debe Ingresar un Nombre</span>
+                                    <span className="span" id="snombreAD">Debe Ingresar un Nombre</span>
                                 </div>
                                 <div className="mb-3">
                                     <FormGroup  >
@@ -786,7 +955,7 @@ export default class CrearDoctor extends React.Component {
                                             value={this.state.apellidoAD}
                                             onChange={this.handleChange} />
                                     </FormGroup>
-                                    <span className="span" id="sapellido">Debe Ingresar un Apellido</span>
+                                    <span className="span" id="sapellidoAD">Debe Ingresar un Apellido</span>
                                 </div>
                                 <div className="mb-3">
                                     <FormGroup  >
@@ -806,7 +975,7 @@ export default class CrearDoctor extends React.Component {
                                             ))}
                                         </Input>
                                     </FormGroup>
-                                    <span className="span" id="stipodoc">Seleccione un Tipo de Documento valido</span>
+                                    <span className="span" id="stipoD_AD">Seleccione un Tipo de Documento valido</span>
                                 </div>
                                 <div className="mb-3">
                                     <FormGroup  >
@@ -820,7 +989,7 @@ export default class CrearDoctor extends React.Component {
                                             value={this.state.idenAD}
                                             onChange={this.handleChange} />
                                     </FormGroup>
-                                    <span className="span" id="sidentificacion">Debe Ingresar una Identificación Valida</span>
+                                    <span className="span" id="sidenAD">Debe Ingresar una Identificación Valida</span>
                                 </div>
                                 <div className="mb-3">
                                     <FormGroup  >
@@ -840,7 +1009,7 @@ export default class CrearDoctor extends React.Component {
                                             ))}
                                         </Input>
                                     </FormGroup>
-                                    <span className="span" id="sbarrio">Seleccione un Barrio</span>
+                                    <span className="span" id="sbarrioAD">Seleccione un Barrio</span>
                                 </div>
 
                                 <div className="mb-3" >
@@ -857,54 +1026,60 @@ export default class CrearDoctor extends React.Component {
                                                 value={this.state.fechaN}
                                                 onChange={this.handleChange}
                                             /> </div></FormGroup>
-                                    <span className="span" id="sfechaN">Debe Ingresar una Fecha Valida</span>
+                                    <span className="span" id="sfechaAD">Debe Ingresar una Fecha Valida</span>
                                 </div>
-                                <FormGroup className=" mb-3   mt-3 ">
+                                <div>
+                                    <FormGroup className=" mb-3   mt-3 ">
 
-                                    <InputGroup>
+                                        <InputGroup>
 
-                                        <Input id="uniAD"
+                                            <Input id="uniAD"
 
-                                            className="form-control"
-                                            name="uniAD"
-                                            type="select"
-                                            bsSize="md"
-                                            onChange={this.handleChange}
+                                                className="form-control"
+                                                name="uniAD"
+                                                type="select"
+                                                bsSize="md"
+                                                onChange={this.handleChange}
 
-                                        >
-                                            <option selected="true" disabled="disabled">Universidad</option>
-                                            {this.state.universidades.map(uni => (
-                                                <option value={uni.iduniversidad}>
-                                                    {uni.nombreuni}
-                                                </option>
-                                            ))}
+                                            >
+                                                <option selected="true" disabled="disabled">Universidad</option>
+                                                {this.state.universidades.map(uni => (
+                                                    <option value={uni.iduniversidad}>
+                                                        {uni.nombreuni}
+                                                    </option>
+                                                ))}
 
-                                        </Input>
-                                    </InputGroup>
-                                </FormGroup>
-                                <FormGroup className=" mb-3  mt-3 ">
+                                            </Input>
+                                        </InputGroup>
+                                    </FormGroup>
+                                    <span className="span" id="suniAD">Seleccione una Universidad</span>
+                                </div>
+                                <div>
+                                    <FormGroup className=" mb-3  mt-3 ">
 
-                                    <InputGroup>
+                                        <InputGroup>
 
-                                        <Input id="epsAD"
+                                            <Input id="epsAD"
 
-                                            className="form-control"
-                                            name="epsAD"
-                                            type="select"
-                                            bsSize="md"
-                                            onChange={this.handleChange}
-                                            selectedIndex={this.state.epsAD}
-                                        >
-                                            <option selected="true" disabled="disabled">Eps</option>
-                                            {this.state.epss.map(ep => (
-                                                <option value={ep.ideps}>
-                                                    {ep.nombreeps}
-                                                </option>
-                                            ))}
+                                                className="form-control"
+                                                name="epsAD"
+                                                type="select"
+                                                bsSize="md"
+                                                onChange={this.handleChange}
+                                                selectedIndex={this.state.epsAD}
+                                            >
+                                                <option selected="true" disabled="disabled">Eps</option>
+                                                {this.state.epss.map(ep => (
+                                                    <option value={ep.ideps}>
+                                                        {ep.nombreeps}
+                                                    </option>
+                                                ))}
 
-                                        </Input>
-                                    </InputGroup>
-                                </FormGroup>
+                                            </Input>
+                                        </InputGroup>
+                                    </FormGroup>
+                                    <span className="span" id="sepsAD">Seleccione una Entidad de Salud</span>
+                                </div>
                                 <div className="mb-3" >
                                     <FormGroup >
                                         <InputGroup>
@@ -926,8 +1101,8 @@ export default class CrearDoctor extends React.Component {
                                                 <option>Email</option>
                                                 {this.state.emailAD.map(mail => (
                                                     <option >
-                                                    {mail}
-                                                </option>
+                                                        {mail}
+                                                    </option>
                                                 ))}
                                             </Input>
                                         </InputGroup>
@@ -966,7 +1141,7 @@ export default class CrearDoctor extends React.Component {
                         </Form>
                     </ModalBody>
                     <ModalFooter >
-                        <Button color="success" >Actualizar</Button>
+                        <Button color="success" onClick={() => this.superValidacionActuDoc()} >Actualizar</Button>
                         <Button color="danger" onClick={() => this.cancelarActuD()}>Cancelar</Button>
                     </ModalFooter>
                 </Modal>
