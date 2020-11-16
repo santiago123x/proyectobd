@@ -4,7 +4,8 @@ import "../Login/syle.scss";
 import CrearDoctor from './crearDoctor';
 import '../InterfazDoc/style.scss';
 import InformesAdmin from './informesAdmin';
-import {Button} from 'reactstrap';
+import MapaAdmin from './mapaAdmin';
+import { Button } from 'reactstrap';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import 'sweetalert2/src/sweetalert2.scss';
 
@@ -49,7 +50,7 @@ export default class NavAdmin extends React.Component {
 
     }
 
-    logOut(){
+    logOut() {
         Swal.fire({
             title: 'Esta Seguro ?',
             text: "Desea Cerrar Sesión ?",
@@ -58,12 +59,12 @@ export default class NavAdmin extends React.Component {
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Si !'
-          }).then((result) => {
+        }).then((result) => {
             if (result.isConfirmed) {
-                this.setState({redirect:'/'})
+                this.setState({ redirect: '/' })
             }
-          })
-        
+        })
+
     }
 
 
@@ -71,13 +72,13 @@ export default class NavAdmin extends React.Component {
         const { match } = this.props;
         this.state.match = match.params.id;
 
-        if (this.state.redirect)  {
-            
-            return <Redirect  to={
-               this.state.redirect
+        if (this.state.redirect) {
+
+            return <Redirect to={
+                this.state.redirect
             } />
-            
-          }
+
+        }
 
         return (
             <BrowserRouter >
@@ -91,6 +92,9 @@ export default class NavAdmin extends React.Component {
                         <div class="collapse navbar-collapse" id="navbarNav">
                             <ul class="navbar-nav ml-auto mr-5">
                                 <li className="nav-item">
+                                    <Link className="btn font-weight-bold" to="/NavAdmin/MapaAdmin" activeClassName="active"> Mapa <i class="fa fa-info-circle" aria-hidden="true"></i></Link>
+                                </li>
+                                <li className="nav-item">
                                     <Link className="btn font-weight-bold" to="/NavAdmin/InformesAdmin" activeClassName="active"> Informes <i class="fa fa-info-circle" aria-hidden="true"></i></Link>
                                 </li>
                                 <li >
@@ -101,12 +105,15 @@ export default class NavAdmin extends React.Component {
                                 </li>
 
 
+
                             </ul>
                         </div>
                     </nav>
 
                     <Switch>
-
+                        <Route path="/NavAdmin/MapaAdmin">
+                            <MapaAdmin />
+                        </Route>
                         <Route path="/NavAdmin/InformesAdmin">
                             <InformesAdmin />
                         </Route>
