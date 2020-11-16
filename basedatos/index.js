@@ -559,6 +559,36 @@ router.get('/medicamentos/',async (req,res)=>{
     }
 });
 
+
+
+
+//------------------------ Inventario ----------------------
+
+
+router.get('/inventario/',async (req,res)=>{
+    try{
+        const arreglo = await pool.query(`SELECT * FROM inventario ORDER BY idmedicamento`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("F invnetario");
+    }
+});
+
+
+router.get('/inventario2/',async (req,res)=>{
+    try{
+        const arreglo = await pool.query(`SELECT inv.idmedicamento, medicamento, lab1, lab2, lab3, lab4 
+        FROM inventario inv join medicamentos med on inv.idmedicamento = med.idmedicamento`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("F invnetario");
+    }
+});
+
+
+
+
+
 // ------------------------- Conexion --------------------
 
 module.exports = router;
