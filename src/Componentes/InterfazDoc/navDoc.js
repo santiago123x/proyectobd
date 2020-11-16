@@ -99,7 +99,7 @@ export default class NavDoc extends React.Component {
                         <div class="collapse navbar-collapse" id="navbarNav">
                             <ul class="navbar-nav ml-auto mr-5">
                                 <li className="nav-item">
-                                    <Link className="btn font-weight-bold" to="/NavDoc/MapaDoc" activeClassName="active"> Mapa <i class="fa fa-info-circle" aria-hidden="true"></i></Link>
+                                    <Link className="btn font-weight-bold" to="/NavDoc/MapaDoc" activeClassName="active"> Mapa <i class="fa fa-map-marker" aria-hidden="true"></i></Link>
                                 </li>
                                 <li className="nav-item">
                                     <Link className="btn font-weight-bold" to="/NavDoc/InformesDoc" activeClassName="active"> Informes <i class="fa fa-info-circle" aria-hidden="true"></i></Link>
