@@ -1,5 +1,5 @@
 import React from 'react';
-import './InterfazDoc/style.scss';
+import '../InterfazDoc/style.scss';
 import {Map,TileLayer} from 'react-leaflet';
 import Markers from './Markers.js'
 import {places} from './data.json'

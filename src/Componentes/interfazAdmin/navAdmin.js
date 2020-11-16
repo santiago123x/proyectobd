@@ -92,10 +92,10 @@ export default class NavAdmin extends React.Component {
                         <div class="collapse navbar-collapse" id="navbarNav">
                             <ul class="navbar-nav ml-auto mr-5">
                                 <li className="nav-item">
-                                    <Link className="btn font-weight-bold" to="/NavAdmin/MapaAdmin" activeClassName="active"> Mapa <i class="fa fa-map-marker" aria-hidden="true"></i></Link>
+                                    <Link className="btn font-weight-bold" to={`/NavAdmin/${match.params.id}/MapaAdmin`} activeClassName="active"> Mapa <i class="fa fa-map-marker" aria-hidden="true"></i></Link>
                                 </li>
                                 <li className="nav-item">
-                                    <Link className="btn font-weight-bold" to="/NavAdmin/InformesAdmin" activeClassName="active"> Informes <i class="fa fa-info-circle" aria-hidden="true"></i></Link>
+                                    <Link className="btn font-weight-bold" to={`/NavAdmin/${match.params.id}/InformesAdmin`} activeClassName="active"> Informes <i class="fa fa-info-circle" aria-hidden="true"></i></Link>
                                 </li>
                                 <li >
                                     <Link className="btn font-weight-bold" to={`/NavAdmin/${match.params.id}`} activeClassName="active"> Crear Doctor o Paciente <i class="fa fa-hospital-o" aria-hidden="true"></i></Link>
@@ -111,10 +111,10 @@ export default class NavAdmin extends React.Component {
                     </nav>
 
                     <Switch>
-                        <Route path="/NavAdmin/MapaAdmin">
+                        <Route path="/NavAdmin/:id/MapaAdmin">
                             <MapaAdmin />
                         </Route>
-                        <Route path="/NavAdmin/InformesAdmin">
+                        <Route path="/NavAdmin/:id/InformesAdmin">
                             <InformesAdmin />
                         </Route>
                         <Route exact path="/NavAdmin/:id">

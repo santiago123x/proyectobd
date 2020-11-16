@@ -1,5 +1,5 @@
 import React from 'react';
-import Mapa from '../Mapa';
+import Mapa from '../Mapa/Mapa';
 
 
 export default class MapaDoctor extends React.Component {
