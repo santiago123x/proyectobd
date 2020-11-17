@@ -587,6 +587,17 @@ router.get('/inventario2/',async (req,res)=>{
 
 
 
+router.put('/inventario/:idmedicamento',async (req,res)=>{
+    try{
+        const { idmedicamento } = req.params;
+        const { lab, des } = req.body;
+     await pool.query(`UPDATE inventario set lab${lab} = ${des} WHERE idmedicamento = ${idmedicamento}`);
+   res.json('ACTUALIZADO Inventario');
+    }catch(e){
+     console.log(e);
+    }
+ });
+
 
 
 // ------------------------- Conexion --------------------
