@@ -140,6 +140,15 @@ router.get('/doctorinfo/:iddoctor', async(req,res)=>{
     } 
 });
 
+// ------------  Doctor(Trae Su ID) ------------
+router.get('/id_doctor/',async (req,res)=>{
+    try{
+        const arreglo = await pool.query(`SELECT iddoctor FROM doctor ORDER BY iddoctor DESC`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("David si está :D");
+    }
+});
 
 
 // ------------ Usuario Doctor(Trae Su Persona) ------------
@@ -565,14 +574,7 @@ router.get('/medicamentos/',async (req,res)=>{
 //------------------------ Inventario ----------------------
 
 
-router.get('/inventario/',async (req,res)=>{
-    try{
-        const arreglo = await pool.query(`SELECT * FROM inventario ORDER BY idmedicamento`);
-        res.send(arreglo.rows);
-    }catch(e){
-        console.log("F invnetario");
-    }
-});
+
 
 
 router.get('/inventario2/',async (req,res)=>{
@@ -597,6 +599,19 @@ router.put('/inventario/:idmedicamento',async (req,res)=>{
      console.log(e);
     }
  });
+
+// ----------------- Hora Fecha Registro Doctor ----------------
+
+router.post('/registrodoc/', async (req,res)=>{
+    try{
+        const { idusu, iddoc, fecha, hora } = req.body;
+        newTodo = await pool.query(
+        `INSERT INTO regitrodoctor (idusuario, iddoctor, fecha, hora) VALUES(${idusu},${iddoc},'${fecha}','${hora}')`);
+        res.json("INSERTADO 7W7");
+    }catch(e){
+        console.log(e);
+    }
+});
 
 
 

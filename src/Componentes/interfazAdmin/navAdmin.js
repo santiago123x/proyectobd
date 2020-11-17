@@ -118,7 +118,7 @@ export default class NavAdmin extends React.Component {
                             <InformesAdmin />
                         </Route>
                         <Route exact path="/NavAdmin/:id">
-                            <CrearDoctor id={this.state.doc} />
+                            <CrearDoctor id={this.state.doc} idusu={this.state.idusuario}/>
                         </Route>
 
 

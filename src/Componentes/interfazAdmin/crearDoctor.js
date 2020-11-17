@@ -5,11 +5,13 @@ import Swal from 'sweetalert2/dist/sweetalert2.js';
 import 'sweetalert2/src/sweetalert2.scss';
 
 import { CrearPersona } from '../Login/index';
+import { get } from "react-hook-form";
 
 export default class CrearDoctor extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            match: props.idusu,
             admin: [],
             personas: [],
             persona: null,
@@ -167,6 +169,12 @@ export default class CrearDoctor extends React.Component {
             var iduniversidad = this.state.universidad;
             const nombre = this.state.personas[document.getElementById('persona').selectedIndex - 1].nombre;
             const apellido = this.state.personas[document.getElementById('persona').selectedIndex - 1].apellido;
+            var hoy = new Date();
+            var fecha = hoy.getFullYear() + '-'+ (hoy.getMonth()+1)+ '-' + hoy.getDate();
+            var hora = hoy.getHours() + ':' + hoy.getMinutes() + ':' + hoy.getSeconds();
+            var idusu = this.state.match;
+            var iddoc = null;
+
             const body = { idpersona, identidadsalud, iduniversidad }
 
 
@@ -177,6 +185,23 @@ export default class CrearDoctor extends React.Component {
                     body: JSON.stringify(body)
                 }
             );
+
+            await fetch(`http://localhost:5000/id_doctor/`)
+            .then(response => response.json())
+            .then(result => {
+                    iddoc = result[0].iddoctor;
+                })
+            
+            
+            const bodyR = {idusu,iddoc,fecha,hora}
+
+            
+            await fetch(`http://localhost:5000/registrodoc/`,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(bodyR)
+            });
             await Swal.fire({
                 icon: 'success',
                 title: `Se ha agregado el Doctor ${nombre} ${apellido}`,
