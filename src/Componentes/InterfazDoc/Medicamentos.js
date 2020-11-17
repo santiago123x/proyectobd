@@ -270,7 +270,7 @@ export default class Medicamentos extends React.Component {
       }
 
       const body = { lab, des }
-      
+
       await fetch(`http://localhost:5000/inventario/${idmedicamento}`,
         {
           method: "PUT",
@@ -286,8 +286,24 @@ export default class Medicamentos extends React.Component {
         timer: 2000
       })
 
-      window.location.reload();
+      //window.location.reload();
+      this.setear();
+      this.componentDidMount();
+      
     }
+  }
+
+  setear(){
+
+    document.getElementById('op').selected ='true';
+    document.getElementById('opo').selected ='true';
+    document.getElementById('cantidad').value =null;
+
+    this.setState({
+      cantidad: null,
+      descontar: null,
+
+    })
   }
 
   render() {
@@ -313,7 +329,7 @@ export default class Medicamentos extends React.Component {
                       name='medi'
 
                     >
-                      <option selected="true" disabled="disabled">Medicamentos</option>
+                      <option id='op' selected="true" disabled="disabled">Medicamentos</option>
                       <option >{this.state.med1}</option>
                       <option >{this.state.med2}</option>
                       <option >{this.state.med3}</option>
@@ -326,7 +342,7 @@ export default class Medicamentos extends React.Component {
                       name='labo'
                       type='select'
                     >
-                      <option selected="true" disabled="disabled">Laboratorios</option>
+                      <option id= 'opo'selected="true" disabled="disabled">Laboratorios</option>
                       <option >Laboratorio #1</option>
                       <option >Laboratorio #2</option>
                       <option >Laboratorio #3</option>
