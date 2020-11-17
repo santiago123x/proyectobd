@@ -613,7 +613,54 @@ router.post('/registrodoc/', async (req,res)=>{
     }
 });
 
+// ---------------------- Direccion -----------------------
 
+router.post('/direccion/', async (req,res)=>{
+    try{
+        const { idviaprincipal, idpersona, numeroviap, numerovias, numerocasa, idtipoinmueble, idbloqueinterior, numeroinmueble, numerobloque } = req.body;
+        newTodo = await pool.query(
+        `INSERT INTO direccion (idviaprincipal, idpersona, numeroviap, numerovias, numerocasa, idtipoinmueble,
+            idbloqueinterior, numeroinmueble, numerobloque) 
+        VALUES(${idviaprincipal},${idpersona},'${numeroviap}','${numerovias}','${numerocasa}',${idtipoinmueble},${idbloqueinterior},'${numeroinmueble}','${numerobloque}')`);
+        res.json("INSERTADO 7W7");
+    }catch(e){
+        console.log(e);
+    }
+});
+
+
+// ---------------------- Via Principal -------------------
+
+router.get('/viap/',async (req,res)=>{
+    try{
+        const arreglo = await pool.query(`select * from viaprincipal order by nombrevia`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("F invnetario");
+    }
+});
+
+// ---------------------- Inmueble ----------------------------
+
+router.get('/inmueble/',async (req,res)=>{
+    try{
+        const arreglo = await pool.query(`select * from tipoinmueble order by nombreinmueble`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("F invnetario");
+    }
+});
+
+// ---------------------- Bloque -------------------------------
+
+router.get('/bloque/',async (req,res)=>{
+    try{
+        const arreglo = await pool.query(`select * from bloqueointerior order by nombrebloqueoint`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("F invnetario");
+    }
+});
 
 // ------------------------- Conexion --------------------
 
