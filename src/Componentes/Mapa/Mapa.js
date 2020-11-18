@@ -2,17 +2,33 @@ import React from 'react';
 import '../InterfazDoc/style.scss';
 import {Map,TileLayer} from 'react-leaflet';
 import Markers from './Markers.js'
-import {places} from './data.json'
+
 
 
 export default class Mapa extends React.Component {
     constructor(props) {
         super(props);
-
+        this.state = {
+            geoloc: []
+        }; 
+               
     }
 
+    async componentDidMount() {
 
-
+        await fetch(`http://localhost:5000/geolocalizacion/`)
+          .then(res => res.json())
+          .then(
+            (result) => {
+              this.setState({
+                geoloc: result         
+              });
+            }            
+          )
+    }
+    
+     
+      
     render() {
         return (
             <div className="total">
@@ -24,13 +40,15 @@ export default class Mapa extends React.Component {
                     <Map center={{lat: '3.42158',lng: '-76.5205'}} zoom={13}>
                         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'/>
 
-                        <Markers places={places}/>
+                        <Markers places={this.state.geoloc}/>
                     </Map>
                     </div>
+                    
                 </div>
                 
             </div>
             
         );
     }
+    
 }

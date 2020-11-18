@@ -662,6 +662,22 @@ router.get('/bloque/',async (req,res)=>{
     }
 });
 
+//---------------------------Geolocalizacion---------------------
+
+router.get('/geolocalizacion/',async (req,res)=>{
+    try{
+        const arreglo = await pool.query(`SELECT geo.longitud, geo.latitud, per.nombre , per.apellido, via.nombrevia, dir.numeroviap, dir.numerovias,dir.numerocasa                                                                                                                                                                                                                     
+        FROM geolocalizacion geo
+        join paciente pa on geo.idpaciente = pa.idpaciente
+        join persona per on pa.idpersona = per.idpersona
+        join direccion dir on per.idpersona = dir.idpersona
+        join viaprincipal via on dir.idviaprincipal = via.idviaprincipal`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("no hay Geolocalizaciones");
+    }
+});                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+
 // ------------------------- Conexion --------------------
 
 module.exports = router;
