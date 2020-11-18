@@ -498,7 +498,7 @@ export class CrearPersona extends React.Component {
                         <InputGroupAddon addonType="prepend">
                           <Input id="viaP"
 
-                            className="form-control"
+                            className="form-control bg-primary  text-white font-weight-bold"
                             name="viaP"
                             type="select"
                             bsSize="md"
@@ -551,7 +551,7 @@ export class CrearPersona extends React.Component {
                           id="tipoInm"
                           type="select"
 
-                          className="form-control"
+                          className="form-control bg-primary  text-white font-weight-bold"
                           name="tipoInm"
                           bsSize="md"
                           selectedIndex={this.state.tipoInm}
@@ -586,7 +586,7 @@ export class CrearPersona extends React.Component {
                           id="bloqueInt"
                           type="select"
 
-                          className="form-control"
+                          className="form-control bg-primary  text-white font-weight-bold"
                           name="bloqueInt"
                           bsSize="md"
                           selectedIndex={this.state.bloqueInt}
