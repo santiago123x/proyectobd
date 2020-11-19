@@ -628,6 +628,29 @@ router.post('/direccion/', async (req,res)=>{
     }
 });
 
+router.get('/direccion/:idpersona', async (req,res)=>{
+    try{
+        const { idpersona } = req.params;
+        const arreglo = await pool.query(`select * from direccion where idpersona = ${idpersona}`);
+        res.send(arreglo.rows[0]);
+    }catch(e){
+        console.log("F invnetario");
+    }
+});
+
+router.put('/direccion/:iddireccion', async (req,res)=>{
+    try{
+        const { iddireccion } = req.params;
+        const { idviaprincipal, numeroviap, numerovias, numerocasa, idtipoinmueble, idbloqueinterior, numeroinmueble, numerobloque } = req.body;
+     await pool.query(`UPDATE direccion  SET idviaprincipal = ${idviaprincipal}, numeroviap  = '${numeroviap}', numerovias = '${numerovias}',
+     numerocasa = '${numerocasa}', idtipoinmueble = ${idtipoinmueble}, idbloqueinterior = ${idbloqueinterior}, numeroinmueble= '${numeroinmueble}', numerobloque = '${numerobloque}'
+    WHERE iddireccion = ${iddireccion}`);
+    }catch(e){
+     console.log(e);
+    }
+    
+});
+
 
 // ---------------------- Via Principal -------------------
 

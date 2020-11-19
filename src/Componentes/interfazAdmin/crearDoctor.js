@@ -5,7 +5,7 @@ import Swal from 'sweetalert2/dist/sweetalert2.js';
 import 'sweetalert2/src/sweetalert2.scss';
 
 import { CrearPersona } from '../Login/index';
-import { get } from "react-hook-form";
+
 
 export default class CrearDoctor extends React.Component {
     constructor(props) {
@@ -44,12 +44,27 @@ export default class CrearDoctor extends React.Component {
             uniAD: null,
             epsAD: null,
             idPerDoc: null,
+            //Direccion Doc
+            viaPD: null,
+            numViaPD: '',
+            numViaSD: '',
+            numCasaD: '',
+            tipoInmD: null,
+            comTipoInmD: '',
+            bloqueIntD: null,
+            comBloqueIntD: '',
+            idDirecDoc: null,
             //Hay Email y Tell
             hayEmail: false,
             hayTel: false,
             //Barrios y TiposID
             barrios: [],
             tiposDOC: [],
+
+            // Selects Direccion
+            selViaP: [],
+            selTipoInm: [],
+            selBloqueInt: [],
             //Info Modal Pac
 
             //
@@ -137,6 +152,36 @@ export default class CrearDoctor extends React.Component {
                 }
             )
 
+        await fetch('http://localhost:5000/viap/')
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    this.setState({
+                        selViaP: result
+                    });
+                }
+            )
+
+        await fetch('http://localhost:5000/inmueble/')
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    this.setState({
+                        selTipoInm: result
+                    });
+                }
+            )
+
+        await fetch('http://localhost:5000/bloque/')
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    this.setState({
+                        selBloqueInt: result
+                    });
+                }
+            )
+
     }
 
     // Crear Doctores y Pacientes
@@ -170,7 +215,7 @@ export default class CrearDoctor extends React.Component {
             const nombre = this.state.personas[document.getElementById('persona').selectedIndex - 1].nombre;
             const apellido = this.state.personas[document.getElementById('persona').selectedIndex - 1].apellido;
             var hoy = new Date();
-            var fecha = hoy.getFullYear() + '-'+ (hoy.getMonth()+1)+ '-' + hoy.getDate();
+            var fecha = hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '-' + hoy.getDate();
             var hora = hoy.getHours() + ':' + hoy.getMinutes() + ':' + hoy.getSeconds();
             var idusu = this.state.match;
             var iddoc = null;
@@ -187,21 +232,21 @@ export default class CrearDoctor extends React.Component {
             );
 
             await fetch(`http://localhost:5000/id_doctor/`)
-            .then(response => response.json())
-            .then(result => {
+                .then(response => response.json())
+                .then(result => {
                     iddoc = result[0].iddoctor;
                 })
-            
-            
-            const bodyR = {idusu,iddoc,fecha,hora}
 
-            
+
+            const bodyR = { idusu, iddoc, fecha, hora }
+
+
             await fetch(`http://localhost:5000/registrodoc/`,
-            {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(bodyR)
-            });
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(bodyR)
+                });
             await Swal.fire({
                 icon: 'success',
                 title: `Se ha agregado el Doctor ${nombre} ${apellido}`,
@@ -234,16 +279,27 @@ export default class CrearDoctor extends React.Component {
         var iduniversidad = this.state.uniAD;
         var identidadsalud = this.state.epsAD;
         var idpersona = this.state.idPerDoc;
+        // Direccion
+        var idviaprincipal = this.state.viaPD;
+        var numeroviap = this.state.numViaPD;
+        var numerovias = this.state.numViaSD;
+        var numerocasa = this.state.numCasaD;
+        var idtipoinmueble = this.state.tipoInmD;
+        var idbloqueinterior = this.state.bloqueIntD;
+        var numeroinmueble = this.state.comTipoInmD;
+        var numerobloque = this.state.comBloqueIntD;
+        var iddireccion = this.state.idDirecDoc;
 
+       
         const body = { nombre, apellido, tipodoc, numerodoc, barrio, fechanaci }
 
-
+        
         await fetch(`http://localhost:5000/persona/${idpersona}`,
             {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(body)
-            })
+            });
 
         const bodyD = { identidadsalud, iduniversidad }
 
@@ -253,7 +309,29 @@ export default class CrearDoctor extends React.Component {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(bodyD)
-            })
+            });
+
+        
+        // Direccion
+        if(idtipoinmueble === 'Tipo de Inmueble'){
+            idtipoinmueble = null;
+            
+        }
+        if(idbloqueinterior === 'Bloque o Interior'){
+            idbloqueinterior = null;
+            
+        }
+        
+        const bodyDirec = { idviaprincipal, numeroviap, numerovias, numerocasa, idtipoinmueble, idbloqueinterior, numeroinmueble, numerobloque }
+
+        
+          fetch(`http://localhost:5000/direccion/${iddireccion}`,
+        {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(bodyDirec)
+
+        });
 
 
 
@@ -329,8 +407,9 @@ export default class CrearDoctor extends React.Component {
             icon: 'success',
             title: `Se ha Actualizado el Doctor ${nombre} ${apellido}`,
             showConfirmButton: false,
-            timer: 1500
-        })
+            timer: 2000
+        });
+
         this.cancelarActuD();
         window.location.reload();
 
@@ -422,6 +501,25 @@ export default class CrearDoctor extends React.Component {
                 }
             });
 
+        await fetch(`http://localhost:5000/direccion/${this.state.idPerDoc}`)
+            .then(response => response.json())
+            .then((result) => {
+
+                this.setState({
+                    viaPD: result.idviaprincipal,
+                    numViaPD: result.numeroviap,
+                    numViaSD: result.numerovias,
+                    numCasaD: result.numerocasa,
+                    tipoInmD: result.idtipoinmueble,
+                    comTipoInmD: result.numeroinmueble,
+                    bloqueIntD: result.idbloqueinterior,
+                    comBloqueIntD: result.numerobloque,
+                    idDirecDoc: result.iddireccion,
+                });
+
+
+            });
+
     }
 
 
@@ -438,12 +536,12 @@ export default class CrearDoctor extends React.Component {
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Si, Borrar!'
-        }).then(async (result)  => {
+        }).then(async (result) => {
             if (result.isConfirmed) {
-                await fetch (`http://localhost:5000/doctor/${id}`, {
+                await fetch(`http://localhost:5000/doctor/${id}`, {
                     method: 'DELETE',
                     headers: { "Content-Type": "application/json" }
-                })      
+                })
                 await Swal.fire({
                     icon: 'success',
                     title: `Se ha Eliminado el Doctor`,
@@ -606,6 +704,14 @@ export default class CrearDoctor extends React.Component {
             document.getElementById('epsAD').value = this.state.epsAD;
             document.getElementById('uniAD').value = this.state.uniAD;
             document.getElementById('fechaAD').value = this.state.fechaAD;
+            document.getElementById('viaPD').value = this.state.viaPD;
+            if (this.state.tipoInmD !== null) {
+                document.getElementById('tipoInmD').value = this.state.tipoInmD;
+            }
+            if (this.state.bloqueIntD !== null) {
+                document.getElementById('bloqueIntD').value = this.state.bloqueIntD;
+            }
+
         }
         else if (index >= 0 && x === 'D') {
             this.borrarDoctor();
@@ -619,6 +725,33 @@ export default class CrearDoctor extends React.Component {
         }
     }
 
+    validaInmBlo() {
+        const tipoInm = document.getElementById('tipoInmD').selectedIndex;
+        const comTipoInm = document.getElementById('comTipoInmD').value;
+        const bloqueInt = document.getElementById('bloqueIntD').selectedIndex;
+        const comBloqueInt = document.getElementById('comBloqueIntD').value;
+
+        if (tipoInm === 0 && comTipoInm === '') {
+            if (bloqueInt === 0 && comBloqueInt === '') {
+                return true
+            }
+            else if (bloqueInt !== 0 && comBloqueInt !== '') {
+                return true
+            }
+        }
+        else if (tipoInm !== 0 && comTipoInm !== '') {
+            if (bloqueInt === 0 && comBloqueInt === '') {
+                return true
+            }
+            else if (bloqueInt !== 0 && comBloqueInt !== '') {
+                return true
+            }
+        } else {
+            return false
+        }
+
+    }
+
     // Valida Actu campos
 
     superValidacionActuDoc() {
@@ -630,6 +763,11 @@ export default class CrearDoctor extends React.Component {
         const fecha = document.getElementById('fechaAD').value;
         const uni = document.getElementById('uniAD').selectedIndex;
         const eps = document.getElementById('epsAD').selectedIndex;
+        const viaP = document.getElementById('viaPD').selectedIndex;
+        const numViaP = document.getElementById('numViaPD').value;
+        const numViaS = document.getElementById('numViaSD').value;
+        const numCasa = document.getElementById('numCasaD').value;
+
         var ft = new Date(fecha)
         ft.setDate(ft.getDate() + 1);
         if (nom !== "" && nom.length <= 20) {
@@ -648,7 +786,18 @@ export default class CrearDoctor extends React.Component {
                                     document.getElementById('suniAD').style.display = 'none';
                                     if (eps !== 0) {
                                         document.getElementById('sepsAD').style.display = 'none';
-                                        this.actuDoc();
+                                        if (viaP !== 0 && numViaP !== '' && numViaS !== '' && numCasa !== '') {
+                                            document.getElementById('sdireccion').style.display = 'none';
+                                            if (this.validaInmBlo()) {
+                                                document.getElementById('sinm').style.display = 'none';
+                                                this.actuDoc();
+                                            } else {
+                                                document.getElementById('sinm').style.display = 'contents';
+                                            }
+                                        } else {
+                                            document.getElementById('sdireccion').style.display = 'contents';
+                                        }
+
                                     } else {
                                         document.getElementById('sepsAD').style.display = 'contents';
                                     }
@@ -710,6 +859,16 @@ export default class CrearDoctor extends React.Component {
             idPerDoc: null,
             emailBAD: [],
             hayEmail: false,
+            viaPD: null,
+            numViaPD: '',
+            numViaSD: '',
+            numCasaD: '',
+            tipoInmD: null,
+            comTipoInmD: '',
+            bloqueIntD: null,
+            comBloqueIntD: '',
+            idDirecDoc: null,
+
         })
     }
 
@@ -1107,6 +1266,130 @@ export default class CrearDoctor extends React.Component {
                                         </InputGroup>
                                     </FormGroup>
                                     <span className="span" id="sepsAD">Seleccione una Entidad de Salud</span>
+                                </div>
+                                <div className="mb-3">
+                                    <FormGroup  >
+                                        <div className="mensajeD">
+                                            <p className="ocultoD">Dirección</p>
+                                            <InputGroup>
+                                                <InputGroupAddon addonType="prepend">
+                                                    <Input id="viaPD"
+
+                                                        className="form-control bg-primary  text-white font-weight-bold"
+                                                        name="viaPD"
+                                                        type="select"
+                                                        bsSize="md"
+                                                        selectedIndex={this.state.viaPD}
+                                                        onChange={this.handleChange}>
+                                                        <option selected="true" disabled="disabled">Via Principal</option>
+                                                        {this.state.selViaP.map(via => (
+                                                            <option value={via.idviaprincipal}>
+                                                                {via.nombrevia}
+                                                            </option>
+                                                        ))}
+                                                    </Input>
+                                                </InputGroupAddon>
+                                                <Input id="numViaPD"
+
+                                                    className="form-control"
+                                                    name="numViaPD"
+                                                    type="text"
+                                                    bsSize="md"
+                                                    value={this.state.numViaPD}
+                                                    onChange={this.handleChange} />
+                                                <h4 className='ml-1 mr-1 mt-1'> # </h4>
+                                                <Input id="numViaSD"
+
+                                                    className="form-control"
+                                                    name="numViaSD"
+                                                    type="text"
+                                                    bsSize="md"
+                                                    value={this.state.numViaSD}
+                                                    onChange={this.handleChange} />
+                                                <h4 className='ml-1 mr-1 mt-1'> -  </h4>
+                                                <Input id="numCasaD"
+
+                                                    className="form-control"
+                                                    name="numCasaD"
+                                                    type="text"
+                                                    bsSize="md"
+                                                    value={this.state.numCasaD}
+                                                    onChange={this.handleChange} />
+                                            </InputGroup>
+                                        </div>
+                                    </FormGroup>
+                                    <span className="span" id="sdireccion">Debe Ingresar una Direccion Valida</span>
+                                </div>
+                                <div className="mb-3" >
+                                    <FormGroup >
+                                        <InputGroup>
+                                            <InputGroupAddon addonType="prepend">
+                                                <Input
+                                                    id="tipoInmD"
+                                                    type="select"
+
+                                                    className="form-control bg-primary  text-white font-weight-bold"
+                                                    name="tipoInmD"
+                                                    bsSize="md"
+                                                    selectedIndex={this.state.tipoInmD}
+                                                    onChange={this.handleChange}
+                                                >
+                                                    <option>Tipo de Inmueble</option>
+                                                    {this.state.selTipoInm.map(inm => (
+                                                        <option value={inm.idtipoinmueble}>
+                                                            {inm.nombreinmueble}
+                                                        </option>
+                                                    ))}
+
+                                                </Input>
+                                            </InputGroupAddon>
+                                            <Input id="comTipoInmD"
+                                                placeholder='Num'
+                                                className="form-control"
+                                                name="comTipoInmD"
+                                                type="text"
+                                                bsSize="md"
+                                                value={this.state.comTipoInmD}
+                                                onChange={this.handleChange} />
+
+                                        </InputGroup>
+                                    </FormGroup>
+                                </div>
+                                <div className="mb-3" >
+                                    <FormGroup >
+                                        <InputGroup>
+                                            <InputGroupAddon addonType="prepend">
+                                                <Input
+                                                    id="bloqueIntD"
+                                                    type="select"
+
+                                                    className="form-control bg-primary  text-white font-weight-bold"
+                                                    name="bloqueIntD"
+                                                    bsSize="md"
+                                                    selectedIndex={this.state.bloqueIntD}
+                                                    onChange={this.handleChange}
+
+                                                >
+                                                    <option>Bloque o Interior</option>
+                                                    {this.state.selBloqueInt.map(blo => (
+                                                        <option value={blo.idbloqueinterior}>
+                                                            {blo.nombrebloqueoint}
+                                                        </option>
+                                                    ))}
+
+                                                </Input>
+                                            </InputGroupAddon>
+                                            <Input id="comBloqueIntD"
+                                                placeholder='Num'
+                                                className="form-control"
+                                                name="comBloqueIntD"
+                                                type="text"
+                                                bsSize="md"
+                                                value={this.state.comBloqueIntD}
+                                                onChange={this.handleChange} />
+                                        </InputGroup>
+                                    </FormGroup>
+                                    <span className="span" id="sinm">No debe dejar Campos Incompletos</span>
                                 </div>
                                 <div className="mb-3" >
                                     <FormGroup >
