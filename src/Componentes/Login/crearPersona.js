@@ -201,7 +201,7 @@ export class CrearPersona extends React.Component {
     var numerobloque = this.state.comBloqueInt;
 
     const body = { nombre, apellido, tipodoc, numerodoc, barrio, fechanaci };
-
+    
     await fetch('http://localhost:5000/persona',
       {
         method: "POST",
@@ -265,6 +265,7 @@ export class CrearPersona extends React.Component {
 
   
     this.cancelar();
+    window.location.reload();
 
   }
 

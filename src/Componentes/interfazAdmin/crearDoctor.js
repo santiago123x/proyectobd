@@ -66,9 +66,15 @@ export default class CrearDoctor extends React.Component {
             selTipoInm: [],
             selBloqueInt: [],
             //Info Modal Pac
-
+            numIP: null,
+            geoPLA: '',
+            geoPLO: '',
+            docSelP: '',
+            ciudadP: '',
+            selCiudades: [],
             //
             haydoc: false,
+            haypac: false
 
         };
         this.handleChange = this.handleChange.bind(this);
@@ -182,6 +188,16 @@ export default class CrearDoctor extends React.Component {
                 }
             )
 
+        await fetch('http://localhost:5000/ciudades/')
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    this.setState({
+                        selCiudades: result
+                    });
+                }
+            )
+
     }
 
     // Crear Doctores y Pacientes
@@ -201,6 +217,99 @@ export default class CrearDoctor extends React.Component {
                 }
 
             });
+    }
+
+    async hayPaciente() {
+        await fetch(`http://localhost:5000/paciente/${this.state.persona}`)
+            .then(response => response.json())
+            .then(result => {
+                if (result.length === 0) {
+                    this.setState({
+                        haypac: false
+                    });
+                } else {
+                    this.setState({
+                        haypac: true
+                    });
+                }
+
+            });
+    }
+
+
+    async crearPac() {
+
+        const nombre = this.state.personas[document.getElementById('persona').selectedIndex - 1].nombre;
+        const apellido = this.state.personas[document.getElementById('persona').selectedIndex - 1].apellido;
+        var idpersona = this.state.persona;
+        var numintegrantes = this.state.numIP;
+        var latitud = this.state.geoPLA;
+        var longitud = this.state.geoPLO;
+        var iddoctor = this.state.docSelP;
+        var ciudadcontagio = this.state.ciudadP;
+        var hoy = new Date();
+        var fecha = hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '-' + hoy.getDate();
+        var hora = hoy.getHours() + ':' + hoy.getMinutes() + ':' + hoy.getSeconds();
+        var idusu = this.state.match;
+        var idpaciente = null;
+        console.log(idusu)
+        const body = { idpersona, numintegrantes, ciudadcontagio }
+        console.log(body)
+
+        
+        await fetch(`http://localhost:5000/paciente/`,
+        {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body)
+        });
+
+        await fetch(`http://localhost:5000/paciente/${idpersona}`)
+            .then(response => response.json())
+            .then(result => {
+                idpaciente = result[0].idpaciente;
+            });
+
+
+        const bodyG = { idpaciente, latitud, longitud }
+
+        await fetch(`http://localhost:5000/geoloca/`,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(bodyG)
+            });
+
+        const bodyD = { idpaciente, iddoctor }
+
+        await fetch(`http://localhost:5000/atencion/`,
+        {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(bodyD)
+        });
+
+        const bodyR = { idusu, idpaciente, fecha, hora }
+        console.log(bodyR)
+
+        await fetch(`http://localhost:5000/registropac/`,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(bodyR)
+            });
+
+        await Swal.fire({
+            icon: 'success',
+            title: `Se ha agregado el Paciente ${nombre} ${apellido}`,
+            text: 'Registre los Parientes de este Paciente',
+            showConfirmButton: false,
+            timer: 2500
+        });
+
+        this.cancelarP();
+        
+
     }
 
     async crearDoctor() {
@@ -290,10 +399,10 @@ export default class CrearDoctor extends React.Component {
         var numerobloque = this.state.comBloqueIntD;
         var iddireccion = this.state.idDirecDoc;
 
-       
+
         const body = { nombre, apellido, tipodoc, numerodoc, barrio, fechanaci }
 
-        
+
         await fetch(`http://localhost:5000/persona/${idpersona}`,
             {
                 method: "PUT",
@@ -311,27 +420,27 @@ export default class CrearDoctor extends React.Component {
                 body: JSON.stringify(bodyD)
             });
 
-        
+
         // Direccion
-        if(idtipoinmueble === 'Tipo de Inmueble'){
+        if (idtipoinmueble === 'Tipo de Inmueble') {
             idtipoinmueble = null;
-            
+
         }
-        if(idbloqueinterior === 'Bloque o Interior'){
+        if (idbloqueinterior === 'Bloque o Interior') {
             idbloqueinterior = null;
-            
+
         }
-        
+
         const bodyDirec = { idviaprincipal, numeroviap, numerovias, numerocasa, idtipoinmueble, idbloqueinterior, numeroinmueble, numerobloque }
 
-        
-          fetch(`http://localhost:5000/direccion/${iddireccion}`,
-        {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(bodyDirec)
 
-        });
+        fetch(`http://localhost:5000/direccion/${iddireccion}`,
+            {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(bodyDirec)
+
+            });
 
 
 
@@ -668,9 +777,18 @@ export default class CrearDoctor extends React.Component {
 
         if (index >= 0) {
             await this.hayDoctor();
-            if (x === 'P') {
+            await this.hayPaciente();
 
-                this.modalPaciente();
+            if (x === 'P') {
+                if (!this.state.haypac) {
+                    this.modalPaciente();
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Esta Persona ya es un Paciente.',
+                    });
+                }
             }
             else {
                 if (!this.state.haydoc) {
@@ -825,6 +943,40 @@ export default class CrearDoctor extends React.Component {
         }
     }
 
+
+    //Validacion Paciente Campos
+
+    validaPaci() {
+        const numIP = document.getElementById('numIP').value.trim();
+        const geoPLA = document.getElementById('geoPLA').value.trim();
+        const geoPLO = document.getElementById('geoPLO').value.trim();
+        const docSelP = document.getElementById('docSelP').selectedIndex;
+        const ciudadP = document.getElementById('ciudadP').selectedIndex;
+
+        if (numIP !== '') {
+            document.getElementById('snumIP').style.display = 'none';
+            if (geoPLA !== '' && geoPLO !== '') {
+                document.getElementById('sgeo').style.display = 'none';
+                if (docSelP !== 0) {
+                    document.getElementById('sdocSelP').style.display = 'none';
+                    if (ciudadP !== 0) {
+                        document.getElementById('sciudadP').style.display = 'none';
+                        this.crearPac();
+                    } else {
+                        document.getElementById('sciudadP').style.display = 'contents';
+                    }
+                } else {
+                    document.getElementById('sdocSelP').style.display = 'contents';
+                }
+            } else {
+                document.getElementById('sgeo').style.display = 'contents';
+            }
+        } else {
+            document.getElementById('snumIP').style.display = 'contents';
+        }
+    }
+
+
     modalPaciente() {
 
         this.setState({
@@ -874,6 +1026,13 @@ export default class CrearDoctor extends React.Component {
 
     cancelarP() {
         this.modalPaciente();
+        this.setState({
+            numIP: null,
+            geoPLA: '',
+            geoPLO: '',
+            docSelP: null,
+            ciudadP: null,
+        })
     }
     cancelarD() {
 
@@ -1020,22 +1179,101 @@ export default class CrearDoctor extends React.Component {
                             <div id="regisM" className="contRegisM">
                                 <div className="mb-3">
                                     <FormGroup  >
-                                        <Input id="nombrePa"
-                                            placeholder="Nombre"
+                                        <Input id="numIP"
+                                            placeholder="Num Integrantes"
                                             className="form-control"
-                                            name="nombrePa"
+                                            name="numIP"
                                             bsSize="md"
-                                            type="text"
-                                            value={this.state.nombrePa}
+                                            type="number"
+                                            value={this.state.numIP}
                                             onChange={this.handleChange} />
                                     </FormGroup>
+                                    <span className="span" id="snumIP">Debe Ingresar un # de Integrantes</span>
+                                </div>
+                                <div className="mb-3">
+                                    <FormGroup  >
+                                        <Label className="font-weight-bold">Geolocalización</Label>
+                                        <InputGroup>
+                                            <Input id="geoPLA"
+                                                placeholder="Latitud"
+                                                className="form-control mr-1"
+                                                name="geoPLA"
+                                                bsSize="md"
+                                                type="text"
+                                                value={this.state.geoPLA}
+                                                onChange={this.handleChange} />
+
+                                            <Input id="geoPLO"
+                                                placeholder="Longitud"
+                                                className="form-control"
+                                                name="geoPLO"
+                                                bsSize="md"
+                                                type="text"
+                                                value={this.state.geoPLO}
+                                                onChange={this.handleChange} />
+                                        </InputGroup>
+                                    </FormGroup>
+                                    <p>Si no Conoce la Geolocalización <a href='https://www.google.com.co/maps/place/Cali,+Valle+del+Cauca/@3.395397,-76.6657539,11z/data=!3m1!4b1!4m5!3m4!1s0x8e30a6f0cc4bb3f1:0x1f0fb5e952ae6168!8m2!3d3.4516467!4d-76.5319854?hl=es&authuser=0' target='_blank' >Google Maps</a></p>
+                                    <span className="span" id="sgeo">Debe Ingresar La Latitud y la Longitud</span>
+                                </div>
+                                <div className="mb-3">
+                                    <FormGroup className="">
+                                        <Label className="font-weight-bold"> Lista de Doctores: </Label>
+
+                                        <Input id="docSelP"
+
+                                            className="form-control"
+                                            name="docSelP"
+                                            type="select"
+                                            bsSize="md"
+                                            value={this.state.docSelP}
+                                            onChange={this.handleChange}
+
+                                        >
+                                            <option selected="true" disabled="disabled">Doctores</option>
+                                            {this.state.listDoc.map(doc => (
+                                                <option value={doc.iddoctor}>
+                                                    {doc.nombre} {doc.apellido} - {doc.numerodoc}
+                                                </option>
+                                            ))}
+
+                                        </Input>
+                                    </FormGroup>
+                                    <span className="span" id="sdocSelP">Debe Seleccionar un Doctor</span>
+                                </div>
+
+                                <div className="mb-3">
+                                    <FormGroup className="">
+                                        <Label className="font-weight-bold"> Ciudad de Contagio: </Label>
+
+                                        <Input id="ciudadP"
+
+                                            className="form-control"
+                                            name="ciudadP"
+                                            type="select"
+                                            bsSize="md"
+                                            value={this.state.ciudadP}
+                                            onChange={this.handleChange}
+
+                                        >
+                                            <option selected="true" disabled="disabled">Ciudades</option>
+                                            {this.state.selCiudades.map(ciu => (
+                                                <option value={ciu.idciudad}>
+                                                    {ciu.ciudad}
+                                                </option>
+                                            ))}
+
+
+                                        </Input>
+                                    </FormGroup>
+                                    <span className="span" id="sciudadP">Debe Seleccionar una Ciudad</span>
                                 </div>
 
                             </div>
                         </Form>
                     </ModalBody>
                     <ModalFooter >
-                        <Button color="success" >Crear</Button>
+                        <Button color="success" onClick={() => this.validaPaci()} >Crear</Button>
                         <Button color="danger" onClick={() => this.cancelarP()}>Cancelar</Button>
                     </ModalFooter>
                 </Modal>

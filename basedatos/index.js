@@ -116,7 +116,7 @@ router.get('/doctores', async(req,res)=>{
         join eps e on d.identidadsalud = e.ideps`);
         res.send(arreglo.rows);
     } catch(e){
-        console.log("MIS COJONES");
+        console.log("doctores "+ e);
     } 
 });
 
@@ -136,7 +136,7 @@ router.get('/doctorinfo/:iddoctor', async(req,res)=>{
         where iddoctor = ${iddoctor}`);
         res.send(arreglo.rows[0]);
     } catch(e){
-        console.log("MIS COJONES");
+        console.log("doctor info " + e);
     } 
 });
 
@@ -167,7 +167,7 @@ router.get('/usudoctor/:idusu', async(req,res)=>{
         where idusuario = ${idusu}`);
         res.send(arreglo.rows[0]);
     } catch(e){
-        console.log("MIS COJONES");
+        console.log("usudoctor " + e);
     } 
 });
 
@@ -184,7 +184,7 @@ router.get('/usuariopersox/:idper', async(req,res)=>{
 		WHERE (per.idpersona= ${idper})`);
         res.send(arreglo.rows);
     } catch(e){
-        console.log("MIS COJONES");
+        console.log("usuariopersox: " + e);
     } 
 });
 
@@ -197,7 +197,7 @@ router.get('/usuariopersox/:idper', async(req,res)=>{
         `INSERT INTO usuario(idpersona, contraseña, tipousuario, nickname) VALUES(${idpersona},'${contra}','${tipo_usu}','${nickname}')`);
         res.send(newTodo);
     }catch(e){
-        console.log('F :asdasd');
+        console.log('usuario inser: ' + e);
     }
       
   });
@@ -229,7 +229,7 @@ router.put('/usuario/:id',async (req,res)=>{
   );
   res.json('ACTUALIZADO');
    }catch(e){
-    console.log("F");
+    console.log("usuario Upd : "+ e);
    }
 });
 
@@ -241,7 +241,7 @@ router.get('/usuario/:nick',async (req,res) =>{
         const arreglo = await pool.query(`SELECT * FROM usuario WHERE nickname = '${nick}'`);
         res.send(arreglo.rows);
     } catch(e){
-        console.log("MIS COJONES");
+        console.log("usuario x nick: " + e);
     } 
 });
 
@@ -253,7 +253,7 @@ router.get('/usuario2/:id',async (req,res) =>{
         res.send(arreglo.rows);
          
     } catch(e){
-        console.log("MIS COJONES");
+        console.log("usuario2 : " + e);
     } 
 });
 
@@ -268,7 +268,7 @@ router.post('/persona', async(req,res)=>{
         VALUES('${nombre}','${apellido}',${tipodoc},'${numerodoc}',${barrio},'${fechanaci}')`);
         res.send(newTodo);
     }catch(e){
-        console.log(e);
+        console.log('persona inser' + e);
     }
 
       
@@ -284,7 +284,7 @@ router.delete('/persona/:idpersona', async (req,res)=>{
         res.json('ELIMINADO');
     }
     catch(err){
-        console.error(err);
+        console.error('persona del : '+ err);
     }
 });
 
@@ -302,7 +302,7 @@ router.put('/persona/:idpersona',async (req,res)=>{
   );
   res.json('ACTUALIZADO');
    }catch(e){
-    console.log("F");
+    console.log("persona upd: " + e);
    }
 });
 
@@ -315,7 +315,7 @@ router.get('/persona/:idpersona',async (req,res) =>{
         res.send(arreglo.rows);
          
     } catch(e){
-        console.log("MIS COJONES");
+        console.log("persona x id " + e);
     } 
 });
 
@@ -327,7 +327,7 @@ router.get('/personaiden/:numerodoc',async (req,res) =>{
         res.send(arreglo.rows);
          
     } catch(e){
-        console.log("MIS COJONES");
+        console.log("persona x numero documento: " + e);
     } 
 });
 
@@ -339,7 +339,7 @@ router.get('/persona/',async (req,res) =>{
         res.send(arreglo.rows);
          
     } catch(e){
-        console.log("MIS COJONES");
+        console.log("Todas las personas: " + e);
     } 
 });
 
@@ -385,7 +385,7 @@ router.put('/email/:idemail',async (req,res)=>{
   );
   res.json('ACTUALIZADO');
    }catch(e){
-    console.log("F");
+    console.log("email upd: " + e);
    }
 });
 
@@ -398,7 +398,7 @@ router.get('/email/:idpersona',async (req,res) =>{
         res.send(arreglo.rows);
          
     } catch(e){
-        console.log("MIS COJONES");
+        console.log("email x idpersona: " + e);
     } 
 });
 
@@ -410,7 +410,7 @@ router.get('/emailhay/:idpersona/:email',async (req,res) =>{
         res.send(arreglo.rows);
          
     } catch(e){
-        console.log("Email no encontrado");
+        console.log("Emailhay : "+ e);
     } 
 });
 
@@ -467,7 +467,7 @@ router.put('/telefono/:idtelefono',async (req,res)=>{
   );
   res.json('ACTUALIZADO');
    }catch(e){
-    console.log("F");
+    console.log("telefono upd : " + e);
    }
 });
 
@@ -480,7 +480,7 @@ router.get('/telefono/:idpersona',async (req,res) =>{
         res.send(arreglo.rows);
          
     } catch(e){
-        console.log("MIS COJONES");
+        console.log("telefono x idpersona " + e);
     } 
 });
 
@@ -492,7 +492,7 @@ router.get('/telhay/:idpersona/:telefono',async (req,res) =>{
         res.send(arreglo.rows);
          
     } catch(e){
-        console.log("Telefono no encontrado");
+        console.log("Telefonohay : "+ e);
     } 
 });
 
@@ -518,7 +518,7 @@ router.get('/barrio/:id_barrio',async (req,res) =>{
         res.send(arreglo.rows);
          
     } catch(e){
-        console.log("MIS COJONES");
+        console.log("barrio: " + e);
     }
 });
 
@@ -528,7 +528,7 @@ router.get('/barrio/',async (req,res) =>{
         res.send(arreglo.rows);
          
     } catch(e){
-        console.log("MIS COJONES");
+        console.log("todos los barrio: " + e);
     }
 });
 
@@ -543,7 +543,7 @@ router.get('/tipodoc/:idtipo',async (req,res) =>{
         res.send(arreglo.rows);
          
     } catch(e){
-        console.log("MIS COJONES");
+        console.log("tipo documento: " + e);
     }
 });
 
@@ -553,7 +553,7 @@ router.get('/tipodoc/',async (req,res) =>{
         res.send(arreglo.rows);
          
     } catch(e){
-        console.log("MIS COJONES");
+        console.log("tipodoc : " + e);
     }
 });
 
@@ -564,7 +564,7 @@ router.get('/medicamentos/',async (req,res)=>{
         const arreglo = await pool.query(`SELECT * FROM medicamentos ORDER BY idmedicamento`);
         res.send(arreglo.rows);
     }catch(e){
-        console.log("F Medica");
+        console.log("medicamento : " + e);
     }
 });
 
@@ -583,7 +583,7 @@ router.get('/inventario2/',async (req,res)=>{
         FROM inventario inv join medicamentos med on inv.idmedicamento = med.idmedicamento`);
         res.send(arreglo.rows);
     }catch(e){
-        console.log("F invnetario");
+        console.log("invetario2: "+ e);
     }
 });
 
@@ -634,7 +634,7 @@ router.get('/direccion/:idpersona', async (req,res)=>{
         const arreglo = await pool.query(`select * from direccion where idpersona = ${idpersona}`);
         res.send(arreglo.rows[0]);
     }catch(e){
-        console.log("F invnetario");
+        console.log("direccion :"+e);
     }
 });
 
@@ -659,7 +659,7 @@ router.get('/viap/',async (req,res)=>{
         const arreglo = await pool.query(`select * from viaprincipal order by nombrevia`);
         res.send(arreglo.rows);
     }catch(e){
-        console.log("F invnetario");
+        console.log("viap :" +e);
     }
 });
 
@@ -670,7 +670,7 @@ router.get('/inmueble/',async (req,res)=>{
         const arreglo = await pool.query(`select * from tipoinmueble order by nombreinmueble`);
         res.send(arreglo.rows);
     }catch(e){
-        console.log("F invnetario");
+        console.log("inmueble : " + e);
     }
 });
 
@@ -681,7 +681,7 @@ router.get('/bloque/',async (req,res)=>{
         const arreglo = await pool.query(`select * from bloqueointerior order by nombrebloqueoint`);
         res.send(arreglo.rows);
     }catch(e){
-        console.log("F invnetario");
+        console.log("bloque :" + e);
     }
 });
 
@@ -697,9 +697,89 @@ router.get('/geolocalizacion/',async (req,res)=>{
         join viaprincipal via on dir.idviaprincipal = via.idviaprincipal`);
         res.send(arreglo.rows);
     }catch(e){
-        console.log("no hay Geolocalizaciones");
+        console.log("geo: " + e);
     }
-});                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+});                 
+
+
+//-------------------------- Paciente --------------------
+
+router.get('/paciente/:idper',async (req,res)=>{
+    try{
+        const { idper } = req.params;
+        const arreglo = await pool.query(`SELECT * FROM paciente WHERE idpersona = ${idper}`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("paciente selec : " + e);
+    }
+});
+
+router.post('/paciente', async(req,res)=>{
+    try{
+        const { idpersona, numintegrantes, ciudadcontagio} = req.body;
+        newTodo = await pool.query(
+        `INSERT INTO paciente ( idpersona, numintegrantes, ciudadcontagio) 
+        VALUES(${idpersona},${numintegrantes},${ciudadcontagio})`);
+        res.send(newTodo);
+    }catch(e){
+        console.log(e);
+    } 
+  });
+
+  router.post('/registropac/', async (req,res)=>{
+    try{
+        const { idusu, idpaciente, fecha, hora } = req.body;
+        newTodo = await pool.query(
+        `INSERT INTO registropaciente (idusuario, idpaciente, fecha, hora) VALUES(${idusu}, ${idpaciente}, '${fecha}', '${hora}')`);
+        res.json("INSERTADO 7W7");
+    }catch(e){
+        console.log(e);
+    }
+});
+
+//---------------------- Ciudades -----------------------------
+
+router.get('/ciudades', async (req,res)=>{
+    try{
+       
+        const arreglo = await pool.query(`SELECT * FROM ciudades ORDER BY ciudad`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("ciudades: " + e);
+    }
+});
+
+
+//-------------------- registar geolocalizacion ---------------
+
+
+router.post('/geoloca', async(req,res)=>{
+    try{
+        const { idpaciente, latitud , longitud } = req.body;
+        newTodo = await pool.query(
+        `INSERT INTO geolocalizacion (idpaciente, longitud, latitud) VALUES(${idpaciente}, '${longitud}', '${latitud}')`);
+        res.send(newTodo);
+    }catch(e){
+        console.log('geoloca: ' +e);
+    }
+
+});
+
+//------------------- doctor que atiende paciente ----------------------
+
+router.post('/atencion', async(req,res)=>{
+    try{
+        const { idpaciente, iddoctor} = req.body;
+        newTodo = await pool.query(
+        `INSERT INTO atencion (idpaciente, iddoctor) VALUES(${idpaciente}, ${iddoctor})`);
+        res.send(newTodo);
+    }catch(e){
+        console.log('atencion : ' +e);
+    }
+
+});
+
+
 
 // ------------------------- Conexion --------------------
 
@@ -707,6 +787,15 @@ module.exports = router;
 router.listen(5000, () => {
     console.log("server has started on port 5000");
   });
+
+
+
+
+
+
+
+
+
 
 
 /*
