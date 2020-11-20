@@ -30,6 +30,7 @@ export default class Registro extends React.Component {
       medicamento: null,
       dosis: '',
       obs: '',
+      idDoc: props.idDoc,
 
 
 
@@ -44,9 +45,9 @@ export default class Registro extends React.Component {
     const name = target.name;
 
     this.setState({
-        [name]: value
+      [name]: value
     });
-};
+  };
 
 
 
@@ -80,7 +81,7 @@ export default class Registro extends React.Component {
 
   seleccionarPaciente() {
 
-    if (document.getElementById('personas').selectedIndex != 0) {
+    if (document.getElementById('paciente').selectedIndex != 0) {
       var nombre = null;
       var año = null;
       var mes = null;
@@ -90,7 +91,7 @@ export default class Registro extends React.Component {
       var añoAc = hoy.getFullYear();
       var mesAc = (hoy.getMonth() + 1);
       var diaAc = hoy.getDate();
-      const index = document.getElementById('personas').selectedIndex - 1;
+      const index = document.getElementById('paciente').selectedIndex - 1;
 
       nombre = this.state.pacientes[index].nombre + ' ' + this.state.pacientes[index].apellido;
       direccion = this.state.pacientes[index].nombrevia + ' ' + this.state.pacientes[index].numeroviap + ' # ' +
@@ -99,7 +100,7 @@ export default class Registro extends React.Component {
       mes = parseInt(this.state.pacientes[index].fechanaci.substr(5, 2));
       año = añoAc - this.state.pacientes[index].fechanaci.substr(0, 4);
 
-      
+
       if (mesAc > mes) {
         año += -1;
       }
@@ -108,9 +109,9 @@ export default class Registro extends React.Component {
           año += -1;
         }
       }
-      
 
-      if(año < 0){
+
+      if (año < 0) {
         año = 0;
       }
 
@@ -122,12 +123,12 @@ export default class Registro extends React.Component {
 
       document.getElementById('formOcul').style.visibility = 'visible';
 
-    }else{
+    } else {
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
         text: 'Seleccione un Paciente.',
-    });
+      });
     }
 
   }
@@ -137,14 +138,49 @@ export default class Registro extends React.Component {
     document.getElementById('formOcul').style.visibility = 'hidden';
 
     this.setState({
-      nombreP:'',
-      direccionP:'',
-      edadP:''
+      nombreP: '',
+      direccionP: '',
+      edadP: ''
     })
   }
 
+  //Crear Visita
 
-  validacion(){
+  async crearVisita() {
+
+    var fecha = this.state.fechaV;
+    var hora = this.state.horaV;
+    var temp = this.state.temperatura;
+    var peso = this.state.peso;
+    var presion = this.state.presionA;
+    var medi = this.state.medicamento;
+    var dosis = this.state.dosis;
+    var obs = this.state.obs;
+    var idDoc = this.state.idDoc;
+    var idPac = this.state.paciente;
+
+    const body = { idDoc, idPac, fecha, hora, temp, peso, presion, medi, dosis, obs }
+
+    await fetch(`http://localhost:5000/visita/`,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(body)
+            });
+
+    await Swal.fire({
+      icon: 'success',
+      title: `Se ha agregado la Visita al Paciente ${this.state.nombreP}`,
+      showConfirmButton: false,
+      timer: 2000
+    });
+
+    this.cancelar();
+  }
+
+
+
+  validacion() {
     const fecha = document.getElementById('fechaV').value;
     const hora = document.getElementById('horaV').value;
     const temp = document.getElementById('temperatura').value.trim();
@@ -159,46 +195,46 @@ export default class Registro extends React.Component {
 
     if (ft <= new Date()) {
       document.getElementById('sfechaV').style.display = 'none';
-      if(hora !== ''){
+      if (hora !== '') {
         document.getElementById('shoraV').style.display = 'none';
-        if(temp !== ''){
+        if (temp !== '') {
           document.getElementById('stemperatura').style.display = 'none';
-          if(peso !== ''){
+          if (peso !== '') {
             document.getElementById('speso').style.display = 'none';
-            if(pres !== ''){
+            if (pres !== '') {
               document.getElementById('spresionA').style.display = 'none';
-              if(medica !== 0){
+              if (medica !== 0) {
                 document.getElementById('smedicamento').style.display = 'none';
-                if(dosis !== ''){
+                if (dosis !== '') {
                   document.getElementById('sdosis').style.display = 'none';
-                  if(obs !== ''){
+                  if (obs !== '') {
                     document.getElementById('sobs').style.display = 'none';
-                    //crearVisita();
-                  }else{
+                    this.crearVisita();
+                  } else {
                     document.getElementById('sobs').style.display = 'contents';
                   }
-                }else{
+                } else {
                   document.getElementById('sdosis').style.display = 'contents';
                 }
-              }else{
+              } else {
                 document.getElementById('smedicamento').style.display = 'contents';
               }
-            }else{
+            } else {
               document.getElementById('spresionA').style.display = 'contents';
             }
-          }else{
+          } else {
             document.getElementById('speso').style.display = 'contents';
           }
-        }else{
+        } else {
           document.getElementById('stemperatura').style.display = 'contents';
         }
-      }else{
+      } else {
         document.getElementById('shoraV').style.display = 'contents';
       }
-    }else{
+    } else {
       document.getElementById('sfechaV').style.display = 'contents';
     }
-    
+
   }
 
   cancelar() {
@@ -233,12 +269,14 @@ export default class Registro extends React.Component {
                   <Label className="mt-3 font-weight-bold">Registrar Visita del Paciente :</Label>
 
                   <FormGroup className="ml-3 mr-3 mt-2" >
-                    <Input className="mt-4" id="personas"
+                    <Input className="mt-4" id="paciente"
 
                       className="form-control"
-                      name="personas"
+                      name="paciente"
                       type="select"
-                      bsSize="md" >
+                      bsSize="md" 
+                      value={this.state.paciente}
+                      onChange={this.handleChange}>
                       <option selected="true" disabled="disabled">Pacientes</option>
                       {this.state.pacientes.map(pac => (
                         <option value={pac.idpaciente}>
@@ -383,46 +421,46 @@ export default class Registro extends React.Component {
                       </FormGroup>
                       <FormGroup className="inputF ml-3 mr-3 mt-3">
                         <div>
-                        <Input id="temperatura"
-                          placeholder="Temperatura Del Paciente °C"
-                          className="form-control"
-                          name="temperatura"
-                          type="number"
-                          step=".0"
-                          bsSize="md"
-                          value={this.state.temperatura}
-                          onChange={this.handleChange}>
-                        </Input>
-                        <span className="span" id="stemperatura">Debe Ingresar la Temperatura</span>
+                          <Input id="temperatura"
+                            placeholder="Temperatura Del Paciente °C"
+                            className="form-control"
+                            name="temperatura"
+                            type="number"
+                            step=".0"
+                            bsSize="md"
+                            value={this.state.temperatura}
+                            onChange={this.handleChange}>
+                          </Input>
+                          <span className="span" id="stemperatura">Debe Ingresar la Temperatura</span>
                         </div>
                       </FormGroup>
                       <FormGroup className="inputF ml-3 mr-3 mt-3">
                         <div>
-                        <Input id="peso"
-                          placeholder="Peso Kg"
-                          className="form-control"
-                          name="peso"
-                          type="text"
-                          bsSize="md"
-                          value={this.state.peso}
-                          onChange={this.handleChange} >
-                        </Input>
-                        <span className="span" id="speso">Debe Ingresar el Peso</span>
+                          <Input id="peso"
+                            placeholder="Peso Kg"
+                            className="form-control"
+                            name="peso"
+                            type="text"
+                            bsSize="md"
+                            value={this.state.peso}
+                            onChange={this.handleChange} >
+                          </Input>
+                          <span className="span" id="speso">Debe Ingresar el Peso</span>
                         </div>
                       </FormGroup>
-                        
+
                       <FormGroup className="inputF ml-3 mr-3 mt-3">
-                      <div>
-                        <Input id="presionA"
-                          placeholder="Presión Arterial"
-                          className="form-control"
-                          name="presionA"
-                          type="text"
-                          bsSize="md"
-                          value={this.state.presionA}
-                          onChange={this.handleChange} >
-                        </Input>
-                        <span className="span" id="spresionA">Debe Ingresar la Presion Arterial</span>
+                        <div>
+                          <Input id="presionA"
+                            placeholder="Presión Arterial"
+                            className="form-control"
+                            name="presionA"
+                            type="text"
+                            bsSize="md"
+                            value={this.state.presionA}
+                            onChange={this.handleChange} >
+                          </Input>
+                          <span className="span" id="spresionA">Debe Ingresar la Presion Arterial</span>
                         </div>
                       </FormGroup>
                       <FormGroup className="inputF ml-3 mr-3 mt-3">
@@ -448,36 +486,36 @@ export default class Registro extends React.Component {
                         </div>
                       </FormGroup>
                       <FormGroup className="inputF ml-3 mr-3 mt-3">
-                              <div>
-                        <Input id="dosis"
-                          placeholder="Dosis Diaria"
-                          className="form-control"
-                          name="dosis"
-                          type="text"
-                          bsSize="md"
-                          value={this.state.dosis}
-                          onChange={this.handleChange} >
+                        <div>
+                          <Input id="dosis"
+                            placeholder="Dosis Diaria"
+                            className="form-control"
+                            name="dosis"
+                            type="text"
+                            bsSize="md"
+                            value={this.state.dosis}
+                            onChange={this.handleChange} >
 
-                        </Input>
-                        <span className="span" id="sdosis">Debe Ingresar la Dosis</span>
+                          </Input>
+                          <span className="span" id="sdosis">Debe Ingresar la Dosis</span>
                         </div>
                       </FormGroup>
                       <FormGroup className="inputF ml-3 mr-3 mt-3">
                         <div>
-                        <InputGroup>
-                          
-                          <FormControl 
-                          as="textarea" 
-                          placeholder="Observación" 
-                          aria-label="Observación"
-                          bsSize="md"
-                          className="form-control"
-                          name="obs"
-                          id="obs"
-                          value={this.state.obs}
-                          onChange={this.handleChange} />
-                        </InputGroup>
-                        <span className="span" id="sobs">Debe Ingresar una Observación</span>
+                          <InputGroup>
+
+                            <FormControl
+                              as="textarea"
+                              placeholder="Observación"
+                              aria-label="Observación"
+                              bsSize="md"
+                              className="form-control"
+                              name="obs"
+                              id="obs"
+                              value={this.state.obs}
+                              onChange={this.handleChange} />
+                          </InputGroup>
+                          <span className="span" id="sobs">Debe Ingresar una Observación</span>
                         </div>
                       </FormGroup>
 
@@ -486,7 +524,7 @@ export default class Registro extends React.Component {
                   </Form>
                 </ModalBody>
                 <ModalFooter >
-                  <Button color="success"  onClick={() => this.validacion()} >Registrar Visita</Button>
+                  <Button color="success" onClick={() => this.validacion()} >Registrar Visita</Button>
                   <Button color="danger" onClick={() => this.cancelar()} >Cancelar</Button>
                 </ModalFooter>
               </Modal>

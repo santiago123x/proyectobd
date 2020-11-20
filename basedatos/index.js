@@ -790,7 +790,47 @@ router.get('/pacientes', async(req,res)=>{
     }
 })
 
+//---------------------------Informes---------------------
 
+router.get('/contxbarrio/',async (req,res)=>{
+    try{
+        const arreglo = await pool.query(`select count (ba.nombre), ba.nombre from paciente pa
+        join persona per on pa.idpersona = per.idpersona
+        join barrio ba on per.barrio = ba.id_barrio group by per.barrio, ba.nombre`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("no hay contagiaos");
+    }
+});
+
+//------------------- visita ----------------------
+
+router.post('/visita', async(req,res)=>{
+    try{
+        const {idDoc, idPac, fecha, hora, temp, peso, presion, medi, dosis, obs } = req.body;
+        newTodo = await pool.query(
+        `insert into visita (idpaciente, iddoctor, hora, fecha, temperatura, peso, presion, dosis, idmedicamento, observaciones)
+        values(${idPac}, ${idDoc}, '${hora}', '${fecha}', ${temp}, ${peso}, '${presion}', '${dosis}', ${medi}, '${obs}' )`);
+        res.send(newTodo);
+    }catch(e){
+        console.log('visita : ' +e);
+    }
+
+});
+//-------------------Integrantes------------------------------
+
+router.post('/integrantes', async(req,res)=>{
+    try{
+        const { } = req.body;
+        newTodo = await pool.query(
+        `insert into integrante (idpaciente, idpersona, parentesco)
+        values ${idPac}, ${idDoc}, '${parentesco}')`);
+        res.send(newTodo);
+    }catch(e){
+        console.log('visita : ' +e);
+    }
+
+});
 
 // ------------------------- Conexion --------------------
 
@@ -798,6 +838,11 @@ module.exports = router;
 router.listen(5000, () => {
     console.log("server has started on port 5000");
   });
+
+
+
+
+
 
 
 
