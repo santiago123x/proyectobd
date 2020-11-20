@@ -24,6 +24,7 @@ export default class CrearDoctor extends React.Component {
             selecdoc: null,
             selecpa: null,
             listDoc: [],
+            listPac: [],
             //Info Modal Doc
             universidad: null,
             universidades: [],
@@ -198,6 +199,16 @@ export default class CrearDoctor extends React.Component {
                 }
             )
 
+        await fetch('http://localhost:5000/pacientes/')
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    this.setState({
+                        listPac: result
+                    });
+                }
+            )
+
     }
 
     // Crear Doctores y Pacientes
@@ -256,13 +267,13 @@ export default class CrearDoctor extends React.Component {
         const body = { idpersona, numintegrantes, ciudadcontagio }
         console.log(body)
 
-        
+
         await fetch(`http://localhost:5000/paciente/`,
-        {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(body)
-        });
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(body)
+            });
 
         await fetch(`http://localhost:5000/paciente/${idpersona}`)
             .then(response => response.json())
@@ -283,11 +294,11 @@ export default class CrearDoctor extends React.Component {
         const bodyD = { idpaciente, iddoctor }
 
         await fetch(`http://localhost:5000/atencion/`,
-        {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(bodyD)
-        });
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(bodyD)
+            });
 
         const bodyR = { idusu, idpaciente, fecha, hora }
         console.log(bodyR)
@@ -308,7 +319,7 @@ export default class CrearDoctor extends React.Component {
         });
 
         this.cancelarP();
-        
+
 
     }
 
@@ -1106,16 +1117,21 @@ export default class CrearDoctor extends React.Component {
                                                     <Button color="primary" ><i class="fa fa-trash-o " /></Button>
                                                 </ButtonGroup>
                                             </InputGroupAddon>
-                                            <Input id="pacientesSelec"
+                                            <Input id="selecpa"
 
                                                 className="form-control"
-                                                name="pacientesSelec"
+                                                name="selecpa"
                                                 type="select"
                                                 bsSize="md"
 
                                                 selectedIndex={this.state.selecpa}
                                             >
                                                 <option selected="true" disabled="disabled">Pacientes</option>
+                                                {this.state.listPac.map(pac => (
+                                                    <option value={pac.idpaciente}>
+                                                        {pac.nombre} {pac.apellido} - {pac.numerodoc}
+                                                    </option>
+                                                ))}
 
 
 
