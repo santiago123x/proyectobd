@@ -779,6 +779,17 @@ router.post('/atencion', async(req,res)=>{
 
 });
 
+// ------------------- All Pacientes -------------------------
+
+router.get('/pacientes', async(req,res)=>{
+    try{
+        const arreglo = await pool.query(`select * from pacientes order by idpaciente`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("pacientes: " + e);
+    }
+})
+
 
 
 // ------------------------- Conexion --------------------
