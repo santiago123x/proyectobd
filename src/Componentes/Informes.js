@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button, Modal,ModalBody } from 'reactstrap';
 import './InterfazDoc/style.scss';
 import { PieChart, Pie, Tooltip, ResponsiveContainer, Cell, Sector, AreaChart, Area, XAxis, YAxis, CartesianGrid } from "recharts";
 
@@ -82,7 +83,8 @@ export default class Informes extends React.Component {
       data01: [],
       color: null,
       color2: [],
-      edades: []
+      edades: [],
+      modalInser: true,
 
     };
 
@@ -162,25 +164,43 @@ export default class Informes extends React.Component {
     });
   };
 
+  mostrarCPB(){
+    document.getElementById('pie').style.display = 'inline-block';
+    document.getElementById('edades').style.display = 'none';
+  }
+  mostrarED(){
+    document.getElementById('pie').style.display = 'none';
+    document.getElementById('edades').style.display = 'inline-block';
+  }
+
   render() {
     return (
       <div className="total">
 
         <div className="header mt-2 text-center " id="login"><h2 className="Titulo m-2 " >Informes</h2></div>
 
-        <div className="conteneT mt-2">
+        <div className="conteneTI mt-2 text-center">
+          <div className="btn-group-lg  pt-3 " role="group" aria-label="Basic example">
+            <Button type="button" onClick={() => this.mostrarCPB()} className='mr-1 font-weight-bold' color="primary">Contagios por Barrio</Button>
+            <Button type="button" onClick={() => this.mostrarED()} className='mr-1 font-weight-bold' color="primary">Contagios por edad</Button>
+            <Button type="button" className='font-weight-bold' color="primary">Visitas Doctores</Button>
+          </div>
+         
 
-
-          <h4 className="text-center mb-2" >Contagiados por Barrio</h4>
-          <ResponsiveContainer height='85%'>
-            <PieChart width={800} height={800} className="col-5 mt-4">
-
+          
+          
+          
+          <div className='pie' id='pie'>
+          <h4 className="text-center mb-2 mt-2 font-weight-bold" >Contagiados por Barrio</h4>
+            
+            <PieChart width={800} height={800} className="pr-2">
+            
               <Pie
                 activeIndex={this.state.activeIndex}
                 activeShape={renderActiveShape}
                 data={this.state.data01}
                 cx='50%'
-                cy='50%'
+                cy='35%'
                 innerRadius={160}
                 outerRadius={220}
                 fill={this.colorRamdo()}
@@ -191,13 +211,16 @@ export default class Informes extends React.Component {
                   this.state.data01.map((entry, index) => <Cell key={`cell-${index}`} fill={this.state.color2[index]} />)
                 }
               </Pie>
+              
             </PieChart>
-          </ResponsiveContainer>
+            
+         </div>
+          
 
 
 
-
-          <div style={{ display: 'none' }}>
+          <div style={{ display: 'none' }} id='edades'>
+          <h4 className="text-center mb-5 mt-2 font-weight-bold" >Contagiados por Edad</h4>
             <AreaChart
               width={500}
               height={400}

@@ -217,4 +217,22 @@
     outline: none;
     box-shadow: 0px 0px 12px 0.8px #3474dbb2;
 }
+
+
+.pie{
+    position: static;
+    display: none;
+    height: 30em;
+}
+
+.conteneTI{
+    background-size: cover;
+    width: auto;
+    height: 1000px;
+    background: url("./fondoD.jpg")  no-repeat center center fixed; ;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover
+}
   

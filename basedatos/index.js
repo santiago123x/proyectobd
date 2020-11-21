@@ -835,7 +835,7 @@ router.post('/integrantes', async(req,res)=>{
 
 router.get('/pacxed/',async (req,res)=>{
     try{
-        const arreglo = await pool.query(`select personas,CAST(anio AS varchar) from pacxed`);
+        const arreglo = await pool.query(`select personas,CAST(anio AS varchar) from pacxed order by anio`);
         res.send(arreglo.rows);
     }catch(e){
         console.log("no hay contagiaos");

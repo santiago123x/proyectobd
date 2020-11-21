@@ -156,7 +156,7 @@ export default class Registro extends React.Component {
     var medi = this.state.medicamento;
     var dosis = this.state.dosis;
     var obs = this.state.obs;
-    var idDoc = this.state.idDoc;
+    var idDoc = this.props.idDoc;
     var idPac = this.state.paciente;
 
     const body = { idDoc, idPac, fecha, hora, temp, peso, presion, medi, dosis, obs }
