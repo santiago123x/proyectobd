@@ -831,6 +831,16 @@ router.post('/integrantes', async(req,res)=>{
     }
 
 });
+//---------------------------Informes---------------------
+
+router.get('/pacxed/',async (req,res)=>{
+    try{
+        const arreglo = await pool.query(`select personas,CAST(anio AS varchar) from pacxed`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("no hay contagiaos");
+    }
+});
 
 // ------------------------- Conexion --------------------
 
