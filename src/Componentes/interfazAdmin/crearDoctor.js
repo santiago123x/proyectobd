@@ -19,6 +19,7 @@ export default class CrearDoctor extends React.Component {
             modalInserD: false,
             modalInserP: false,
             modalActuD: false,
+            modalParen: false,
             //
             nombrePa: '',
             selecdoc: null,
@@ -995,6 +996,13 @@ export default class CrearDoctor extends React.Component {
         });
 
     }
+    modalParen() {
+
+        this.setState({
+            modalParen: !this.state.modalParen
+        });
+
+    }
     modalDoctor() {
         this.setState({
             modalInserD: !this.state.modalInserD
@@ -1005,6 +1013,9 @@ export default class CrearDoctor extends React.Component {
         this.setState({
             modalActuD: !this.state.modalActuD
         });
+    }
+    cancelarParen(){
+        this.modalParen();
     }
     cancelarActuD() {
         this.modalActuD();
@@ -1710,6 +1721,23 @@ export default class CrearDoctor extends React.Component {
                         <Button color="danger" onClick={() => this.cancelarActuD()}>Cancelar</Button>
                     </ModalFooter>
                 </Modal>
+
+                {/* Modal Parentesco */}
+
+                <Modal
+                    size="md"
+                    centered isOpen={this.state.modalParen} id="insertar">
+                    <ModalHeader>
+                        <div><h3>Crear Parentesco</h3></div>
+                    </ModalHeader>
+                    <ModalBody>
+                    </ModalBody>
+                    <ModalFooter >
+                        <Button color="success"  >Crear Parentesco</Button>
+                        <Button color="danger" onClick={() => this.cancelarParen()}>Cancelar</Button>
+                    </ModalFooter>
+                </Modal>
+
             </Fragment >
         );
     }
