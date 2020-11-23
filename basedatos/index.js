@@ -790,6 +790,19 @@ router.get('/pacientes', async(req,res)=>{
     }
 })
 
+// --------------------- Paciente(Id Paciente) ----------------
+
+
+
+router.get('/pacientesid', async(req,res)=>{
+    try{
+        const arreglo = await pool.query(`SELECT idpaciente FROM paciente ORDER BY idpaciente DESC`);
+        res.send(arreglo.rows[0]);
+    }catch(e){
+        console.log("pacientes: " + e);
+    }
+})
+
 //---------------------------Informes---------------------
 
 router.get('/contxbarrio/',async (req,res)=>{

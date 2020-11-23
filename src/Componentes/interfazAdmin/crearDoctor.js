@@ -325,6 +325,7 @@ export default class CrearDoctor extends React.Component {
         });
 
         this.cancelarP();
+        this.modalParen();
 
 
     }
@@ -794,7 +795,7 @@ export default class CrearDoctor extends React.Component {
         if (paren != 0 && perParen != 0) {
             const arreglo = {
                 paren: this.state.paren, nombre: this.state.personas[perParen - 1].nombre + ' ' + this.state.personas[perParen - 1].apellido,
-                doc: this.state.personas[perParen - 1].numerodoc
+                doc: this.state.personas[perParen - 1].numerodoc, id: this.state.personas[perParen - 1].idpersona
             }
             this.setState({
                 tablaParen: [...this.state.tablaParen, arreglo]
@@ -820,6 +821,39 @@ export default class CrearDoctor extends React.Component {
         this.setState({
             tablaParen: arreglo
         })
+    }
+
+    async crearParent() {
+        if (this.state.tablaParen.length !== 0) {
+            var idpac = null;
+            var idper = null;
+            var paren = '';
+
+            await fetch(`http://localhost:5000/pacientesid`)
+                .then(response => response.json())
+                .then((result) => {
+                    idpac = result.idpaciente;
+                });
+
+            for (var i = 0; i < this.state.tablaParen.length; i++) {
+                idper = this.state.tablaParen[i].id;
+                paren = this.state.tablaParen[i].paren;
+
+                const body = { paren, idper, idpac }
+
+                //await fetch
+
+                console.log(body)
+            }
+
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Debe Agregar las Personas con su Respectivo Parentesco.',
+            });
+        }
+
     }
 
     // Validaciones y Modals
@@ -1093,6 +1127,20 @@ export default class CrearDoctor extends React.Component {
         })
     }
 
+    async recargarP() {
+
+        await fetch('http://localhost:5000/persona/')
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    this.setState({
+                        personas: result
+                    });
+
+                }
+            )
+    }
+
     cancelarP() {
         this.modalPaciente();
         this.setState({
@@ -1127,26 +1175,30 @@ export default class CrearDoctor extends React.Component {
                                         <Label className="mt-4 font-weight-bold">Seleccione la Persona de la base de datos :</Label>
 
                                         <FormGroup className="selP ml-3 mr-3 mt-2 mb-3" >
+                                            <InputGroup>
 
+                                                <Input className="mt-4" id="persona"
 
-                                            <Input className="mt-4" id="persona"
+                                                    className="form-control"
+                                                    name="persona"
+                                                    type="select"
+                                                    bsSize="md"
 
-                                                className="form-control"
-                                                name="persona"
-                                                type="select"
-                                                bsSize="md"
+                                                    onChange={this.handleChange} >
+                                                    <option selected="true" disabled="disabled">Personas</option>
+                                                    {this.state.personas.map(per => (
+                                                        <option value={per.idpersona}>
+                                                            {per.nombre}  {per.apellido} - {per.numerodoc}
+                                                        </option>
+                                                    ))}
 
-                                                onChange={this.handleChange} >
-                                                <option selected="true" disabled="disabled">Personas</option>
-                                                {this.state.personas.map(per => (
-                                                    <option value={per.idpersona}>
-                                                        {per.nombre}  {per.apellido} - {per.numerodoc}
-                                                    </option>
-                                                ))}
+                                                </Input>
+                                                <InputGroupAddon addonType="prepend" className=''>
+                                                    <Button color="primary" onClick={() => this.recargarP()} ><i class="fa fa-refresh" aria-hidden="true"></i></Button>
 
-                                            </Input>
+                                                </InputGroupAddon>
 
-
+                                            </InputGroup>
                                         </FormGroup>
 
                                         <div className="footer mt-3 mb-4">
@@ -1781,7 +1833,10 @@ export default class CrearDoctor extends React.Component {
                         <div className="mb-3" style={{ width: '70%', float: 'left' }} >
                             <FormGroup >
                                 <InputGroup>
+                                    <InputGroupAddon addonType="prepend" className=''>
+                                        <Button color="primary" onClick={() => this.recargarP()} ><i class="fa fa-refresh" aria-hidden="true"></i></Button>
 
+                                    </InputGroupAddon>
                                     <Input
                                         id="perParen"
 
@@ -1857,7 +1912,7 @@ export default class CrearDoctor extends React.Component {
                         </Table>
                     </ModalBody>
                     <ModalFooter >
-                        <Button color="success"  >Crear Parentesco</Button>
+                        <Button color="success"  onClick={() => this.crearParent()} >Crear Parentesco</Button>
                         <Button color="danger" onClick={() => this.cancelarParen()}>Cancelar</Button>
                     </ModalFooter>
                 </Modal>

@@ -265,7 +265,7 @@ export class CrearPersona extends React.Component {
 
   
     this.cancelar();
-    window.location.reload();
+    
 
   }
 

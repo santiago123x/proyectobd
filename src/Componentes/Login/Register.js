@@ -1,6 +1,6 @@
 import React from "react";
 import loginImg from "../../LOGIN.svg";
-import { Button, Form, FormGroup, Input, InputGroup, InputGroupText, Row, Col } from "reactstrap";
+import { Button, Form, FormGroup, Input, InputGroup, InputGroupAddon, InputGroupText, Row, Col } from "reactstrap";
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import 'sweetalert2/src/sweetalert2.scss';
 import { CrearPersona } from './crearPersona';
@@ -91,6 +91,18 @@ export class Register extends React.Component {
 
 
 
+  }
+
+  async recargar(){
+    await fetch('http://localhost:5000/persona/')
+      .then(res => res.json())
+      .then(
+        (result) => {
+          this.setState({
+            personas: result
+          });
+        }
+      )
   }
 
   async crearUsuario() {
@@ -248,28 +260,34 @@ export class Register extends React.Component {
                       bsSize="md"
                       selectedIndex={this.state.tipousuario}
                       onChange={this.handleChange} >
-                        <option  selected="true" disabled="disabled">Tipo de Usuario</option>
-                        <option value="super">Admin</option>
-                        <option value="doctor">Doctor</option>
+                      <option selected="true" disabled="disabled">Tipo de Usuario</option>
+                      <option value="super">Admin</option>
+                      <option value="doctor">Doctor</option>
                     </Input>
                   </FormGroup>
                 </div>
                 <div className="mb-1">
                   <FormGroup  >
-                    <Input id="personas"
+                    <InputGroup>
+                      <Input id="personas"
 
-                      className="form-control"
-                      name="personas"
-                      type="select"
-                      bsSize="md"
-                      selectedIndex={this.state.idperso} >
-                      <option  selected="true" disabled="disabled">Personas</option>
-                      {this.state.personas.map(per => (
-                        <option value={per.idpersona}>
-                          {per.nombre} {per.apellido} - {per.numerodoc}
-                        </option>
-                      ))}
-                    </Input>
+                        className="form-control"
+                        name="personas"
+                        type="select"
+                        bsSize="md"
+                        selectedIndex={this.state.idperso} >
+                        <option selected="true" disabled="disabled">Personas</option>
+                        {this.state.personas.map(per => (
+                          <option value={per.idpersona}>
+                            {per.nombre} {per.apellido} - {per.numerodoc}
+                          </option>
+                        ))}
+                      </Input>
+                      <InputGroupAddon addonType="prepend" className=''>
+                        <Button color="primary" onClick={() => this.recargar()} ><i class="fa fa-refresh" aria-hidden="true"></i></Button>
+
+                      </InputGroupAddon>
+                    </InputGroup>
                   </FormGroup>
                 </div>
               </div>
@@ -278,7 +296,7 @@ export class Register extends React.Component {
                   <Col >
                     <Button size="lg" color='primary' onClick={() => this.crearUsuario()} >
                       Registro <i class="fa fa-users" aria-hidden="true"></i>
-              </Button>
+                    </Button>
                   </Col>
 
                   <Col>
