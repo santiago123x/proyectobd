@@ -792,14 +792,30 @@ export default class CrearDoctor extends React.Component {
     agregarParen() {
         const paren = document.getElementById('paren').selectedIndex
         const perParen = document.getElementById('perParen').selectedIndex
+        var bool = true;
         if (paren != 0 && perParen != 0) {
             const arreglo = {
                 paren: this.state.paren, nombre: this.state.personas[perParen - 1].nombre + ' ' + this.state.personas[perParen - 1].apellido,
                 doc: this.state.personas[perParen - 1].numerodoc, id: this.state.personas[perParen - 1].idpersona
             }
-            this.setState({
-                tablaParen: [...this.state.tablaParen, arreglo]
-            })
+            for(var i =0; i<this.state.tablaParen.length;i++){
+                if(this.state.tablaParen[i].id === arreglo.id ){
+                    bool = false;
+                }
+            }
+            if(bool === true){
+
+                this.setState({
+                    tablaParen: [...this.state.tablaParen, arreglo]
+                });
+            }else{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Esta Persona ya se agrego a la Lista de Parentesco.',
+                });
+            }
+            
         } else {
             Swal.fire({
                 icon: 'error',
