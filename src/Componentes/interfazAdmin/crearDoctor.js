@@ -76,8 +76,8 @@ export default class CrearDoctor extends React.Component {
             numIP: null,
             geoPLA: '',
             geoPLO: '',
-            docSelP: '',
-            ciudadP: '',
+            docSelP: null,
+            ciudadP: null,
             selCiudades: [],
             //
             haydoc: false,
