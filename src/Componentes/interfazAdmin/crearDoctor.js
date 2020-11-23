@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { Button, Form, Label, FormGroup, Input, Modal, ModalHeader, ModalBody, ModalFooter, InputGroup, InputGroupAddon, ButtonGroup } from "reactstrap";
+import { Button, Form, Label, FormGroup, Input, Modal, ModalHeader, ModalBody, ModalFooter, InputGroup, InputGroupAddon, ButtonGroup, Table } from "reactstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import 'sweetalert2/src/sweetalert2.scss';
@@ -19,7 +19,12 @@ export default class CrearDoctor extends React.Component {
             modalInserD: false,
             modalInserP: false,
             modalActuD: false,
-            modalParen: false,
+            modalParen: true,
+            //
+            //Parentesco
+            paren: null,
+            perParen: null,
+            tablaParen: [],
             //
             nombrePa: '',
             selecdoc: null,
@@ -781,6 +786,42 @@ export default class CrearDoctor extends React.Component {
         });
     }
 
+    //Parentesco
+
+    agregarParen() {
+        const paren = document.getElementById('paren').selectedIndex
+        const perParen = document.getElementById('perParen').selectedIndex
+        if (paren != 0 && perParen != 0) {
+            const arreglo = {
+                paren: this.state.paren, nombre: this.state.personas[perParen - 1].nombre + ' ' + this.state.personas[perParen - 1].apellido,
+                doc: this.state.personas[perParen - 1].numerodoc
+            }
+            this.setState({
+                tablaParen: [...this.state.tablaParen, arreglo]
+            })
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Seleccione una Persona y su Parentesco.',
+            });
+        }
+    }
+
+    borrarParen(x) {
+        var arreglo = this.state.tablaParen;
+        var index = null;
+        for (var i = 0; i < this.state.tablaParen.length; i++) {
+            if (this.state.tablaParen[i].nombre === x) {
+                index = i;
+            }
+        }
+        arreglo.splice(index, 1);
+        this.setState({
+            tablaParen: arreglo
+        })
+    }
+
     // Validaciones y Modals
 
     async validaM(x) {
@@ -1014,8 +1055,14 @@ export default class CrearDoctor extends React.Component {
             modalActuD: !this.state.modalActuD
         });
     }
-    cancelarParen(){
+    cancelarParen() {
         this.modalParen();
+        this.setState({
+            paren: null,
+            perParen: null,
+            tablaParen: [],
+        })
+
     }
     cancelarActuD() {
         this.modalActuD();
@@ -1725,12 +1772,89 @@ export default class CrearDoctor extends React.Component {
                 {/* Modal Parentesco */}
 
                 <Modal
-                    size="md"
+                    size="lg"
                     centered isOpen={this.state.modalParen} id="insertar">
                     <ModalHeader>
                         <div><h3>Crear Parentesco</h3></div>
                     </ModalHeader>
                     <ModalBody>
+                        <div className="mb-3" style={{ width: '70%', float: 'left' }} >
+                            <FormGroup >
+                                <InputGroup>
+
+                                    <Input
+                                        id="perParen"
+
+                                        className="form-control"
+                                        name="perParen"
+                                        bsSize="md"
+                                        type="select"
+                                        value={this.state.perParen}
+                                        onChange={this.handleChange}>
+
+                                        <option selected="true" disabled="disabled">Personas</option>
+                                        {this.state.personas.map(per => (
+                                            <option value={per.idpersona}>
+                                                {per.nombre}  {per.apellido} - {per.numerodoc}
+                                            </option>
+                                        ))}
+
+                                    </Input>
+                                    <Input
+                                        id="paren"
+
+                                        className="form-control ml-2"
+                                        name="paren"
+                                        bsSize="md"
+                                        type="select"
+                                        value={this.state.paren}
+                                        onChange={this.handleChange}>
+
+                                        <option selected="true" disabled="disabled">Parentesco</option>
+                                        <option value='Padre'>Padre</option>
+                                        <option value='Madre'>Madre</option>
+                                        <option value='Hij@'>Hij@</option>
+                                        <option value='Ti@'>Ti@</option>
+                                        <option value='Herman@'>Herman@</option>
+                                        <option value='Prim@'>Prim@</option>
+                                        <option value='Espos@'>Espos@</option>
+                                        <option value='Abuel@'>Abuel@</option>
+
+                                    </Input>
+                                    <InputGroupAddon addonType="prepend" className='ml-4'>
+                                        <Button color="primary" onClick={() => this.agregarParen()} >Agregar Parentesco</Button>
+
+                                    </InputGroupAddon>
+
+                                </InputGroup>
+                                <div style={{ width: '35%', float: 'left' }} className='mt-3'>
+                                    <CrearPersona />
+                                </div>
+                            </FormGroup>
+                        </div>
+                        <Table className=' text-center' striped bordered hover>
+                            <thead>
+                                <tr>
+                                    <th className='font-weight-bold'>Parentesco</th>
+                                    <th className='font-weight-bold'>Nombre</th>
+                                    <th className='font-weight-bold'>Documento</th>
+
+                                    <th className='font-weight-bold'>Eliminar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {this.state.tablaParen.map(paren => (
+                                    <tr>
+                                        <td>{paren.paren}</td>
+                                        <td>{paren.nombre}</td>
+                                        <td>{paren.doc}</td>
+
+                                        <td><Button onClick={() => this.borrarParen(paren.nombre)} color='danger'><i className="fa fa-trash" aria-hidden="true"></i></Button></td>
+                                    </tr>
+                                ))}
+
+                            </tbody>
+                        </Table>
                     </ModalBody>
                     <ModalFooter >
                         <Button color="success"  >Crear Parentesco</Button>
