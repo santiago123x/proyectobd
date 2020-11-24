@@ -803,7 +803,7 @@ router.get('/pacientesid', async(req,res)=>{
     }
 })
 
-//---------------------------Informes---------------------
+//---------------------------Informes barrio---------------------
 
 router.get('/contxbarrio/',async (req,res)=>{
     try{
@@ -815,6 +815,54 @@ router.get('/contxbarrio/',async (req,res)=>{
         console.log("no hay contagiaos");
     }
 });
+//---------------------------Informes edad---------------------
+
+router.get('/pacxed/',async (req,res)=>{
+    try{
+        const arreglo = await pool.query(`select personas,CAST(anio AS varchar) from pacxed order by anio`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("no hay contagiaos");
+    }
+});
+//---------------------------Informes visitas---------------------
+
+router.get('/visxanio/',async (req,res)=>{
+    try{
+        const {anio} = req.body;
+        const arreglo = await pool.query(`select * from infovisitas
+        where to_char(fecha, 'YYYY') = '${anio}'`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("informe visxanio se jodio " + e );
+    }
+});
+
+router.get('/visxmes/',async (req,res)=>{
+    try{
+        const {anio, mes} = req.body;
+        const arreglo = await pool.query(`select * from infovisitas
+        where to_char(fecha, 'YYYY') = '${anio}' 
+        and to_char(fecha, 'MM') = '${mes}'`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("informe visxmes se jodio " + e );
+    }
+});
+
+router.get('/visxdia/',async (req,res)=>{
+    try{
+        const {anio, mes, dia} = req.body;
+        const arreglo = await pool.query(`select * from infovisitas
+        where to_char(fecha, 'YYYY') = '${anio}'
+        and to_char(fecha, 'MM') = '${mes}'
+        and to_char(fecha, 'DD') = '${dia}'`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("informe visxdia se jodio " + e );
+    }
+});
+
 
 //------------------- visita ----------------------
 
@@ -843,16 +891,7 @@ router.post('/integrantes', async(req,res)=>{
     }
 
 });
-//---------------------------Informes---------------------
 
-router.get('/pacxed/',async (req,res)=>{
-    try{
-        const arreglo = await pool.query(`select personas,CAST(anio AS varchar) from pacxed order by anio`);
-        res.send(arreglo.rows);
-    }catch(e){
-        console.log("no hay contagiaos");
-    }
-});
 
 // ------------------------- Conexion --------------------
 

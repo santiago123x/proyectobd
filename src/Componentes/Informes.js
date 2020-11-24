@@ -1,31 +1,10 @@
 import React from 'react';
-import { Button, Modal,ModalBody } from 'reactstrap';
+import { Button, Modal, ModalBody, FormGroup, InputGroup, Input, InputGroupAddon, Button } from 'reactstrap';
 import './InterfazDoc/style.scss';
 import { PieChart, Pie, Tooltip, ResponsiveContainer, Cell, Sector, AreaChart, Area, XAxis, YAxis, CartesianGrid } from "recharts";
+import Swal from 'sweetalert2/dist/sweetalert2.js';
+import 'sweetalert2/src/sweetalert2.scss';
 
-const datas = [
-  {
-    name: 'Page A', uv: 4000, pv: 2400, amt: 2400,
-  },
-  {
-    name: 'Page B', uv: 3000, pv: 1398, amt: 2210,
-  },
-  {
-    name: 'Page C', uv: 2000, pv: 9800, amt: 2290,
-  },
-  {
-    name: 'Page D', uv: 2780, pv: 3908, amt: 2000,
-  },
-  {
-    name: 'Page E', uv: 1890, pv: 4800, amt: 2181,
-  },
-  {
-    name: 'Page F', uv: 2390, pv: 3800, amt: 2500,
-  },
-  {
-    name: 'Page G', uv: 3490, pv: 4300, amt: 2100,
-  },
-];
 const renderActiveShape = (props) => {
   const RADIAN = Math.PI / 180;
   const {
@@ -85,11 +64,24 @@ export default class Informes extends React.Component {
       color2: [],
       edades: [],
       modalInser: true,
+      visitas: [],
+      visi: null,
+      fechavisi: null,
 
     };
 
-
+    this.handleChange = this.handleChange.bind(this);
   }
+
+  handleChange(event) {
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value
+    });
+  };
 
 
   colorRamdo() {
@@ -106,6 +98,67 @@ export default class Informes extends React.Component {
     color = `"background-color: ${color};"`;
     console.log(color);
     return color;
+  }
+
+  async visitas() {
+    var anio = '';
+    var mes = '';
+    var dia = '';
+
+    if (document.getElementById('visitas').value === 1) {
+      const body = { anio }
+      await fetch(`http://localhost:5000/visxanio/`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      })
+        .then(res => res.json())
+        .then(
+          (result) => {
+            this.setState({
+              barrios: result
+            });
+          }
+        )
+    } else if (document.getElementById('visitas').value === 2) {
+      const body = { anio, mes }
+      await fetch(`http://localhost:5000/visxmes/`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      })
+        .then(res => res.json())
+        .then(
+          (result) => {
+            this.setState({
+              barrios: result
+            });
+          }
+        )
+    } else if (document.getElementById('visi').value === 3) {
+      const body = { anio, mes, dia }
+      await fetch(`http://localhost:5000/visxdia/`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      })
+        .then(res => res.json())
+        .then(
+          (result) => {
+            this.setState({
+              barrios: result
+            });
+          }
+        )
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Seleccione una opcion de busqueda',
+      })
+    }
+
+
   }
 
   async componentDidMount() {
@@ -164,15 +217,23 @@ export default class Informes extends React.Component {
     });
   };
 
-  mostrarCPB(){
-    document.getElementById('pie').style.display = 'inline-block';
+  mostrarCPB() {
     document.getElementById('edades').style.display = 'none';
-  }
-  mostrarED(){
-    document.getElementById('pie').style.display = 'none';
-    document.getElementById('edades').style.display = 'inline-block';
-  }
+    document.getElementById('visitas').style.display = 'none';
+    document.getElementById('pie').style.display = 'inline-block';
 
+  }
+  mostrarED() {
+    document.getElementById('pie').style.display = 'none';
+    document.getElementById('visitas').style.display = 'none';
+    document.getElementById('edades').style.display = 'inline-block';
+
+  }
+  mostrarVI() {
+    document.getElementById('pie').style.display = 'none';
+    document.getElementById('edades').style.display = 'none';
+    document.getElementById('visitas').style.display = 'inline-block';
+  }
   render() {
     return (
       <div className="total">
@@ -183,18 +244,18 @@ export default class Informes extends React.Component {
           <div className="btn-group-lg  pt-3 " role="group" aria-label="Basic example">
             <Button type="button" onClick={() => this.mostrarCPB()} className='mr-1 font-weight-bold' color="primary">Contagios por Barrio</Button>
             <Button type="button" onClick={() => this.mostrarED()} className='mr-1 font-weight-bold' color="primary">Contagios por edad</Button>
-            <Button type="button" className='font-weight-bold' color="primary">Visitas Doctores</Button>
+            <Button type="button" onClick={() => this.mostrarVI()} className='font-weight-bold' color="primary">Visitas Doctores</Button>
           </div>
-         
 
-          
-          
-          
+
+
+
+
           <div className='pie' id='pie'>
-          <h4 className="text-center mb-2 mt-2 font-weight-bold" >Contagiados por Barrio</h4>
-            
+            <h4 className="text-center mb-2 mt-2 font-weight-bold" >Contagiados por Barrio</h4>
+
             <PieChart width={800} height={800} className="pr-2">
-            
+
               <Pie
                 activeIndex={this.state.activeIndex}
                 activeShape={renderActiveShape}
@@ -211,16 +272,16 @@ export default class Informes extends React.Component {
                   this.state.data01.map((entry, index) => <Cell key={`cell-${index}`} fill={this.state.color2[index]} />)
                 }
               </Pie>
-              
+
             </PieChart>
-            
-         </div>
-          
+
+          </div>
+
 
 
 
           <div style={{ display: 'none' }} id='edades'>
-          <h4 className="text-center mb-5 mt-2 font-weight-bold" >Contagiados por Edad</h4>
+            <h4 className="text-center mb-5 mt-2 font-weight-bold" >Contagiados por Edad</h4>
             <AreaChart
               width={500}
               height={400}
@@ -235,6 +296,44 @@ export default class Informes extends React.Component {
               <Tooltip />
               <Area type="monotone" dataKey="personas" stroke="#8884d8" fill="#8884d8" />
             </AreaChart>
+          </div>
+
+          <div style={{ display: 'none' }} id='visitas'>
+            <h4 className="text-center mb-5 mt-2 font-weight-bold" >Informes de Visitas</h4>
+            <FormGroup  >
+              <InputGroup>
+                <Input id="visi"
+                  className="form-control"
+                  name="visi"
+                  type="select"
+                  bsSize="md"
+                  value={this.state.visi}
+                  onChange={this.handleChange}>
+
+                  <option selected="true" disabled="disabled">Tipo de Busqueda</option>
+                  <option value='1'>Por Año</option>
+                  <option value='2'>Por Mes</option>
+                  <option value='3'>Por Dia</option>
+
+                </Input>
+                <Input id="fechavisi"
+                  className="form-control"
+                  name="fechavisi"
+                  type="date"
+                  bsSize="md"
+                  value={this.state.fechavisi}
+                  onChange={this.handleChange}>
+
+
+                </Input>
+
+                <InputGroupAddon addonType="prepend">
+
+                  <Button color="primary" onClick={}><i class="fa fa-plus" /></Button>
+
+                </InputGroupAddon>
+              </InputGroup>
+            </FormGroup>
           </div>
 
         </div>
