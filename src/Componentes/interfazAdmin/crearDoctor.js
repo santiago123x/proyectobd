@@ -19,7 +19,7 @@ export default class CrearDoctor extends React.Component {
             modalInserD: false,
             modalInserP: false,
             modalActuD: false,
-            modalParen: true,
+            modalParen: false,
             //
             //Parentesco
             paren: null,
@@ -267,11 +267,11 @@ export default class CrearDoctor extends React.Component {
         var hoy = new Date();
         var fecha = hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '-' + hoy.getDate();
         var hora = hoy.getHours() + ':' + hoy.getMinutes() + ':' + hoy.getSeconds();
-        var idusu = this.state.match;
+        var idusu = this.props.idusu;
         var idpaciente = null;
-        console.log(idusu)
+
         const body = { idpersona, numintegrantes, ciudadcontagio }
-        console.log(body)
+        
 
 
         await fetch(`http://localhost:5000/paciente/`,
@@ -307,7 +307,7 @@ export default class CrearDoctor extends React.Component {
             });
 
         const bodyR = { idusu, idpaciente, fecha, hora }
-        console.log(bodyR)
+        
 
         await fetch(`http://localhost:5000/registropac/`,
             {
@@ -793,29 +793,29 @@ export default class CrearDoctor extends React.Component {
         const paren = document.getElementById('paren').selectedIndex
         const perParen = document.getElementById('perParen').selectedIndex
         var bool = true;
-        if (paren != 0 && perParen != 0) {
+        if (paren !== 0 && perParen !== 0) {
             const arreglo = {
                 paren: this.state.paren, nombre: this.state.personas[perParen - 1].nombre + ' ' + this.state.personas[perParen - 1].apellido,
                 doc: this.state.personas[perParen - 1].numerodoc, id: this.state.personas[perParen - 1].idpersona
             }
-            for(var i =0; i<this.state.tablaParen.length;i++){
-                if(this.state.tablaParen[i].id === arreglo.id ){
+            for (var i = 0; i < this.state.tablaParen.length; i++) {
+                if (this.state.tablaParen[i].id === arreglo.id) {
                     bool = false;
                 }
             }
-            if(bool === true){
+            if (bool === true) {
 
                 this.setState({
                     tablaParen: [...this.state.tablaParen, arreglo]
                 });
-            }else{
+            } else {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
                     text: 'Esta Persona ya se agrego a la Lista de Parentesco.',
                 });
             }
-            
+
         } else {
             Swal.fire({
                 icon: 'error',
@@ -848,19 +848,34 @@ export default class CrearDoctor extends React.Component {
             await fetch(`http://localhost:5000/pacientesid`)
                 .then(response => response.json())
                 .then((result) => {
-                    idpac = result.idpaciente;
+                    idpac = parseInt(result.idpaciente);
                 });
 
             for (var i = 0; i < this.state.tablaParen.length; i++) {
-                idper = this.state.tablaParen[i].id;
+                idper = parseInt(this.state.tablaParen[i].id);
                 paren = this.state.tablaParen[i].paren;
 
-                const body = { paren, idper, idpac }
+                const body = { idpac, idper, paren }
 
-                //await fetch
+                await fetch(`http://localhost:5000/integrantes`,
+                    {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(body)
+                    });
 
-                console.log(body)
+
             }
+
+            await Swal.fire({
+                icon: 'success',
+                title: `Se ha Agregado los Parientes`,
+                showConfirmButton: false,
+                timer: 1750
+            })
+
+            this.cancelarParen();
+            this.componentDidMount();
 
         } else {
             Swal.fire({
@@ -1928,7 +1943,7 @@ export default class CrearDoctor extends React.Component {
                         </Table>
                     </ModalBody>
                     <ModalFooter >
-                        <Button color="success"  onClick={() => this.crearParent()} >Crear Parentesco</Button>
+                        <Button color="success" onClick={() => this.crearParent()} >Crear Parentesco</Button>
                         <Button color="danger" onClick={() => this.cancelarParen()}>Cancelar</Button>
                     </ModalFooter>
                 </Modal>

@@ -15,12 +15,12 @@ const Markers = (props) => {
                 {place.nombrevia}{place.numeroviap} # {place.numerovias}  - {place.numerocasa}
             </Tooltip>
             <Popup>
-                {place.nombre},{place.apellido}
+                {place.nombre}{' '}{place.apellido}
             </Popup>
         </Marker>
     ))
     return (markers);
-    console.log(places[0])
+    
 }
 
 export default Markers;

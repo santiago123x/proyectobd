@@ -834,10 +834,9 @@ router.post('/visita', async(req,res)=>{
 
 router.post('/integrantes', async(req,res)=>{
     try{
-        const { } = req.body;
-        newTodo = await pool.query(
-        `insert into integrante (idpaciente, idpersona, parentesco)
-        values ${idPac}, ${idDoc}, '${parentesco}')`);
+        const {idpac,idper, paren } = req.body;
+        newTodo = await pool.query(`insert into integrante (idpaciente, idpersona, parentesco)
+        values (${idpac}, ${idper}, '${paren}')`);
         res.send(newTodo);
     }catch(e){
         console.log('visita : ' +e);
