@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Modal, ModalBody, FormGroup, InputGroup, Input, InputGroupAddon, Button } from 'reactstrap';
+import { Button, Modal, ModalBody, FormGroup, InputGroup, Input, InputGroupAddon, Table, Collapse, Card, CardBody, ModalHeader, ModalFooter } from 'reactstrap';
 import './InterfazDoc/style.scss';
 import { PieChart, Pie, Tooltip, ResponsiveContainer, Cell, Sector, AreaChart, Area, XAxis, YAxis, CartesianGrid } from "recharts";
 import Swal from 'sweetalert2/dist/sweetalert2.js';
@@ -67,6 +67,9 @@ export default class Informes extends React.Component {
       visitas: [],
       visi: null,
       fechavisi: null,
+      modal: false,
+      obs: '',
+
 
     };
 
@@ -83,6 +86,28 @@ export default class Informes extends React.Component {
     });
   };
 
+  toggle(y) {
+    /*
+    const x = document.getElementById(y).style.display
+    if (x === 'none') {
+      document.getElementById(y).style.display = 'contents'
+    }
+    else {
+      document.getElementById(y).style.display = 'none'
+    }*/
+    const observacion = y;
+    this.setState({
+      modal: !this.state.modal,
+      obs: observacion
+    })
+  }
+
+  cerrarM(){
+    this.setState({
+      modal: !this.state.modal,
+      obs: '',
+    })
+  }
 
   colorRamdo() {
     var randomColor = Math.floor(Math.random() * 16777215).toString(16);
@@ -101,63 +126,63 @@ export default class Informes extends React.Component {
   }
 
   async visitas() {
-    var anio = '';
-    var mes = '';
-    var dia = '';
+    var fecha = this.state.fechavisi;
+    var visita = this.state.visi;
 
-    if (document.getElementById('visitas').value === 1) {
-      const body = { anio }
-      await fetch(`http://localhost:5000/visxanio/`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body)
-      })
-        .then(res => res.json())
-        .then(
-          (result) => {
-            this.setState({
-              barrios: result
-            });
-          }
-        )
-    } else if (document.getElementById('visitas').value === 2) {
-      const body = { anio, mes }
-      await fetch(`http://localhost:5000/visxmes/`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body)
-      })
-        .then(res => res.json())
-        .then(
-          (result) => {
-            this.setState({
-              barrios: result
-            });
-          }
-        )
-    } else if (document.getElementById('visi').value === 3) {
-      const body = { anio, mes, dia }
-      await fetch(`http://localhost:5000/visxdia/`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body)
-      })
-        .then(res => res.json())
-        .then(
-          (result) => {
-            this.setState({
-              barrios: result
-            });
-          }
-        )
+    if (fecha !== null) {
+      var anio = fecha.substr(0, 4);
+      var mes = fecha.substr(5, 2);
+      var dia = fecha.substr(8, 2);
+
+      if (visita === '1') {
+
+        await fetch(`http://localhost:5000/visxanio/${anio}/`)
+          .then(res => res.json())
+          .then(
+            (result) => {
+              console.log(result)
+              this.setState({
+                visitas: result
+              });
+            }
+          )
+
+      } else if (visita === '2') {
+
+        await fetch(`http://localhost:5000/visxmes/${anio}/${mes}/`)
+          .then(res => res.json())
+          .then(
+            (result) => {
+              this.setState({
+                visitas: result
+              });
+            }
+          )
+      } else if (visita === '3') {
+
+        await fetch(`http://localhost:5000/visxdia/${anio}/${mes}/${dia}/`)
+          .then(res => res.json())
+          .then(
+            (result) => {
+              this.setState({
+                visitas: result
+              });
+            }
+          )
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Seleccione una opcion de busqueda',
+        })
+      }
     } else {
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
-        text: 'Seleccione una opcion de busqueda',
+        text: 'Seleccione una fecha',
       })
     }
-
 
   }
 
@@ -300,40 +325,96 @@ export default class Informes extends React.Component {
 
           <div style={{ display: 'none' }} id='visitas'>
             <h4 className="text-center mb-5 mt-2 font-weight-bold" >Informes de Visitas</h4>
-            <FormGroup  >
-              <InputGroup>
-                <Input id="visi"
-                  className="form-control"
-                  name="visi"
-                  type="select"
-                  bsSize="md"
-                  value={this.state.visi}
-                  onChange={this.handleChange}>
-
-                  <option selected="true" disabled="disabled">Tipo de Busqueda</option>
-                  <option value='1'>Por Año</option>
-                  <option value='2'>Por Mes</option>
-                  <option value='3'>Por Dia</option>
-
-                </Input>
-                <Input id="fechavisi"
-                  className="form-control"
-                  name="fechavisi"
-                  type="date"
-                  bsSize="md"
-                  value={this.state.fechavisi}
-                  onChange={this.handleChange}>
+            <FormGroup >
+              <div className='row justify-content-md-center'>
 
 
-                </Input>
+                <InputGroup className='col-7' style={{ width: '50%' }}>
+                  <Input id="visi"
+                    className="form-control"
+                    name="visi"
+                    type="select"
+                    bsSize="md"
+                    value={this.state.visi}
+                    onChange={this.handleChange}>
 
-                <InputGroupAddon addonType="prepend">
+                    <option selected="true" disabled="disabled">Tipo de Busqueda</option>
+                    <option value='1'>Por Año</option>
+                    <option value='2'>Por Mes</option>
+                    <option value='3'>Por Dia</option>
 
-                  <Button color="primary" onClick={}><i class="fa fa-plus" /></Button>
+                  </Input>
+                  <Input id="fechavisi"
+                    className="form-control"
+                    name="fechavisi"
+                    type="date"
+                    bsSize="md"
+                    value={this.state.fechavisi}
+                    onChange={this.handleChange}>
 
-                </InputGroupAddon>
-              </InputGroup>
+
+                  </Input>
+
+                  <InputGroupAddon addonType="prepend">
+
+                    <Button color="primary" onClick={() => this.visitas()}><i className="fa fa-search" aria-hidden="true"></i></Button>
+
+                  </InputGroupAddon>
+                </InputGroup>
+              </div>
             </FormGroup>
+            <Table className=' text-center' striped bordered hover>
+              <thead>
+                <tr id='tr-info'>
+                  <th className='font-weight-bold'>Paciente</th>
+                  <th className='font-weight-bold'>Doctor</th>
+                  <th className='font-weight-bold'>Medicamento</th>
+                  <th className='font-weight-bold'>Temperatura</th>
+                  <th className='font-weight-bold'>Fecha</th>
+                  <th className='font-weight-bold'>Hora</th>
+                  <th className='font-weight-bold'>Observaciones</th>
+
+
+                </tr>
+              </thead>
+              <tbody>
+                {this.state.visitas.map((vis, index) => (
+                  <tr className='font-weight-bold'>
+                    <td>{vis.nombrepac}{' '}{vis.apellidopac}</td>
+                    <td>{vis.nombredoc}{' '}{vis.apellidodoc}</td>
+                    <td>{vis.medicamento}</td>
+                    <td>{vis.temperatura}</td>
+                    <td>{vis.to_char}</td>
+                    <td>{vis.hora}</td>
+                    <td> <Button onClick={() => this.toggle(vis.observaciones)} type="button">
+                      <i className="fa fa-commenting" aria-hidden="true"></i>
+                    </Button>
+
+                    </td>
+
+
+                  </tr>
+                ))}
+
+
+
+              </tbody>
+            </Table>
+
+            <Modal centered isOpen={this.state.modal} >
+              <ModalHeader >
+                Observaciones
+                          </ModalHeader>
+              <ModalBody>
+                  {this.state.obs}
+              </ModalBody>
+
+              <ModalFooter>
+                <Button onClick={() => this.cerrarM()} color='danger' type="button">Cerrar</Button>
+
+              </ModalFooter>
+
+            </Modal>
           </div>
 
         </div>

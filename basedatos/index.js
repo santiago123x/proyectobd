@@ -573,9 +573,27 @@ router.get('/medicamentos/',async (req,res)=>{
 
 //------------------------ Inventario ----------------------
 
+router.post('/pedido/', async (req,res)=>{
+    try{
+        const {iddoc, idmed, cant, idlab } = req.body;
+        newTodo = await pool.query(
+        `insert into pedido (iddoctor, idmedicamento, fecha, cantidad, idlab)
+        values ( ${iddoc}, ${idmed}, now(), ${cant}, ${idlab})`);
+        res.json("INSERTADO 7W7");
+    }catch(e){
+        console.log('pedido: ' + e);
+    }
+});
 
 
-
+router.get('/stock/',async (req,res)=>{
+    try{
+        const arreglo = await pool.query(`SELECT * from stock`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("stock: "+ e);
+    }
+});
 
 router.get('/inventario2/',async (req,res)=>{
     try{
@@ -827,9 +845,9 @@ router.get('/pacxed/',async (req,res)=>{
 });
 //---------------------------Informes visitas---------------------
 
-router.get('/visxanio/',async (req,res)=>{
+router.get('/visxanio/:anio/',async (req,res)=>{
     try{
-        const {anio} = req.body;
+        const {anio} = req.params;
         const arreglo = await pool.query(`select * from infovisitas
         where to_char(fecha, 'YYYY') = '${anio}'`);
         res.send(arreglo.rows);
@@ -838,9 +856,9 @@ router.get('/visxanio/',async (req,res)=>{
     }
 });
 
-router.get('/visxmes/',async (req,res)=>{
+router.get('/visxmes/:anio/:mes/',async (req,res)=>{
     try{
-        const {anio, mes} = req.body;
+        const {anio, mes} = req.params;
         const arreglo = await pool.query(`select * from infovisitas
         where to_char(fecha, 'YYYY') = '${anio}' 
         and to_char(fecha, 'MM') = '${mes}'`);
@@ -850,9 +868,9 @@ router.get('/visxmes/',async (req,res)=>{
     }
 });
 
-router.get('/visxdia/',async (req,res)=>{
+router.get('/visxdia/:anio/:mes/:dia/',async (req,res)=>{
     try{
-        const {anio, mes, dia} = req.body;
+        const {anio, mes, dia} = req.params;
         const arreglo = await pool.query(`select * from infovisitas
         where to_char(fecha, 'YYYY') = '${anio}'
         and to_char(fecha, 'MM') = '${mes}'
