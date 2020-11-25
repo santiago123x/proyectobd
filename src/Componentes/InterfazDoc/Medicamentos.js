@@ -42,10 +42,44 @@ export default class Medicamentos extends React.Component {
   }
 
   async componentDidMount() {
-    await fetch(`http://localhost:5000/inventario2`)
+    await fetch(`http://localhost:5000/stock`)
       .then(response => response.json())
       .then((result) => {
+        this.setState({
+          med1: result[0].medicamento,
+          med1lab1: result[0].cantidad,
+          med1lab2: result[1].cantidad,
+          med1lab3: result[2].cantidad,
+          med1lab4: result[3].cantidad,
+          med2: result[4].medicamento,
+          med2lab1: result[4].cantidad,
+          med2lab2: result[5].cantidad,
+          med2lab3: result[6].cantidad,
+          med2lab4: result[7].cantidad,
+          med3: result[8].medicamento,
+          med3lab1: result[8].cantidad,
+          med3lab2: result[9].cantidad,
+          med3lab3: result[10].cantidad,
+          med3lab4: result[11].cantidad,
 
+          
+
+        });
+        const total1 = this.state.med1lab1 + this.state.med1lab2 + this.state.med1lab3 + this.state.med1lab4
+            this.setState({
+              totalMed1: total1
+            });
+            const total2 = this.state.med2lab1 + this.state.med2lab2 + this.state.med2lab3 + this.state.med2lab4
+            this.setState({
+              totalMed2: total2
+            });
+            const total3 = this.state.med3lab1 + this.state.med3lab2 + this.state.med3lab3 + this.state.med3lab4
+
+            this.setState({
+              totalMed3: total3
+            });
+
+/*
         for (var i = 0; i < result.length; i++) {
           if (result[i].idmedicamento === 1) {
             this.setState({
@@ -92,7 +126,7 @@ export default class Medicamentos extends React.Component {
               totalMed3: total
             })
           }
-        }
+        }*/
       });
 
   }
@@ -289,15 +323,15 @@ export default class Medicamentos extends React.Component {
       //window.location.reload();
       this.setear();
       this.componentDidMount();
-      
+
     }
   }
 
-  setear(){
+  setear() {
 
-    document.getElementById('op').selected ='true';
-    document.getElementById('opo').selected ='true';
-    document.getElementById('cantidad').value =null;
+    document.getElementById('op').selected = 'true';
+    document.getElementById('opo').selected = 'true';
+    document.getElementById('cantidad').value = null;
 
     this.setState({
       cantidad: null,
@@ -342,7 +376,7 @@ export default class Medicamentos extends React.Component {
                       name='labo'
                       type='select'
                     >
-                      <option id= 'opo'selected="true" disabled="disabled">Laboratorios</option>
+                      <option id='opo' selected="true" disabled="disabled">Laboratorios</option>
                       <option >Laboratorio #1</option>
                       <option >Laboratorio #2</option>
                       <option >Laboratorio #3</option>

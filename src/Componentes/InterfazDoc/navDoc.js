@@ -128,7 +128,7 @@ export default class NavDoc extends React.Component {
               <InformesDoc />
             </Route>
             <Route path="/NavDoc/:id/Medicamentos">
-              <Medicamentos />
+              <Medicamentos idDoc={this.state.idDoc} />
             </Route>
             <Route exact path="/NavDoc/:id">
               <Registro idpD={this.state.idpD} idDoc={this.state.idDoc} tipodD={this.state.tipodD}

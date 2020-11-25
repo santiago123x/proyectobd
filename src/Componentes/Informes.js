@@ -102,7 +102,7 @@ export default class Informes extends React.Component {
     })
   }
 
-  cerrarM(){
+  cerrarM() {
     this.setState({
       modal: !this.state.modal,
       obs: '',
@@ -404,9 +404,9 @@ export default class Informes extends React.Component {
             <Modal centered isOpen={this.state.modal} >
               <ModalHeader >
                 Observaciones
-                          </ModalHeader>
-              <ModalBody>
-                  {this.state.obs}
+              </ModalHeader>
+              <ModalBody className='text-center text-justify'>
+                {this.state.obs}
               </ModalBody>
 
               <ModalFooter>
