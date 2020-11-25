@@ -574,13 +574,13 @@ cancelarEmail() {
                     <td>{urg.relacion}</td>
                     <td>{urg.idpaciente}</td>
                     <td>{urg.nompa}{' '}{urg.apepa}</td>
-                    <td> <Button onClick={() => this.emailEmer(urg.idpersona)} type="button">
-                    <i class="fa fa-volume-control-phone" color="primary" aria-hidden="true"></i>
+                    <td> <Button color="primary" onClick={() => this.telEmer(urg.idpersona)} type="button">
+                    <i class="fa fa-volume-control-phone"  aria-hidden="true"></i>
                     </Button>
 
                     </td>
-                    <td> <Button onClick={() => this.telEmer(urg.idpersona)} type="button">
-                    <i class="fa fa-envelope" color="succes" aria-hidden="true"></i>
+                    <td> <Button  color="success" onClick={() => this.emailEmer(urg.idpersona)} type="button">
+                    <i class="fa fa-envelope"  aria-hidden="true"></i>
                     </Button>
 
                     </td>
