@@ -419,8 +419,8 @@ cancelarEmail() {
           <div style={{ display: 'none' }} id='edades'>
             <h4 className="text-center mb-5 mt-2 font-weight-bold" >Contagiados por Edad</h4>
             <AreaChart
-              width={500}
-              height={400}
+              width={800}
+              height={450}
               data={this.state.edades}
               margin={{
                 top: 10, right: 30, left: 0, bottom: 0,
