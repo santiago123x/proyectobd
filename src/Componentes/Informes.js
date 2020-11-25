@@ -70,7 +70,10 @@ export default class Informes extends React.Component {
       modal: false,
       obs: '',
 
-
+      //informe urgencias
+      urginf: [],
+      pacientes: [],
+      paciente: null
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -125,6 +128,36 @@ export default class Informes extends React.Component {
     return color;
   }
 
+
+
+  async seleccionarPaciente() {
+
+    if (document.getElementById('paciente').selectedIndex != 0) {
+      const index = document.getElementById('paciente').selectedIndex - 1;
+      var idpac = this.state.pacientes[index].idpaciente;
+
+      await fetch(`http://localhost:5000/infurg/${idpac}/`)
+        .then(res => res.json())
+        .then(
+          (result) => {
+            console.log(result)
+            this.setState({
+              urginf: result
+            });
+          }
+        )
+
+    } else {
+      Swal.fire({
+        icon: 'error',
+        titele: 'Oops...',
+        text: 'Seleccione un Paciente.',
+      });
+    }
+
+  }
+
+
   async visitas() {
     var fecha = this.state.fechavisi;
     var visita = this.state.visi;
@@ -140,7 +173,7 @@ export default class Informes extends React.Component {
           .then(res => res.json())
           .then(
             (result) => {
-              console.log(result)
+              
               this.setState({
                 visitas: result
               });
@@ -187,6 +220,15 @@ export default class Informes extends React.Component {
   }
 
   async componentDidMount() {
+    await fetch('http://localhost:5000/pacientes/')
+      .then(res => res.json())
+      .then(
+        (result) => {
+          this.setState({
+            pacientes: result
+          });
+        }
+      )
 
     await fetch(`http://localhost:5000/contxbarrio/`)
       .then(res => res.json())
@@ -246,18 +288,27 @@ export default class Informes extends React.Component {
     document.getElementById('edades').style.display = 'none';
     document.getElementById('visitas').style.display = 'none';
     document.getElementById('pie').style.display = 'inline-block';
+    document.getElementById('urgencias').style.display = 'none';
 
   }
   mostrarED() {
     document.getElementById('pie').style.display = 'none';
     document.getElementById('visitas').style.display = 'none';
     document.getElementById('edades').style.display = 'inline-block';
+    document.getElementById('urgencias').style.display = 'none';
 
   }
   mostrarVI() {
     document.getElementById('pie').style.display = 'none';
     document.getElementById('edades').style.display = 'none';
     document.getElementById('visitas').style.display = 'inline-block';
+    document.getElementById('urgencias').style.display = 'none';
+  }
+  mostrarUR() {
+    document.getElementById('pie').style.display = 'none';
+    document.getElementById('edades').style.display = 'none';
+    document.getElementById('visitas').style.display = 'none';
+    document.getElementById('urgencias').style.display = 'inline-block';
   }
   render() {
     return (
@@ -270,6 +321,7 @@ export default class Informes extends React.Component {
             <Button type="button" onClick={() => this.mostrarCPB()} className='mr-1 font-weight-bold' color="primary">Contagios por Barrio</Button>
             <Button type="button" onClick={() => this.mostrarED()} className='mr-1 font-weight-bold' color="primary">Contagios por edad</Button>
             <Button type="button" onClick={() => this.mostrarVI()} className='font-weight-bold' color="primary">Visitas Doctores</Button>
+            <Button type="button" onClick={() => this.mostrarUR()} className='ml-1 font-weight-bold' color="primary">Urgencias</Button>
           </div>
 
 
@@ -415,6 +467,73 @@ export default class Informes extends React.Component {
               </ModalFooter>
 
             </Modal>
+          </div>
+          <div style={{ display: 'none' }} id='urgencias'>
+            <h4 className="text-center mb-5 mt-2 font-weight-bold" >Contactos en caso de Urgencia</h4>
+            <FormGroup className="ml-3 mr-3 mt-2" >
+              <InputGroup>
+              <Input className="mt-4" id='paciente'
+
+                className="form-control"
+                name="paciente"
+                type="select"
+                bsSize="md"
+                value={this.state.paciente}
+                onChange={this.handleChange}>
+                <option selected="true" disabled="disabled">Pacientes</option>
+                {this.state.pacientes.map(pac => (
+                  <option value={pac.idpaciente}>
+                    {pac.nombre} {pac.apellido} - {pac.numerodoc}
+                  </option>
+                ))}
+
+              </Input>
+              <InputGroupAddon addonType="prepend">
+
+                    <Button color="primary" onClick={() => this.seleccionarPaciente()}><i className="fa fa-search" aria-hidden="true"></i></Button>
+
+              </InputGroupAddon>
+              </InputGroup>
+            </FormGroup>
+            <Table className=' text-center' striped bordered hover>
+              <thead>
+                <tr id='tr-info'>
+                  <th className='font-weight-bold'>Nombre</th>
+                  <th className='font-weight-bold'>Relacion</th>
+                  <th className='font-weight-bold'>Id Paciente</th>
+                  <th className='font-weight-bold'>Nombre Paciente</th>
+                  <th className='font-weight-bold'>Telefonos</th>
+                  <th className='font-weight-bold'>Correos</th>              
+
+
+                </tr>
+              </thead>
+              <tbody>
+                {this.state.urginf.map((urg, index) => (
+                  <tr className='font-weight-bold'>
+                    <td>{urg.nomburg}{' '}{urg.apeurg}</td>
+                    <td>{urg.relacion}</td>
+                    <td>{urg.idpaciente}</td>
+                    <td>{urg.nompa}{' '}{urg.apepa}</td>
+                    <td> <Button /*onClick={() => this.toggle(urg.idpersona)}*/ type="button">
+                      <i className="fa fa-commenting" aria-hidden="true"></i>
+                    </Button>
+
+                    </td>
+                    <td> <Button /*onClick={() => this.toggle(urg.idpersona)}*/ type="button">
+                      <i className="fa fa-commenting" aria-hidden="true"></i>
+                    </Button>
+
+                    </td>
+
+
+                  </tr>
+                ))}
+
+
+
+              </tbody>
+            </Table>
           </div>
 
         </div>

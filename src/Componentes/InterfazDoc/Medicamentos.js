@@ -37,6 +37,8 @@ export default class Medicamentos extends React.Component {
       cantidad: null,
       descontar: null,
 
+      inven: [],
+
     }
     this.handleChange = this.handleChange.bind(this);
   }
@@ -61,10 +63,8 @@ export default class Medicamentos extends React.Component {
           med3lab2: result[9].cantidad,
           med3lab3: result[10].cantidad,
           med3lab4: result[11].cantidad,
-
-          
-
         });
+
         const total1 = this.state.med1lab1 + this.state.med1lab2 + this.state.med1lab3 + this.state.med1lab4
             this.setState({
               totalMed1: total1
@@ -78,55 +78,19 @@ export default class Medicamentos extends React.Component {
             this.setState({
               totalMed3: total3
             });
-
-/*
-        for (var i = 0; i < result.length; i++) {
-          if (result[i].idmedicamento === 1) {
+            let matrix = [];
+            var x = 0;
+            for (var i = 0; i < 3; i++) {
+              let fila = [];
+              for (var j = 0; j < 4; j++) {
+                fila[j]= result[x].cantidad;
+                x++
+              }
+              matrix[i] = fila;
+            }
             this.setState({
-              med1: result[i].medicamento,
-              med1lab1: result[i].lab1,
-              med1lab2: result[i].lab2,
-              med1lab3: result[i].lab3,
-              med1lab4: result[i].lab4,
-
-
-            })
-            const total = this.state.med1lab1 + this.state.med1lab2 + this.state.med1lab3 + this.state.med1lab4
-            this.setState({
-              totalMed1: total
-            })
-          }
-          else if (result[i].idmedicamento === 2) {
-            this.setState({
-              med2: result[i].medicamento,
-              med2lab1: result[i].lab1,
-              med2lab2: result[i].lab2,
-              med2lab3: result[i].lab3,
-              med2lab4: result[i].lab4,
-
-
+              inven: matrix
             });
-            const total = this.state.med2lab1 + this.state.med2lab2 + this.state.med2lab3 + this.state.med2lab4
-            this.setState({
-              totalMed2: total
-            })
-          }
-          else if (result[i].idmedicamento === 3) {
-            this.setState({
-              med3: result[i].medicamento,
-              med3lab1: result[i].lab1,
-              med3lab2: result[i].lab2,
-              med3lab3: result[i].lab3,
-              med3lab4: result[i].lab4,
-
-            })
-            const total = this.state.med3lab1 + this.state.med3lab2 + this.state.med3lab3 + this.state.med3lab4
-
-            this.setState({
-              totalMed3: total
-            })
-          }
-        }*/
       });
 
   }
@@ -142,123 +106,24 @@ export default class Medicamentos extends React.Component {
   };
 
   async validaCantidad() {
-    const medi = document.getElementById('medi').selectedIndex
-    const lab = document.getElementById('labo').selectedIndex
+    const medi = document.getElementById('medi').selectedIndex;
+    const lab = document.getElementById('labo').selectedIndex;
     if (medi != 0) {
       if (lab != 0) {
         if (this.state.cantidad != null) {
-
-          if (medi === 1) {
-            if (lab === 1) {
-              const des = this.state.med1lab1 - this.state.cantidad
-              if (des >= 0) {
-                await this.setState({
-                  descontar: des
-                });
-
-
-                return true
-              }
-            } else if (lab === 2) {
-              const des = this.state.med1lab2 - this.state.cantidad
-              if (des >= 0) {
-                await this.setState({
-                  descontar: des
-                });
-                return true
-              }
-            } else if (lab === 3) {
-              const des = this.state.med1lab3 - this.state.cantidad
-              if (des >= 0) {
-                await this.setState({
-                  descontar: des
-                });
-                return true
-              }
-            } else if (lab === 4) {
-              const des = this.state.med1lab4 - this.state.cantidad
-              if (des >= 0) {
-                await this.setState({
-                  descontar: des
-                });
-                return true
-              }
-            }
-          } else if (medi === 2) {
-            if (lab === 1) {
-              const des = this.state.med2lab1 - this.state.cantidad
-              if (des >= 0) {
-                await this.setState({
-                  descontar: des
-                });
-                return true
-              }
-            } else if (lab === 2) {
-              const des = this.state.med2lab2 - this.state.cantidad
-              if (des >= 0) {
-                await this.setState({
-                  descontar: des
-                });
-                return true
-              }
-            } else if (lab === 3) {
-              const des = this.state.med2lab3 - this.state.cantidad
-              if (des >= 0) {
-                await this.setState({
-                  descontar: des
-                });
-                return true
-              }
-            } else if (lab === 4) {
-              const des = this.state.med2lab4 - this.state.cantidad
-              if (des >= 0) {
-                await this.setState({
-                  descontar: des
-                });
-                return true
-              }
-            }
-          } else if (medi === 3) {
-            if (lab === 1) {
-              const des = this.state.med3lab1 - this.state.cantidad
-              if (des >= 0) {
-                await this.setState({
-                  descontar: des
-                });
-                return true
-              }
-            } else if (lab === 2) {
-              const des = this.state.med3lab2 - this.state.cantidad
-              if (des >= 0) {
-                await this.setState({
-                  descontar: des
-                });
-                return true
-              }
-            } else if (lab === 3) {
-              const des = this.state.med3lab3 - this.state.cantidad
-              if (des >= 0) {
-                await this.setState({
-                  descontar: des
-                });
-                return true
-              }
-            } else if (lab === 4) {
-              const des = this.state.med3lab4 - this.state.cantidad
-              if (des >= 0) {
-                await this.setState({
-                  descontar: des
-                });
-                return true
-              }
-            }
-          } Swal.fire({
+          const medica = medi - 1
+          const labo = lab - 1
+          var exis = this.state.inven[medica][labo];
+          const des = exis - this.state.cantidad;
+          if (des >= 0){
+            return true
+          }
+          Swal.fire({
             icon: 'error',
             title: 'Oops...',
             text: 'No hay Existencias Suficientes para realizar la Reserva.',
           })
           return false
-
         } else {
           Swal.fire({
             icon: 'error',
@@ -288,26 +153,27 @@ export default class Medicamentos extends React.Component {
   async descontar() {
     var x = await this.validaCantidad();
     if (x) {
-      var des = this.state.descontar
-      var idmedicamento = document.getElementById('medi').selectedIndex
-      var lab = document.getElementById('labo').selectedIndex
+      var cant = this.state.cantidad
+      var idmed = document.getElementById('medi').selectedIndex 
+      var idlab = document.getElementById('labo').selectedIndex
+      var iddoc = this.props.idDoc
       var med = null
 
-      if (idmedicamento === 1) {
+      if (idmed === 1) {
         med = this.state.med1
       }
-      else if (idmedicamento === 2) {
+      else if (idmed === 2) {
         med = this.state.med2
       }
-      else if (idmedicamento === 3) {
+      else if (idmed === 3) {
         med = this.state.med3
       }
 
-      const body = { lab, des }
+      const body = { iddoc, idmed, cant, idlab }
 
-      await fetch(`http://localhost:5000/inventario/${idmedicamento}`,
+      await fetch(`http://localhost:5000/pedido`,
         {
-          method: "PUT",
+          method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(body)
         })
@@ -315,12 +181,11 @@ export default class Medicamentos extends React.Component {
       await Swal.fire({
         icon: 'success',
         title: `Se ha Realizado la Reserva de ${this.state.cantidad}`,
-        text: `De ${med} del Lab#${lab}`,
+        text: `De ${med} del Lab#${idlab}`,
         showConfirmButton: false,
         timer: 2000
       })
 
-      //window.location.reload();
       this.setear();
       this.componentDidMount();
 
@@ -414,7 +279,7 @@ export default class Medicamentos extends React.Component {
                 <tbody>
                   <tr>
                     <td className='font-weight-bold'>{this.state.med1}</td>
-                    <td >{this.state.med1lab1}</td>
+                    <td>{this.state.med1lab1}</td>
                     <td>{this.state.med1lab2}</td>
                     <td>{this.state.med1lab3}</td>
                     <td>{this.state.med1lab4}</td>

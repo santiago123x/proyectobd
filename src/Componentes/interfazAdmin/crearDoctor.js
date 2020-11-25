@@ -16,11 +16,23 @@ export default class CrearDoctor extends React.Component {
             personas: [],
             persona: null,
             //Modals
+            modalEmer: true,
             modalInserD: false,
             modalInserP: false,
             modalActuD: false,
             modalParen: false,
+            modalTel: false,
+            modalEmail: false,
             //
+            //Emergencias
+            emer: null,
+            perEmer: null,
+            tablaEmer: [],
+            telEmer: [],
+            telEmerB: [],
+            emailEmer: [],
+            emailEmerB: [],
+            seleccionada: null,
             //Parentesco
             paren: null,
             perParen: null,
@@ -271,7 +283,7 @@ export default class CrearDoctor extends React.Component {
         var idpaciente = null;
 
         const body = { idpersona, numintegrantes, ciudadcontagio }
-        
+
 
 
         await fetch(`http://localhost:5000/paciente/`,
@@ -307,7 +319,7 @@ export default class CrearDoctor extends React.Component {
             });
 
         const bodyR = { idusu, idpaciente, fecha, hora }
-        
+
 
         await fetch(`http://localhost:5000/registropac/`,
             {
@@ -344,7 +356,7 @@ export default class CrearDoctor extends React.Component {
             var hoy = new Date();
             var fecha = hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '-' + hoy.getDate();
             var hora = hoy.getHours() + ':' + hoy.getMinutes() + ':' + hoy.getSeconds();
-            var idusu = this.state.match;
+            var idusu = this.props.idusu;
             var iddoc = null;
 
             const body = { idpersona, identidadsalud, iduniversidad }
@@ -839,6 +851,7 @@ export default class CrearDoctor extends React.Component {
         })
     }
 
+
     async crearParent() {
         if (this.state.tablaParen.length !== 0) {
             var idpac = null;
@@ -885,6 +898,221 @@ export default class CrearDoctor extends React.Component {
             });
         }
 
+    }
+
+    // Emergencia
+
+    async agregarEmer() {
+        const rela = document.getElementById('emer').selectedIndex
+        const perEmer = document.getElementById('perEmer').selectedIndex
+        var bool = true;
+        if (rela !== 0 && perEmer !== 0) {
+            const arreglo = {
+                rela: this.state.emer, nombre: this.state.personas[perEmer - 1].nombre + ' ' + this.state.personas[perEmer - 1].apellido,
+                doc: this.state.personas[perEmer - 1].numerodoc, id: this.state.personas[perEmer - 1].idpersona
+            }
+            for (var i = 0; i < this.state.tablaEmer.length; i++) {
+                if (this.state.tablaEmer[i].id === arreglo.id) {
+                    bool = false;
+                }
+            }
+            if (bool === true) {
+
+                this.setState({
+                    tablaEmer: [...this.state.tablaEmer, arreglo]
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Esta Persona ya se agrego a la Lista de Contactos.',
+                });
+            }
+
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Seleccione una Persona y su Relación.',
+            });
+        }
+    }
+    async crearEmer() {
+        if (this.state.tablaEmer.length >= 2) {
+            var idpac = null;
+            var idper = null;
+            var rela = '';
+
+            await fetch(`http://localhost:5000/pacientesid`)
+                .then(response => response.json())
+                .then((result) => {
+                    idpac = parseInt(result.idpaciente);
+                });
+
+            for (var i = 0; i < this.state.tablaEmer.length; i++) {
+                idper = parseInt(this.state.tablaEmer[i].id);
+                rela = this.state.tablaEmer[i].rela;
+
+                const body = { idpac, idper, rela }
+                /*
+                await fetch(`http://localhost:5000/integrantes`,
+                    {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(body)
+                    });*/
+
+
+            }
+
+            await Swal.fire({
+                icon: 'success',
+                title: `Se ha Agregado los Contactos de Emergencia`,
+                showConfirmButton: false,
+                timer: 1750
+            })
+
+            this.cancelarEmer();
+            this.componentDidMount();
+
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Debe Agregar Minimo 2 Personas como Contacto de Emergencia.',
+            });
+        }
+
+    }
+
+    async emailEmer(idper) {
+
+        const idPer = parseInt(idper);
+
+
+        await fetch(`http://localhost:5000/email/${idPer}`)
+            .then(response => response.json())
+            .then((result) => {
+                this.setState({
+                    emailEmer: result,
+                    seleccionada: idPer,
+                })
+
+            });
+
+        this.modalEmail();
+
+    }
+
+    borrarEmaEmer(x) {
+
+        var arreglo = this.state.emailEmer;
+        var index = null;
+        for (var i = 0; i < this.state.emailEmer.length; i++) {
+            if (this.state.emailEmer[i].email === x) {
+                index = i;
+            }
+        }
+        arreglo.splice(index, 1);
+        this.setState({
+            emailEmer: arreglo,
+            emailEmerB: [...this.state.emailEmerB, arreglo[index]]
+        })
+    }
+
+    async hayemail2(x){
+      var bool = false;
+      await fetch(`http://localhost:5000/emailhay2/${x}`)
+      .then(response => response.json())
+            .then((result) => {
+              if(result != '' ){
+                bool = true
+              }
+            })
+
+            return bool;
+    }
+
+    async creaEmerEmail() {
+
+        if (this.state.emailEmer.length > 0) {
+
+            for (var i = 0; i < this.state.emailEmer.length; i++) {
+                if (this.state.emailEmer[i].idemail === 0 && !this.hayemail2(this.state.emailEmer[i].email)) {
+                    var email = this.state.emailEmer[i].email;
+                    var idpersona = this.state.emailEmer[i].idpersona;
+                    const body = { email, idpersona }
+                    console.log(body)
+                    /*
+                    await fetch(`http://localhost:5000/email/`,
+                    {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(body)
+                    });*/
+                }else{
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: `${this.state.emailEmer[i].email} Este Email ya se Encuentra en la base de Datos`,
+                });
+                }
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Debe Agregar al Menos 1 Email.',
+            });
+        }
+    }
+
+    emerEmailAgre() {
+        const emi = this.state.emerEma.trim();
+
+        if (emi !== '') {
+            const arreglo = this.state.emailEmer;
+            const ema = { idemail: 0, email: emi, idpersona: this.state.seleccionada }
+            arreglo.push(ema);
+            this.setState({
+                emailEmer: arreglo
+            })
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Debe Ingresar un Email Valido.',
+            });
+        }
+    }
+
+    async telEmer(idper) {
+
+        await fetch(`http://localhost:5000/telefono/${idper}`)
+            .then(response => response.json())
+            .then((result) => {
+                this.setState({
+                    telEmer: result
+                })
+            });
+
+        this.modalTel();
+
+
+    }
+
+    borrarEmer(x) {
+        var arreglo = this.state.tablaEmer;
+        var index = null;
+        for (var i = 0; i < this.state.tablaEmer.length; i++) {
+            if (this.state.tablaEmer[i].nombre === x) {
+                index = i;
+            }
+        }
+        arreglo.splice(index, 1);
+        this.setState({
+            tablaEmer: arreglo
+        })
     }
 
     // Validaciones y Modals
@@ -1107,6 +1335,50 @@ export default class CrearDoctor extends React.Component {
         this.setState({
             modalParen: !this.state.modalParen
         });
+
+    }
+    modalEmergencia() {
+        this.setState({
+            modalEmer: !this.state.modalEmer
+        });
+    }
+    modalTel() {
+        this.setState({
+            modalTel: !this.state.modalTel
+        });
+    }
+    modalEmail() {
+        this.setState({
+            modalEmail: !this.state.modalEmail
+        });
+    }
+
+    cancelarTel() {
+        this.modalTel();
+        this.setState({
+            telEmer: [],
+            telEmerB: [],
+            seleccionada: null
+        });
+    }
+    cancelarEmail() {
+        this.modalEmail();
+        this.setState({
+            emailEmer: [],
+            emailEmerB: [],
+            seleccionada: null
+        });
+    }
+
+    cancelarEmer() {
+        this.modalEmergencia();
+        this.setState({
+            emer: null,
+            perEmer: null,
+            tablaEmer: [],
+            telEmer: [],
+            emailEmer: [],
+        })
 
     }
     modalDoctor() {
@@ -1944,7 +2216,162 @@ export default class CrearDoctor extends React.Component {
                     </ModalBody>
                     <ModalFooter >
                         <Button color="success" onClick={() => this.crearParent()} >Crear Parentesco</Button>
-                        <Button color="danger" onClick={() => this.cancelarParen()}>Cancelar</Button>
+
+                    </ModalFooter>
+                </Modal>
+
+
+
+                {/* Modal Emergencia */}
+
+                <Modal
+                    size="lg"
+                    centered isOpen={this.state.modalEmer} id="insertar">
+                    <ModalHeader>
+                        <div><h3>Datos de Emergencia</h3></div>
+                    </ModalHeader>
+                    <ModalBody>
+                        <div className="mb-3" style={{ width: '80%', float: 'left' }} >
+                            <FormGroup >
+                                <InputGroup>
+                                    <InputGroupAddon addonType="prepend" className=''>
+                                        <Button color="primary" onClick={() => this.recargarP()} ><i class="fa fa-refresh" aria-hidden="true"></i></Button>
+
+                                    </InputGroupAddon>
+                                    <Input
+                                        id="perEmer"
+
+                                        className="form-control"
+                                        name="perEmer"
+                                        bsSize="md"
+                                        type="select"
+                                        value={this.state.perEmer}
+                                        onChange={this.handleChange}>
+
+                                        <option selected="true" disabled="disabled">Personas</option>
+                                        {this.state.personas.map(per => (
+                                            <option value={per.idpersona}>
+                                                {per.nombre}  {per.apellido} - {per.numerodoc}
+                                            </option>
+                                        ))}
+
+                                    </Input>
+                                    <Input
+                                        id="emer"
+
+                                        className="form-control ml-2"
+                                        name="emer"
+                                        bsSize="md"
+                                        type="select"
+                                        value={this.state.emer}
+                                        onChange={this.handleChange}>
+
+                                        <option selected="true" disabled="disabled">Relación</option>
+                                        <option value='Familiar'>Familiar</option>
+                                        <option value='Vecino'>Vecino</option>
+                                        <option value='Amigo'>Amigo</option>
+
+                                    </Input>
+                                    <InputGroupAddon addonType="prepend" className='ml-4'>
+                                        <Button color="primary" onClick={() => this.agregarEmer()} >Agregar Contacto de Emergencia</Button>
+
+                                    </InputGroupAddon>
+
+                                </InputGroup>
+                                <div style={{ width: '30%', float: 'left' }} className='mt-3'>
+                                    <CrearPersona />
+                                </div>
+                            </FormGroup>
+                        </div>
+                        <Table className=' text-center' striped bordered hover>
+                            <thead>
+                                <tr>
+                                    <th className='font-weight-bold'>Relacion</th>
+                                    <th className='font-weight-bold'>Nombre</th>
+                                    <th className='font-weight-bold'>Documento</th>
+                                    <th className='font-weight-bold'>Email</th>
+                                    <th className='font-weight-bold'>Telefono</th>
+
+                                    <th className='font-weight-bold'>Eliminar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {this.state.tablaEmer.map(emer => (
+                                    <tr>
+                                        <td>{emer.rela}</td>
+                                        <td>{emer.nombre}</td>
+                                        <td>{emer.doc}</td>
+                                        <td><Button onClick={() => this.emailEmer(emer.id)} color='secondary'><i class="fa fa-envelope-o" aria-hidden="true"></i></Button></td>
+                                        <td><Button onClick={() => this.telEmer(emer.id)} color='secondary'><i class="fa fa-phone" aria-hidden="true"></i></Button></td>
+                                        <td><Button onClick={() => this.borrarEmer(emer.nombre)} color='danger'><i className="fa fa-trash" aria-hidden="true"></i></Button></td>
+                                    </tr>
+                                ))}
+
+                            </tbody>
+                        </Table>
+                    </ModalBody>
+                    <ModalFooter >
+                        <Button color="success" onClick={() => this.crearEmer()} >Enviar Datos de Emergencia</Button>
+
+                    </ModalFooter>
+                </Modal>
+
+                {/* Modal Email */}
+
+                <Modal
+                    size="md"
+                    centered isOpen={this.state.modalEmail} id="insertar">
+                    <ModalHeader>
+                        <div><h3>Datos de Emergencia Emails</h3></div>
+                    </ModalHeader>
+                    <ModalBody>
+                        <div className="mb-3" style={{ width: '80%', float: 'left' }} >
+                            <FormGroup >
+                                <InputGroup>
+
+                                    <Input
+                                        id="emerEma"
+
+                                        className="form-control ml-2"
+                                        name="emerEma"
+                                        bsSize="md"
+                                        type="email"
+                                        value={this.state.emerEma}
+                                        onChange={this.handleChange}>
+
+                                    </Input>
+                                    <InputGroupAddon addonType="prepend" className='ml-4'>
+                                        <Button color="primary" onClick={() => this.emerEmailAgre()} >Agregar Email</Button>
+
+                                    </InputGroupAddon>
+
+                                </InputGroup>
+
+                            </FormGroup>
+                        </div>
+                        <Table className=' text-center' striped bordered hover>
+                            <thead>
+                                <tr>
+                                    <th className='font-weight-bold'>Id</th>
+                                    <th className='font-weight-bold'>Email</th>
+                                    <th className='font-weight-bold'>Eliminar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {this.state.emailEmer.map((ema, index) => (
+                                    <tr>
+                                        <td>{index + 1}</td>
+                                        <td>{ema.email}</td>
+                                        <td><Button onClick={() => this.borrarEmaEmer(ema.email)} color='danger'><i className="fa fa-trash" aria-hidden="true"></i></Button></td>
+                                    </tr>
+                                ))}
+
+                            </tbody>
+                        </Table>
+                    </ModalBody>
+                    <ModalFooter >
+                        <Button color="success" onClick={() => this.creaEmerEmail()} >Enviar Datos de Emergencia</Button>
+                        <Button color="danger" onClick={() => this.cancelarEmail()} >Cerrar</Button>
                     </ModalFooter>
                 </Modal>
 

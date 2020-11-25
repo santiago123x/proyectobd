@@ -414,6 +414,18 @@ router.get('/emailhay/:idpersona/:email',async (req,res) =>{
     } 
 });
 
+router.get('/emailhay2/:email',async (req,res) =>{
+    try{
+        const { email } = req.params;
+        const arreglo = await pool.query(`SELECT email FROM email 
+        WHERE email ILIKE '${email}'`);
+        res.send(arreglo.rows[0]);
+         
+    } catch(e){
+        console.log("Emailhay2 : "+ e);
+    } 
+});
+
 router.delete('/emaildel/:idpersona/:email', async (req,res)=>{
     try{
         const { idpersona, email } = req.params;
@@ -881,6 +893,19 @@ router.get('/visxdia/:anio/:mes/:dia/',async (req,res)=>{
     }
 });
 
+
+//---------------------------Informes urgencias---------------------
+
+router.get('/infurg/:idpaciente/',async (req,res)=>{
+    try{
+        const {idpaciente} = req.params;
+        const arreglo = await pool.query(`select * from urginf
+        where idpaciente = ${idpaciente}`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("informe infurg se jodio " + e );
+    }
+});
 
 //------------------- visita ----------------------
 
