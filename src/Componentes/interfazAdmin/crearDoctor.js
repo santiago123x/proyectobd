@@ -1068,14 +1068,14 @@ export default class CrearDoctor extends React.Component {
                     var email = this.state.emailEmer[i].email;
                     var idpersona = this.state.emailEmer[i].idpersona;
                     const body = { email, idpersona }
-                    console.log(body)
-                    /*
+                    
+                    
                     await fetch(`http://localhost:5000/email/`,
                     {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify(body)
-                    });*/
+                    });
                 }
                 
             }for (var i = 0; i < this.state.emailEmerB.length; i++) {
@@ -1083,18 +1083,23 @@ export default class CrearDoctor extends React.Component {
                 
                     var email2 = this.state.emailEmerB[i].email;
                     var idpersona2 = this.state.emailEmerB[i].idpersona;
-                    const bodyB = { email2, idpersona2 }
-                    console.log(bodyB)
-                    /*
-                    await fetch(`http://localhost:5000/email/`,
+                    
+                    
+                    await fetch(`http://localhost:5000/emaildel/${idpersona2}/${email2}`,
                     {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(body)
-                    });*/
+                        method: "DELETE",
+                        headers: { "Content-Type": "application/json" }
+                        
+                    });
                 
                 
             }
+            await Swal.fire({
+                icon: 'success',
+                title: `Se han Actualizado los Emails`,
+                showConfirmButton: false,
+                timer: 1750
+            })
             this.cancelarEmail();
         } else {
             Swal.fire({
