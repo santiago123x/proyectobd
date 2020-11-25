@@ -390,7 +390,6 @@ router.put('/email/:idemail',async (req,res)=>{
 });
 
 
-
 router.get('/email/:idpersona',async (req,res) =>{
     try{
         const { idpersona } = req.params;
@@ -517,6 +516,18 @@ router.delete('/teldel/:idpersona/:telefono', async (req,res)=>{
     catch(err){
         console.error(err);
     }
+});
+
+router.get('/telhay2/:telefono',async (req,res) =>{
+    try{
+        const { telefono } = req.params;
+        const arreglo = await pool.query(`SELECT telefono FROM telefono 
+        WHERE telefono = '${telefono}'`);
+        res.send(arreglo.rows);
+         
+    } catch(e){
+        console.log("Telhay2 : "+ e);
+    } 
 });
 
 
@@ -930,10 +941,26 @@ router.post('/integrantes', async(req,res)=>{
         values (${idpac}, ${idper}, '${paren}')`);
         res.send(newTodo);
     }catch(e){
-        console.log('visita : ' +e);
+        console.log('Integrante : ' +e);
     }
 
 });
+
+
+//-------------------Emergencia------------------------------
+
+router.post('/emergencias', async(req,res)=>{
+    try{
+        const  { idper, idpac, rela } = req.body;
+        newTodo = await pool.query(`insert into urgencias (idpersona, idpaciente, relacion)
+        values (${idper}, ${idpac}, '${rela}')`);
+        res.send(newTodo);
+    }catch(e){
+        console.log('emergencias : ' +e);
+    }
+
+});
+
 
 
 // ------------------------- Conexion --------------------

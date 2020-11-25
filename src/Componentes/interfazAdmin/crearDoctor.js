@@ -16,7 +16,7 @@ export default class CrearDoctor extends React.Component {
             personas: [],
             persona: null,
             //Modals
-            modalEmer: true,
+            modalEmer: false,
             modalInserD: false,
             modalInserP: false,
             modalActuD: false,
@@ -34,6 +34,7 @@ export default class CrearDoctor extends React.Component {
             emailEmerB: [],
             seleccionada: null,
             emerEma: '',
+            emerTel: '',
             //Parentesco
             paren: null,
             perParen: null,
@@ -264,6 +265,9 @@ export default class CrearDoctor extends React.Component {
                 }
 
             });
+
+
+
     }
 
 
@@ -890,6 +894,7 @@ export default class CrearDoctor extends React.Component {
 
             this.cancelarParen();
             this.componentDidMount();
+            this.modalEmergencia();
 
         } else {
             Swal.fire({
@@ -938,6 +943,7 @@ export default class CrearDoctor extends React.Component {
             });
         }
     }
+
     async crearEmer() {
         if (this.state.tablaEmer.length >= 2) {
             var idpac = null;
@@ -950,31 +956,46 @@ export default class CrearDoctor extends React.Component {
                     idpac = parseInt(result.idpaciente);
                 });
 
-            for (var i = 0; i < this.state.tablaEmer.length; i++) {
-                idper = parseInt(this.state.tablaEmer[i].id);
-                rela = this.state.tablaEmer[i].rela;
-
-                const body = { idpac, idper, rela }
-                /*
-                await fetch(`http://localhost:5000/integrantes`,
-                    {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(body)
-                    });*/
-
-
+            var bool = true;
+            for (var y = 0; y < this.state.tablaEmer.length; y++) {
+                if (!this.tieneAlMenosUno(this.state.tablaEmer[y].id)) {
+                    bool = false;
+                }
             }
+            if (bool) {
+                for (var i = 0; i < this.state.tablaEmer.length; i++) {
+                    idper = parseInt(this.state.tablaEmer[i].id);
+                    rela = this.state.tablaEmer[i].rela;
 
-            await Swal.fire({
-                icon: 'success',
-                title: `Se ha Agregado los Contactos de Emergencia`,
-                showConfirmButton: false,
-                timer: 1750
-            })
+                    const body = { idper, idpac, rela }
 
-            this.cancelarEmer();
-            this.componentDidMount();
+                    
+                    await fetch(`http://localhost:5000/emergencias`,
+                        {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(body)
+                        });
+                }
+
+
+
+                await Swal.fire({
+                    icon: 'success',
+                    title: `Se ha Agregado los Contactos de Emergencia`,
+                    showConfirmButton: false,
+                    timer: 1750
+                })
+
+                this.cancelarEmer();
+                this.componentDidMount();
+            }else{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Debe Agregar un Email o un Telefono a Todas las Personas.',
+                });
+            }
 
         } else {
             Swal.fire({
@@ -984,6 +1005,20 @@ export default class CrearDoctor extends React.Component {
             });
         }
 
+    }
+
+    borrarEmer(x) {
+        var arreglo = this.state.tablaEmer;
+        var index = null;
+        for (var i = 0; i < this.state.tablaEmer.length; i++) {
+            if (this.state.tablaEmer[i].nombre === x) {
+                index = i;
+            }
+        }
+        arreglo.splice(index, 1);
+        this.setState({
+            tablaEmer: arreglo
+        })
     }
 
     // Email Emergencia
@@ -1020,36 +1055,33 @@ export default class CrearDoctor extends React.Component {
         }
         var algo = this.state.emailEmerB;
         algo.push(arreglo[index])
-        
+
         arreglo.splice(index, 1);
 
         if (idemail != 0) {
             this.setState({
-                
+
                 emailEmerB: algo,
                 emailEmer: arreglo,
 
             })
-            
-            
-            
-            
-        }else {
+
+        } else {
             this.setState({
                 emailEmer: arreglo,
 
             })
-            
+
         }
     }
 
 
     async hayemail2(x) {
         var bool = false;
-        
+
         await fetch(`http://localhost:5000/emailhay2/${x}`)
             .then(response => response.json())
-            .then(result => { 
+            .then(result => {
                 if (result.length > 0) {
                     bool = true
                 }
@@ -1061,38 +1093,38 @@ export default class CrearDoctor extends React.Component {
     async creaEmerEmail() {
 
         if (this.state.emailEmer.length > 0) {
-            
+
             for (var i = 0; i < this.state.emailEmer.length; i++) {
-                
+
                 if (this.state.emailEmer[i].idemail === 0) {
                     var email = this.state.emailEmer[i].email;
                     var idpersona = this.state.emailEmer[i].idpersona;
                     const body = { email, idpersona }
-                    
-                    
+
+
                     await fetch(`http://localhost:5000/email/`,
-                    {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(body)
-                    });
+                        {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(body)
+                        });
                 }
-                
-            }for (var i = 0; i < this.state.emailEmerB.length; i++) {
-                
-                
-                    var email2 = this.state.emailEmerB[i].email;
-                    var idpersona2 = this.state.emailEmerB[i].idpersona;
-                    
-                    
-                    await fetch(`http://localhost:5000/emaildel/${idpersona2}/${email2}`,
+
+            } for (var i = 0; i < this.state.emailEmerB.length; i++) {
+
+
+                var email2 = this.state.emailEmerB[i].email;
+                var idpersona2 = this.state.emailEmerB[i].idpersona;
+
+
+                await fetch(`http://localhost:5000/emaildel/${idpersona2}/${email2}`,
                     {
                         method: "DELETE",
                         headers: { "Content-Type": "application/json" }
-                        
+
                     });
-                
-                
+
+
             }
             await Swal.fire({
                 icon: 'success',
@@ -1110,10 +1142,10 @@ export default class CrearDoctor extends React.Component {
         }
     }
 
-    hayaquiemail(x){
+    hayaquiemail(x) {
         var bool = false;
-        for(var i = 0;i<this.state.emailEmer.length;i++){
-            if(this.state.emailEmer.email === x){
+        for (var i = 0; i < this.state.emailEmer.length; i++) {
+            if (this.state.emailEmer[i].email === x) {
                 bool = true;
             }
         }
@@ -1122,9 +1154,9 @@ export default class CrearDoctor extends React.Component {
 
     async emerEmailAgre() {
         const emi = this.state.emerEma.trim();
-        
-        if (emi !== '' && emi.includes('@') && (emi.includes('.com')||emi.includes('.co'))) {
-            const bool =  await this.hayemail2(emi)
+
+        if (emi !== '' && emi.includes('@') && (emi.includes('.com') || emi.includes('.co'))) {
+            const bool = await this.hayemail2(emi)
             if (!bool && !this.hayaquiemail(emi)) {
                 const arreglo = this.state.emailEmer;
                 const ema = { idemail: 0, email: emi, idpersona: this.state.seleccionada }
@@ -1135,7 +1167,7 @@ export default class CrearDoctor extends React.Component {
                 })
                 document.getElementById('emerEma').value = '';
 
-            }else{
+            } else {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
@@ -1151,34 +1183,177 @@ export default class CrearDoctor extends React.Component {
         }
     }
 
+    // Tel Emergencia
+
     async telEmer(idper) {
 
         await fetch(`http://localhost:5000/telefono/${idper}`)
             .then(response => response.json())
             .then((result) => {
                 this.setState({
-                    telEmer: result
+                    telEmer: result,
+                    seleccionada: idper,
                 })
             });
-
         this.modalTel();
-
-
     }
 
-    borrarEmer(x) {
-        var arreglo = this.state.tablaEmer;
+    async creaEmerTel() {
+
+        if (this.state.telEmer.length > 0) {
+
+            for (var i = 0; i < this.state.telEmer.length; i++) {
+
+                if (this.state.telEmer[i].idtelefono === 0) {
+                    var telefono = this.state.telEmer[i].telefono;
+                    var idpersona = this.state.telEmer[i].idpersona;
+                    const body = { telefono, idpersona }
+
+
+                    await fetch(`http://localhost:5000/telefono/`,
+                        {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(body)
+                        });
+                }
+
+            } for (var i = 0; i < this.state.telEmerB.length; i++) {
+
+
+                var tel2 = this.state.telEmerB[i].telefono;
+                var idpersona2 = this.state.telEmerB[i].idpersona;
+                console.log(tel2)
+                console.log(idpersona2)
+
+                await fetch(`http://localhost:5000/teldel/${idpersona2}/${tel2}`,
+                    {
+                        method: "DELETE",
+                        headers: { "Content-Type": "application/json" }
+
+                    });
+
+
+            }
+            await Swal.fire({
+                icon: 'success',
+                title: `Se han Actualizado los Telefonos`,
+                showConfirmButton: false,
+                timer: 1750
+            })
+            this.cancelarTel();
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Debe Agregar al Menos 1 Telefono.',
+            });
+        }
+    }
+
+
+    borrarTelEmer(x) {
+
+        var arreglo = this.state.telEmer;
         var index = null;
-        for (var i = 0; i < this.state.tablaEmer.length; i++) {
-            if (this.state.tablaEmer[i].nombre === x) {
+        var idtelefono = null;
+        for (var i = 0; i < this.state.telEmer.length; i++) {
+            if (this.state.telEmer[i].telefono === x) {
                 index = i;
+                idtelefono = this.state.telEmer[i].idtelefono;
             }
         }
+        var algo = this.state.telEmerB;
+        algo.push(arreglo[index])
+
         arreglo.splice(index, 1);
-        this.setState({
-            tablaEmer: arreglo
-        })
+
+        if (idtelefono != 0) {
+            this.setState({
+
+                telEmerB: algo,
+                telEmer: arreglo,
+
+            })
+
+        } else {
+            this.setState({
+                telEmer: arreglo,
+
+            })
+
+        }
     }
+
+    async telhay2(x) {
+        var bool = false;
+
+        await fetch(`http://localhost:5000/telhay2/${x}`)
+            .then(response => response.json())
+            .then(result => {
+                if (result.length > 0) {
+                    bool = true
+                }
+            });
+
+        return bool;
+    }
+
+    hayaquitel(x) {
+        var bool = false;
+        for (var i = 0; i < this.state.telEmer.length; i++) {
+            if (this.state.telEmer[i].telefono === x) {
+                bool = true;
+            }
+        }
+        return bool;
+    }
+
+    async emerTelAgre() {
+        const tel = this.state.emerTel.trim();
+
+        if (tel !== '' && (tel.length === 7 || tel.length === 10)) {
+            const bool = await this.telhay2(tel)
+            if (!bool && !this.hayaquitel(tel)) {
+                const arreglo = this.state.telEmer;
+                const tele = { idtelefono: 0, telefono: tel, idpersona: this.state.seleccionada }
+                arreglo.push(tele);
+                this.setState({
+                    telEmer: arreglo,
+                    emerTel: ''
+                })
+
+                document.getElementById('emerTel').value = '';
+
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Este Telefono ya esta Registrado en la Base de Datos.',
+                });
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Debe Ingresar un Telefono Valido.',
+            });
+        }
+    }
+
+    async tieneAlMenosUno(idper) {
+        let email = await fetch(`http://localhost:5000/email/${idper}`).then(response => response.json())
+        let tele = await fetch(`http://localhost:5000/telefono/${idper}`).then(response => response.json())
+        console.log(email)
+        console.log(tele)
+        if (email.length > 0 || tele.length > 0) {
+            return true
+        }
+        return false
+
+    }
+
+
 
     // Validaciones y Modals
 
@@ -1423,7 +1598,8 @@ export default class CrearDoctor extends React.Component {
         this.setState({
             telEmer: [],
             telEmerB: [],
-            seleccionada: null
+            seleccionada: null,
+            emerTel: '',
         });
     }
     cancelarEmail() {
@@ -2393,7 +2569,7 @@ export default class CrearDoctor extends React.Component {
                     <ModalBody>
                         <div className="mb-3" style={{ width: '80%', float: 'left' }} >
                             <FormGroup >
-                                
+
                                 <InputGroup>
 
                                     <Input
@@ -2414,7 +2590,7 @@ export default class CrearDoctor extends React.Component {
                                     </InputGroupAddon>
 
                                 </InputGroup>
-                                
+
                             </FormGroup>
                         </div>
                         <Table className=' text-center' striped bordered hover>
@@ -2442,6 +2618,69 @@ export default class CrearDoctor extends React.Component {
                         <Button color="danger" onClick={() => this.cancelarEmail()} >Cerrar</Button>
                     </ModalFooter>
                 </Modal>
+
+
+                {/* Modal Tel */}
+
+                <Modal
+                    size="md"
+                    centered isOpen={this.state.modalTel} id="insertar">
+                    <ModalHeader>
+                        <div><h3>Datos de Emergencia Telefonos</h3></div>
+                    </ModalHeader>
+                    <ModalBody>
+                        <div className="mb-3" style={{ width: '80%', float: 'left' }} >
+                            <FormGroup >
+
+                                <InputGroup>
+
+                                    <Input
+                                        id="emerTel"
+
+                                        className="form-control ml-2"
+                                        name="emerTel"
+                                        bsSize="md"
+                                        type="number"
+                                        value={this.state.emerTel}
+                                        required
+                                        onChange={this.handleChange}>
+
+                                    </Input>
+                                    <InputGroupAddon addonType="prepend" className='ml-4'>
+                                        <Button color="primary" onClick={() => this.emerTelAgre()} >Agregar Telefono</Button>
+
+                                    </InputGroupAddon>
+
+                                </InputGroup>
+
+                            </FormGroup>
+                        </div>
+                        <Table className=' text-center' striped bordered hover>
+                            <thead>
+                                <tr>
+                                    <th className='font-weight-bold'>Id</th>
+                                    <th className='font-weight-bold'>Email</th>
+                                    <th className='font-weight-bold'>Eliminar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {this.state.telEmer.map((tel, index) => (
+                                    <tr>
+                                        <td>{index + 1}</td>
+                                        <td>{tel.telefono}</td>
+                                        <td><Button onClick={() => this.borrarTelEmer(tel.telefono)} color='danger'><i className="fa fa-trash" aria-hidden="true"></i></Button></td>
+                                    </tr>
+                                ))}
+
+                            </tbody>
+                        </Table>
+                    </ModalBody>
+                    <ModalFooter >
+                        <Button color="success" onClick={() => this.creaEmerTel()} >Enviar Datos de Emergencia</Button>
+                        <Button color="danger" onClick={() => this.cancelarTel()} >Cerrar</Button>
+                    </ModalFooter>
+                </Modal>
+
 
             </Fragment >
         );

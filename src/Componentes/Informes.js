@@ -331,7 +331,7 @@ export default class Informes extends React.Component {
           <div className='pie' id='pie'>
             <h4 className="text-center mb-2 mt-2 font-weight-bold" >Contagiados por Barrio</h4>
 
-            <PieChart width={800} height={800} className="pr-2">
+            <PieChart width={900} height={800} className="pr-2">
 
               <Pie
                 activeIndex={this.state.activeIndex}
@@ -516,12 +516,12 @@ export default class Informes extends React.Component {
                     <td>{urg.idpaciente}</td>
                     <td>{urg.nompa}{' '}{urg.apepa}</td>
                     <td> <Button /*onClick={() => this.toggle(urg.idpersona)}*/ type="button">
-                      <i className="fa fa-commenting" aria-hidden="true"></i>
+                    <i class="fa fa-volume-control-phone" color="primary" aria-hidden="true"></i>
                     </Button>
 
                     </td>
                     <td> <Button /*onClick={() => this.toggle(urg.idpersona)}*/ type="button">
-                      <i className="fa fa-commenting" aria-hidden="true"></i>
+                    <i class="fa fa-envelope" color="succes" aria-hidden="true"></i>
                     </Button>
 
                     </td>
