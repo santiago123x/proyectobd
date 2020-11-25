@@ -1,0 +1,24 @@
+{"places": [
+    {
+        "name": "Casa de David",
+        "geometry": [
+            3.402806,
+            -76.501907
+        ]
+    },
+    {
+        "name": "Casa de Santiago",
+        "geometry": [
+            3.4219061,
+            -76.531389
+        ]
+    }
+    ,
+    {
+        "name": "Casa de Santiago x2",
+        "geometry": [
+            3.4219070,
+            -76.531399
+        ]
+    }
+]}

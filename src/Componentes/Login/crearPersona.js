@@ -4,7 +4,7 @@ import Swal from 'sweetalert2/dist/sweetalert2.js';
 import 'sweetalert2/src/sweetalert2.scss';
 import "./syle.scss";
 
-export  class CrearPersona extends React.Component {
+export class CrearPersona extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -18,7 +18,19 @@ export  class CrearPersona extends React.Component {
       barrios: [],
       tiposdoc: [],
       modalInser: false,
-      idperso: ''
+      idperso: '',
+      //Direccion
+      viaP: null,
+      selViaP: [],
+      numViaP: '',
+      numViaS: '',
+      numCasa: '',
+      tipoInm: null,
+      selTipoInm: [],
+      comTipoInm: '',
+      bloqueInt: null,
+      selBloqueInt: [],
+      comBloqueInt: '',
 
     }
     this.handleChange = this.handleChange.bind(this);
@@ -130,6 +142,37 @@ export  class CrearPersona extends React.Component {
           });
         }
       )
+
+    await fetch('http://localhost:5000/viap/')
+      .then(res => res.json())
+      .then(
+        (result) => {
+          this.setState({
+            selViaP: result
+          });
+        }
+      )
+
+    await fetch('http://localhost:5000/inmueble/')
+      .then(res => res.json())
+      .then(
+        (result) => {
+          this.setState({
+            selTipoInm: result
+          });
+        }
+      )
+
+    await fetch('http://localhost:5000/bloque/')
+      .then(res => res.json())
+      .then(
+        (result) => {
+          this.setState({
+            selBloqueInt: result
+          });
+        }
+      )
+
   }
   mostarInser() {
     this.setState({
@@ -146,8 +189,19 @@ export  class CrearPersona extends React.Component {
     var fechanaci = this.state.fechaN;
     var barrio = this.state.barrio;
 
-    const body = { nombre, apellido, tipodoc, numerodoc, barrio, fechanaci };
+    // Direccion
 
+    var idviaprincipal = this.state.viaP;
+    var numeroviap = this.state.numViaP;
+    var numerovias = this.state.numViaS;
+    var numerocasa = this.state.numCasa;
+    var idtipoinmueble = this.state.tipoInm;
+    var idbloqueinterior = this.state.bloqueInt;
+    var numeroinmueble = this.state.comTipoInm;
+    var numerobloque = this.state.comBloqueInt;
+
+    const body = { nombre, apellido, tipodoc, numerodoc, barrio, fechanaci };
+    
     await fetch('http://localhost:5000/persona',
       {
         method: "POST",
@@ -166,6 +220,13 @@ export  class CrearPersona extends React.Component {
 
     var idpersona = this.state.idperso
 
+    const bodyD = { idviaprincipal, idpersona, numeroviap, numerovias, numerocasa, idtipoinmueble, idbloqueinterior, numeroinmueble, numerobloque }
+
+    await fetch(`http://localhost:5000/direccion/`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(bodyD)
+    });
 
     if (this.state.email.length > 0) {
       for (var i = 0; i < this.state.email.length; i++) {
@@ -177,7 +238,7 @@ export  class CrearPersona extends React.Component {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(body)
           });
-        console.log(body);
+
       }
     }
 
@@ -191,7 +252,7 @@ export  class CrearPersona extends React.Component {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(body)
           });
-        console.log(body);
+
       }
     }
 
@@ -202,20 +263,56 @@ export  class CrearPersona extends React.Component {
       timer: 1500
     })
 
+  
     this.cancelar();
+    
 
   }
 
 
 
   cancelar() {
-    this.state.nombre = ''
-    this.state.apellido = ''
-    this.state.identificacion = ''
-    this.state.telefono = []
-    this.state.email = []
+    this.setState({
+      nombre: '',
+      apellido: '',
+      identificacion: '',
+      telefono : [],
+      email : [],
+      numViaP: '',
+      numViaS: '',
+      numCasa: '',
+      comTipoInm: '',
+      comBloqueInt: '',
+      fechaN : '',
+    })
 
     this.mostarInser();
+
+  }
+  validaInmBlo() {
+    const tipoInm = document.getElementById('tipoInm').selectedIndex;
+    const comTipoInm = document.getElementById('comTipoInm').value;
+    const bloqueInt = document.getElementById('bloqueInt').selectedIndex;
+    const comBloqueInt = document.getElementById('comBloqueInt').value;
+
+    if (tipoInm === 0 && comTipoInm === '') {
+      if (bloqueInt === 0 && comBloqueInt === '') {
+        return true
+      }
+      else if (bloqueInt !== 0 && comBloqueInt !== '') {
+        return true
+      }
+    }
+    else if (tipoInm !== 0 && comTipoInm !== '') {
+      if (bloqueInt === 0 && comBloqueInt === '') {
+        return true
+      }
+      else if (bloqueInt !== 0 && comBloqueInt !== '') {
+        return true
+      }
+    } else {
+      return false
+    }
 
   }
 
@@ -226,6 +323,12 @@ export  class CrearPersona extends React.Component {
     const doc = document.getElementById('identificacion').value.trim();
     const barr = document.getElementById('barrio').selectedIndex;
     const fecha = document.getElementById('fechaN').value;
+    const viaP = document.getElementById('viaP').selectedIndex;
+    const numViaP = document.getElementById('numViaP').value;
+    const numViaS = document.getElementById('numViaS').value;
+    const numCasa = document.getElementById('numCasa').value;
+
+
     var ft = new Date(fecha)
     ft.setDate(ft.getDate() + 1);
     if (nom !== "" && nom.length <= 20) {
@@ -240,7 +343,18 @@ export  class CrearPersona extends React.Component {
               document.getElementById('sbarrio').style.display = 'none';
               if (ft <= new Date()) {
                 document.getElementById('sfechaN').style.display = 'none';
-                this.crearPerso();
+
+                if (viaP !== 0 && numViaP !== '' && numViaS !== '' && numCasa !== '') {
+                  document.getElementById('sdireccion').style.display = 'none';
+                  if (this.validaInmBlo()) {
+                    document.getElementById('sinm').style.display = 'none';
+                    this.crearPerso();
+                  } else {
+                    document.getElementById('sinm').style.display = 'contents';
+                  }
+                } else {
+                  document.getElementById('sdireccion').style.display = 'contents';
+                }
               } else {
                 document.getElementById('sfechaN').style.display = 'contents';
               }
@@ -316,7 +430,7 @@ export  class CrearPersona extends React.Component {
                       type="select"
                       bsSize="md"
                       onChange={this.handleChange}>
-                      <option>Tipo de Documento</option>
+                      <option selected="true" disabled="disabled">Tipo de Documento</option>
                       {this.state.tiposdoc.map(tipo => (
                         <option value={tipo.idtipo}>
                           {tipo.tipodocument}
@@ -350,7 +464,7 @@ export  class CrearPersona extends React.Component {
                       bsSize="md"
                       selectedIndex={this.state.barrio}
                       onChange={this.handleChange}>
-                      <option>Barrios</option>
+                      <option selected="true" disabled="disabled">Barrios</option>
                       {this.state.barrios.map(bar => (
                         <option value={bar.id_barrio}>
                           {bar.nombre}
@@ -376,6 +490,130 @@ export  class CrearPersona extends React.Component {
                         onChange={this.handleChange}
                       /> </div></FormGroup>
                   <span className="span" id="sfechaN">Debe Ingresar una Fecha Valida</span>
+                </div>
+                <div className="mb-3">
+                  <FormGroup  >
+                    <div className="mensajeD">
+                      <p className="ocultoD">Dirección</p>
+                      <InputGroup>
+                        <InputGroupAddon addonType="prepend">
+                          <Input id="viaP"
+
+                            className="form-control bg-primary  text-white font-weight-bold"
+                            name="viaP"
+                            type="select"
+                            bsSize="md"
+                            selectedIndex={this.state.viaP}
+                            onChange={this.handleChange}>
+                            <option selected="true" disabled="disabled">Via Principal</option>
+                            {this.state.selViaP.map(via => (
+                              <option value={via.idviaprincipal}>
+                                {via.nombrevia}
+                              </option>
+                            ))}
+                          </Input>
+                        </InputGroupAddon>
+                        <Input id="numViaP"
+
+                          className="form-control"
+                          name="numViaP"
+                          type="text"
+                          bsSize="md"
+                          value={this.state.numViaP}
+                          onChange={this.handleChange} />
+                        <h4 className='ml-1 mr-1 mt-1'> # </h4>
+                        <Input id="numViaS"
+
+                          className="form-control"
+                          name="numViaS"
+                          type="text"
+                          bsSize="md"
+                          value={this.state.numViaS}
+                          onChange={this.handleChange} />
+                        <h4 className='ml-1 mr-1 mt-1'> -  </h4>
+                        <Input id="numCasa"
+
+                          className="form-control"
+                          name="numCasa"
+                          type="text"
+                          bsSize="md"
+                          value={this.state.numCasa}
+                          onChange={this.handleChange} />
+                      </InputGroup>
+                    </div>
+                  </FormGroup>
+                  <span className="span" id="sdireccion">Debe Ingresar una Direccion Valida</span>
+                </div>
+                <div className="mb-3" >
+                  <FormGroup >
+                    <InputGroup>
+                      <InputGroupAddon addonType="prepend">
+                        <Input
+                          id="tipoInm"
+                          type="select"
+
+                          className="form-control bg-primary  text-white font-weight-bold"
+                          name="tipoInm"
+                          bsSize="md"
+                          selectedIndex={this.state.tipoInm}
+                          onChange={this.handleChange}
+                        >
+                          <option>Tipo de Inmueble</option>
+                          {this.state.selTipoInm.map(inm => (
+                            <option value={inm.idtipoinmueble}>
+                              {inm.nombreinmueble}
+                            </option>
+                          ))}
+
+                        </Input>
+                      </InputGroupAddon>
+                      <Input id="comTipoInm"
+                        placeholder='Num'
+                        className="form-control"
+                        name="comTipoInm"
+                        type="text"
+                        bsSize="md"
+                        value={this.state.comTipoInm}
+                        onChange={this.handleChange} />
+
+                    </InputGroup>
+                  </FormGroup>
+                </div>
+                <div className="mb-3" >
+                  <FormGroup >
+                    <InputGroup>
+                      <InputGroupAddon addonType="prepend">
+                        <Input
+                          id="bloqueInt"
+                          type="select"
+
+                          className="form-control bg-primary  text-white font-weight-bold"
+                          name="bloqueInt"
+                          bsSize="md"
+                          selectedIndex={this.state.bloqueInt}
+                          onChange={this.handleChange}
+
+                        >
+                          <option>Bloque o Interior</option>
+                          {this.state.selBloqueInt.map(blo => (
+                            <option value={blo.idbloqueinterior}>
+                              {blo.nombrebloqueoint}
+                            </option>
+                          ))}
+
+                        </Input>
+                      </InputGroupAddon>
+                      <Input id="comBloqueInt"
+                        placeholder='Num'
+                        className="form-control"
+                        name="comBloqueInt"
+                        type="text"
+                        bsSize="md"
+                        value={this.state.comBloqueInt}
+                        onChange={this.handleChange} />
+                    </InputGroup>
+                  </FormGroup>
+                  <span className="span" id="sinm">No debe dejar Campos Incompletos</span>
                 </div>
                 <div className="mb-3" >
                   <FormGroup >

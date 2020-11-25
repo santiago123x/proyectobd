@@ -151,3 +151,16 @@
   color: #FF3333;
   font-size: 15px;
 }
+
+.ocultoD{ 
+  display: none;
+  border: 2px inset #54A3E8;
+    border-radius: 15px;
+    font-family: "Candara";
+    margin-bottom:2px;
+    text-align: center;
+}
+
+.mensajeD:hover .ocultoD {
+  display: block;
+}

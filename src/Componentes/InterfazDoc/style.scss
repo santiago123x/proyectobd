@@ -30,6 +30,72 @@
     
 }
 
+.conteneTabla{
+    display: flex;
+  justify-content: center;
+  align-items: center;
+    background-size: cover;
+    width: auto;
+    height: 650px;
+    background: url("./fondoD.jpg")  no-repeat center center fixed; ;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover
+}
+.contieneTabla{
+    justify-content: center;
+    align-items: center;
+    padding: 2%;
+    width: 90%;
+    height: 80%;
+    outline: none;
+    box-shadow: 0px 0px 12px 0.8px #3474dbb2;
+    text-align: center;
+    
+     
+}
+.soli{
+    width: 90%;
+    height: 18%;
+   
+    float: left;
+    margin-bottom: 1%;
+}
+.soliLabel{
+    
+    font-family: 'Candara';
+    font-size:  x-large  ;
+    text-align: left;
+    
+}
+.soliM{
+    float: left;
+}
+.soliL{
+    margin-left: 2%;
+    float: left;
+}
+.soliB{
+    width: 15%;
+    margin-left: 2%;
+    float: left; 
+}
+
+.tabla{
+    
+    margin: auto;
+    font-family: 'Candara';
+    font-size:  xx-large  ;
+    padding: 1.5%;
+    width: 80%;
+    height: 80%;
+    outline: none;
+    box-shadow: 0px 0px 12px 0.8px #3474dbb2;
+    text-align: center;
+}
+
+
 .conteneA{
     margin-left: 2.4%;
     width: 95%;
@@ -141,6 +207,63 @@
  }
 .mensajeM:hover .ocultoM{
     display: block;
+}
+.leaflet-container{
+    width: 100vw;
+    height: 100vh;
+}
+.conteMap{
+    padding: 1%;
+    outline: none;
+    box-shadow: 0px 0px 12px 0.8px #3474dbb2;
+}
+
+
+.pie{
+    margin-top: 1.5%;
+    padding: 1.2%;
+    position: static;
+    display: none;
+    height: 42em;
+    outline: none;
+    box-shadow: 0px 0px 12px 0.8px #3474dbb2;
+}
+
+.conteneTI{
+    
+    background-size: cover;
+    width: auto;
+    height: 1000px;
+    background: url("./fondoD.jpg")  no-repeat center center fixed; ;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover
+}
+
+#edades{
+    margin-top: 1.5%;
+    padding: 1.2%;
+    outline: none;
+    box-shadow: 0px 0px 12px 0.8px #3474dbb2;
+}
+
+#visitas{
+    margin-top: 1.5%;
+    padding: 1.2%;
+    outline: none;
+    box-shadow: 0px 0px 12px 0.8px #3474dbb2;
+}
+
+#urgencias{
+    margin-top: 1.5%;
+    padding: 1.2%;
+    outline: none;
+    box-shadow: 0px 0px 12px 0.8px #3474dbb2; 
+}
+
+#tr-info{
+    font-size: large;
 }
 
 

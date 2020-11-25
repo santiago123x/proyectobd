@@ -23,7 +23,135 @@ module.exports = router;
 
 //crear todo
 
-//--------------------- usuario doctor por idusu ------------------------------
+// ------------ Crear Doctor -------------------------------
+
+router.post('/doctor', async(req,res)=>{
+    try{
+        const { idpersona, identidadsalud, iduniversidad } = req.body;
+        newTodo = await pool.query(
+        `INSERT INTO doctor(idperona, identidadsalud, iduniversidad) VALUES(${idpersona}, ${identidadsalud}, ${iduniversidad})`);
+        res.send(newTodo);
+    }catch(e){
+        console.log('sigue intentando');
+    }
+
+});
+
+// ------------ Actualizar Doctor -------------------------------
+
+router.put('/doctor/:id',async (req,res)=>{
+    try{
+        const { id } = req.params;
+     const { identidadsalud, iduniversidad} = req.body;
+   await pool.query(
+     `UPDATE doctor SET  identidadsalud = ${identidadsalud}, iduniversidad= ${iduniversidad}
+     WHERE iddoctor = ${id}`
+   );
+   res.json('ACTUALIZADO');
+    }catch(e){
+     console.log("F");
+    }
+ });
+// ------------ Borrar Doctor -------------------------------
+
+router.delete('/doctor/:iddoc', async (req,res)=>{
+    try{
+        const { iddoc } = req.params;
+        await pool.query(`DELETE FROM doctor WHERE iddoctor = ${iddoc}`);
+        res.json('ELIMINADO');
+    }
+    catch(err){
+        console.error(err);
+    }
+});
+
+
+
+//------------- Universidades ------------------------------
+
+router.get('/universidades/',async (req,res)=>{
+    try{
+        const arreglo = await pool.query(`SELECT * FROM universidades ORDER BY nombreuni`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("no hay universidades");
+    }
+});
+
+
+// ------------ Si esta persona es Doctor ------------------
+
+router.get('/doctor/:idper',async (req,res)=>{
+    try{
+        const { idper } = req.params;
+        const arreglo = await pool.query(`SELECT * FROM doctor WHERE idperona = ${idper}`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("upppsss paila le dio error");
+    }
+});
+
+// ------------ Eps ----------------------------------------
+
+router.get('/eps/',async (req,res)=>{
+    try{
+        const arreglo = await pool.query(`SELECT * FROM eps ORDER BY nombreeps`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("ninguna eps es buena");
+    }
+});
+
+// ------------ Info Doctor --------------------------------
+
+router.get('/doctores', async(req,res)=>{
+    try{
+        const arreglo = await pool.query(`select iddoctor, idpersona, per.nombre, apellido, idtipo, tipodocument, numerodoc,
+        fechanaci, id_barrio, b.nombre as barrio, uni.iduniversidad, nombreuni, ideps, nombreeps
+        from doctor d 
+        join persona per on d.idperona = per.idpersona 
+        join barrio b on per.barrio = b.id_barrio
+        join tipodocumento ti on per.tipodoc = ti.idtipo
+        join universidades uni on d.iduniversidad = uni.iduniversidad
+        join eps e on d.identidadsalud = e.ideps`);
+        res.send(arreglo.rows);
+    } catch(e){
+        console.log("doctores "+ e);
+    } 
+});
+
+
+
+router.get('/doctorinfo/:iddoctor', async(req,res)=>{
+    try{
+        const { iddoctor } = req.params;
+        const arreglo = await pool.query(`select iddoctor, idpersona, per.nombre, apellido, idtipo, tipodocument, numerodoc,
+        fechanaci, id_barrio, b.nombre as barrio, uni.iduniversidad, nombreuni, ideps, nombreeps
+        from doctor d 
+        join persona per on d.idperona = per.idpersona 
+        join barrio b on per.barrio = b.id_barrio
+        join tipodocumento ti on per.tipodoc = ti.idtipo
+        join universidades uni on d.iduniversidad = uni.iduniversidad
+        join eps e on d.identidadsalud = e.ideps
+        where iddoctor = ${iddoctor}`);
+        res.send(arreglo.rows[0]);
+    } catch(e){
+        console.log("doctor info " + e);
+    } 
+});
+
+// ------------  Doctor(Trae Su ID) ------------
+router.get('/id_doctor/',async (req,res)=>{
+    try{
+        const arreglo = await pool.query(`SELECT iddoctor FROM doctor ORDER BY iddoctor DESC`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("David si está :D");
+    }
+});
+
+
+// ------------ Usuario Doctor(Trae Su Persona) ------------
 
 router.get('/usudoctor/:idusu', async(req,res)=>{
     try{
@@ -39,89 +167,8 @@ router.get('/usudoctor/:idusu', async(req,res)=>{
         where idusuario = ${idusu}`);
         res.send(arreglo.rows[0]);
     } catch(e){
-        console.log("MIS COJONES");
+        console.log("usudoctor " + e);
     } 
-});
-
-
-//------------------- doctores info completa -------------------
-
-
-router.get('/doctores', async(req,res)=>{
-    try{
-        const arreglo = await pool.query(`select iddoctor, idpersona, per.nombre, apellido, idtipo, tipodocument, numerodoc,
-        fechanaci, id_barrio, b.nombre as barrio, uni.iduniversidad, nombreuni, ideps, nombreeps
-        from doctor d 
-        join persona per on d.idperona = per.idpersona 
-        join barrio b on per.barrio = b.id_barrio
-        join tipodocumento ti on per.tipodoc = ti.idtipo
-        join universidades uni on d.iduniversidad = uni.iduniversidad
-        join eps e on d.identidadsalud = e.ideps`);
-        res.send(arreglo.rows);
-    } catch(e){
-        console.log("MIS COJONES");
-    } 
-});
-
-//--------------------- doctor por idpersona ------------------
-
-router.get('/doctor/:idper',async (req,res)=>{
-    try{
-        const { idper } = req.params;
-        const arreglo = await pool.query(`SELECT * FROM doctor WHERE idperona = ${idper}`);
-        res.send(arreglo.rows);
-    }catch(e){
-        console.log("upppsss paila le dio error");
-    }
-});
-
-
-router.post('/doctor', async(req,res)=>{
-    try{
-        const { idpersona, identidadsalud, iduniversidad } = req.body;
-        newTodo = await pool.query(
-        `INSERT INTO doctor(idpersona, identidadsalud, iduniversidad) VALUES(${idpersona}, ${identidadsalud}, ${iduniversidad})`);
-        res.send(newTodo);
-    }catch(e){
-        console.log('sigue intentando');
-    }
-      
-});
-
-
-//--------------------- paciente por idpersona ------------------
-
-router.get('/paciente/:idper',async (req,res)=>{
-    try{
-        const { idper } = req.params;
-        const arreglo = await pool.query(`SELECT * FROM paciente WHERE idperona = ${idper}`);
-        res.send(arreglo.rows);
-    }catch(e){
-        console.log("no encontramos lo que querias");
-    }
-});
-
-
-//-------------------------- universidades -----------------------
-
-router.get('/universidades/',async (req,res)=>{
-    try{
-        const arreglo = await pool.query(`SELECT * FROM universidades ORDER BY nombreuni`);
-        res.send(arreglo.rows);
-    }catch(e){
-        console.log("no hay universidades");
-    }
-});
-
-//---------------------------- EPS --------------------------------
-
-router.get('/eps/',async (req,res)=>{
-    try{
-        const arreglo = await pool.query(`SELECT * FROM eps ORDER BY nombreeps`);
-        res.send(arreglo.rows);
-    }catch(e){
-        console.log("ninguna eps es buena");
-    }
 });
 
 // ------------  Usuario * Persona ------------------------- 
@@ -137,7 +184,7 @@ router.get('/usuariopersox/:idper', async(req,res)=>{
 		WHERE (per.idpersona= ${idper})`);
         res.send(arreglo.rows);
     } catch(e){
-        console.log("MIS COJONES");
+        console.log("usuariopersox: " + e);
     } 
 });
 
@@ -150,7 +197,7 @@ router.get('/usuariopersox/:idper', async(req,res)=>{
         `INSERT INTO usuario(idpersona, contraseña, tipousuario, nickname) VALUES(${idpersona},'${contra}','${tipo_usu}','${nickname}')`);
         res.send(newTodo);
     }catch(e){
-        console.log('F :asdasd');
+        console.log('usuario inser: ' + e);
     }
       
   });
@@ -182,7 +229,7 @@ router.put('/usuario/:id',async (req,res)=>{
   );
   res.json('ACTUALIZADO');
    }catch(e){
-    console.log("F");
+    console.log("usuario Upd : "+ e);
    }
 });
 
@@ -194,7 +241,7 @@ router.get('/usuario/:nick',async (req,res) =>{
         const arreglo = await pool.query(`SELECT * FROM usuario WHERE nickname = '${nick}'`);
         res.send(arreglo.rows);
     } catch(e){
-        console.log("MIS COJONES");
+        console.log("usuario x nick: " + e);
     } 
 });
 
@@ -206,7 +253,7 @@ router.get('/usuario2/:id',async (req,res) =>{
         res.send(arreglo.rows);
          
     } catch(e){
-        console.log("MIS COJONES");
+        console.log("usuario2 : " + e);
     } 
 });
 
@@ -221,7 +268,7 @@ router.post('/persona', async(req,res)=>{
         VALUES('${nombre}','${apellido}',${tipodoc},'${numerodoc}',${barrio},'${fechanaci}')`);
         res.send(newTodo);
     }catch(e){
-        console.log(e);
+        console.log('persona inser' + e);
     }
 
       
@@ -237,7 +284,7 @@ router.delete('/persona/:idpersona', async (req,res)=>{
         res.json('ELIMINADO');
     }
     catch(err){
-        console.error(err);
+        console.error('persona del : '+ err);
     }
 });
 
@@ -255,7 +302,7 @@ router.put('/persona/:idpersona',async (req,res)=>{
   );
   res.json('ACTUALIZADO');
    }catch(e){
-    console.log("F");
+    console.log("persona upd: " + e);
    }
 });
 
@@ -268,7 +315,7 @@ router.get('/persona/:idpersona',async (req,res) =>{
         res.send(arreglo.rows);
          
     } catch(e){
-        console.log("MIS COJONES");
+        console.log("persona x id " + e);
     } 
 });
 
@@ -280,7 +327,7 @@ router.get('/personaiden/:numerodoc',async (req,res) =>{
         res.send(arreglo.rows);
          
     } catch(e){
-        console.log("MIS COJONES");
+        console.log("persona x numero documento: " + e);
     } 
 });
 
@@ -292,7 +339,7 @@ router.get('/persona/',async (req,res) =>{
         res.send(arreglo.rows);
          
     } catch(e){
-        console.log("MIS COJONES");
+        console.log("Todas las personas: " + e);
     } 
 });
 
@@ -338,7 +385,7 @@ router.put('/email/:idemail',async (req,res)=>{
   );
   res.json('ACTUALIZADO');
    }catch(e){
-    console.log("F");
+    console.log("email upd: " + e);
    }
 });
 
@@ -351,8 +398,43 @@ router.get('/email/:idpersona',async (req,res) =>{
         res.send(arreglo.rows);
          
     } catch(e){
-        console.log("MIS COJONES");
+        console.log("email x idpersona: " + e);
     } 
+});
+
+router.get('/emailhay/:idpersona/:email',async (req,res) =>{
+    try{
+        const { idpersona, email } = req.params;
+        const arreglo = await pool.query(`SELECT * FROM email 
+        WHERE idpersona = ${idpersona} and email ILIKE '${email}'`);
+        res.send(arreglo.rows);
+         
+    } catch(e){
+        console.log("Emailhay : "+ e);
+    } 
+});
+
+router.get('/emailhay2/:email',async (req,res) =>{
+    try{
+        const { email } = req.params;
+        const arreglo = await pool.query(`SELECT email FROM email 
+        WHERE email ILIKE '${email}'`);
+        res.send(arreglo.rows);
+         
+    } catch(e){
+        console.log("Emailhay2 : "+ e);
+    } 
+});
+
+router.delete('/emaildel/:idpersona/:email', async (req,res)=>{
+    try{
+        const { idpersona, email } = req.params;
+        await pool.query(`DELETE FROM email WHERE idpersona = ${idpersona} and email ILIKE '${email}'`);
+        res.json('ELIMINADO');
+    }
+    catch(err){
+        console.error(err);
+    }
 });
 
 
@@ -397,7 +479,7 @@ router.put('/telefono/:idtelefono',async (req,res)=>{
   );
   res.json('ACTUALIZADO');
    }catch(e){
-    console.log("F");
+    console.log("telefono upd : " + e);
    }
 });
 
@@ -410,10 +492,32 @@ router.get('/telefono/:idpersona',async (req,res) =>{
         res.send(arreglo.rows);
          
     } catch(e){
-        console.log("MIS COJONES");
+        console.log("telefono x idpersona " + e);
     } 
 });
 
+router.get('/telhay/:idpersona/:telefono',async (req,res) =>{
+    try{
+        const { idpersona, telefono } = req.params;
+        const arreglo = await pool.query(`SELECT * FROM telefono 
+        WHERE idpersona = ${idpersona} and telefono = '${telefono}'`);
+        res.send(arreglo.rows);
+         
+    } catch(e){
+        console.log("Telefonohay : "+ e);
+    } 
+});
+
+router.delete('/teldel/:idpersona/:telefono', async (req,res)=>{
+    try{
+        const { idpersona, telefono } = req.params;
+        await pool.query(`DELETE FROM telefono WHERE idpersona = ${idpersona} and telefono = '${telefono}'`);
+        res.json('ELIMINADO');
+    }
+    catch(err){
+        console.error(err);
+    }
+});
 
 
 //-------------------------- Barrio ----------------------
@@ -426,7 +530,7 @@ router.get('/barrio/:id_barrio',async (req,res) =>{
         res.send(arreglo.rows);
          
     } catch(e){
-        console.log("MIS COJONES");
+        console.log("barrio: " + e);
     }
 });
 
@@ -436,7 +540,7 @@ router.get('/barrio/',async (req,res) =>{
         res.send(arreglo.rows);
          
     } catch(e){
-        console.log("MIS COJONES");
+        console.log("todos los barrio: " + e);
     }
 });
 
@@ -451,7 +555,7 @@ router.get('/tipodoc/:idtipo',async (req,res) =>{
         res.send(arreglo.rows);
          
     } catch(e){
-        console.log("MIS COJONES");
+        console.log("tipo documento: " + e);
     }
 });
 
@@ -461,7 +565,7 @@ router.get('/tipodoc/',async (req,res) =>{
         res.send(arreglo.rows);
          
     } catch(e){
-        console.log("MIS COJONES");
+        console.log("tipodoc : " + e);
     }
 });
 
@@ -472,23 +576,364 @@ router.get('/medicamentos/',async (req,res)=>{
         const arreglo = await pool.query(`SELECT * FROM medicamentos ORDER BY idmedicamento`);
         res.send(arreglo.rows);
     }catch(e){
-        console.log("F Medica");
+        console.log("medicamento : " + e);
     }
 });
 
 
-// -------------------------- Doctor ----------------------
 
-router.get('/doctor/:iddoctor',async (req,res)=>{
+
+//------------------------ Inventario ----------------------
+
+router.post('/pedido/', async (req,res)=>{
     try{
-        const { iddoctor } = req.params;
-        const arreglo = await pool.query(`SELECT * FROM tipodocumento WHERE idtipo = ${iddoctor}`);
+        const {iddoc, idmed, cant, idlab } = req.body;
+        newTodo = await pool.query(
+        `insert into pedido (iddoctor, idmedicamento, fecha, cantidad, idlab)
+        values ( ${iddoc}, ${idmed}, now(), ${cant}, ${idlab})`);
+        res.json("INSERTADO 7W7");
+    }catch(e){
+        console.log('pedido: ' + e);
+    }
+});
+
+
+router.get('/stock/',async (req,res)=>{
+    try{
+        const arreglo = await pool.query(`SELECT * from stock`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("stock: "+ e);
+    }
+});
+
+router.get('/inventario2/',async (req,res)=>{
+    try{
+        const arreglo = await pool.query(`SELECT inv.idmedicamento, medicamento, lab1, lab2, lab3, lab4 
+        FROM inventario inv join medicamentos med on inv.idmedicamento = med.idmedicamento`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("invetario2: "+ e);
+    }
+});
+
+
+
+router.put('/inventario/:idmedicamento',async (req,res)=>{
+    try{
+        const { idmedicamento } = req.params;
+        const { lab, des } = req.body;
+     await pool.query(`UPDATE inventario set lab${lab} = ${des} WHERE idmedicamento = ${idmedicamento}`);
+   res.json('ACTUALIZADO Inventario');
+    }catch(e){
+     console.log(e);
+    }
+ });
+
+// ----------------- Hora Fecha Registro Doctor ----------------
+
+router.post('/registrodoc/', async (req,res)=>{
+    try{
+        const { idusu, iddoc, fecha, hora } = req.body;
+        newTodo = await pool.query(
+        `INSERT INTO regitrodoctor (idusuario, iddoctor, fecha, hora) VALUES(${idusu},${iddoc},'${fecha}','${hora}')`);
+        res.json("INSERTADO 7W7");
+    }catch(e){
+        console.log(e);
+    }
+});
+
+// ---------------------- Direccion -----------------------
+
+router.post('/direccion/', async (req,res)=>{
+    try{
+        const { idviaprincipal, idpersona, numeroviap, numerovias, numerocasa, idtipoinmueble, idbloqueinterior, numeroinmueble, numerobloque } = req.body;
+        newTodo = await pool.query(
+        `INSERT INTO direccion (idviaprincipal, idpersona, numeroviap, numerovias, numerocasa, idtipoinmueble,
+            idbloqueinterior, numeroinmueble, numerobloque) 
+        VALUES(${idviaprincipal},${idpersona},'${numeroviap}','${numerovias}','${numerocasa}',${idtipoinmueble},${idbloqueinterior},'${numeroinmueble}','${numerobloque}')`);
+        res.json("INSERTADO 7W7");
+    }catch(e){
+        console.log(e);
+    }
+});
+
+router.get('/direccion/:idpersona', async (req,res)=>{
+    try{
+        const { idpersona } = req.params;
+        const arreglo = await pool.query(`select * from direccion where idpersona = ${idpersona}`);
         res.send(arreglo.rows[0]);
     }catch(e){
-        console.log("F Medica");
+        console.log("direccion :"+e);
     }
-}); 
+});
 
+router.put('/direccion/:iddireccion', async (req,res)=>{
+    try{
+        const { iddireccion } = req.params;
+        const { idviaprincipal, numeroviap, numerovias, numerocasa, idtipoinmueble, idbloqueinterior, numeroinmueble, numerobloque } = req.body;
+     await pool.query(`UPDATE direccion  SET idviaprincipal = ${idviaprincipal}, numeroviap  = '${numeroviap}', numerovias = '${numerovias}',
+     numerocasa = '${numerocasa}', idtipoinmueble = ${idtipoinmueble}, idbloqueinterior = ${idbloqueinterior}, numeroinmueble= '${numeroinmueble}', numerobloque = '${numerobloque}'
+    WHERE iddireccion = ${iddireccion}`);
+    }catch(e){
+     console.log(e);
+    }
+    
+});
+
+
+// ---------------------- Via Principal -------------------
+
+router.get('/viap/',async (req,res)=>{
+    try{
+        const arreglo = await pool.query(`select * from viaprincipal order by nombrevia`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("viap :" +e);
+    }
+});
+
+// ---------------------- Inmueble ----------------------------
+
+router.get('/inmueble/',async (req,res)=>{
+    try{
+        const arreglo = await pool.query(`select * from tipoinmueble order by nombreinmueble`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("inmueble : " + e);
+    }
+});
+
+// ---------------------- Bloque -------------------------------
+
+router.get('/bloque/',async (req,res)=>{
+    try{
+        const arreglo = await pool.query(`select * from bloqueointerior order by nombrebloqueoint`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("bloque :" + e);
+    }
+});
+
+//---------------------------Geolocalizacion---------------------
+
+router.get('/geolocalizacion/',async (req,res)=>{
+    try{
+        const arreglo = await pool.query(`SELECT geo.longitud, geo.latitud, per.nombre , per.apellido, via.nombrevia, dir.numeroviap, dir.numerovias,dir.numerocasa                                                                                                                                                                                                                     
+        FROM geolocalizacion geo
+        join paciente pa on geo.idpaciente = pa.idpaciente
+        join persona per on pa.idpersona = per.idpersona
+        join direccion dir on per.idpersona = dir.idpersona
+        join viaprincipal via on dir.idviaprincipal = via.idviaprincipal`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("geo: " + e);
+    }
+});                 
+
+
+//-------------------------- Paciente --------------------
+
+router.get('/paciente/:idper',async (req,res)=>{
+    try{
+        const { idper } = req.params;
+        const arreglo = await pool.query(`SELECT * FROM paciente WHERE idpersona = ${idper}`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("paciente selec : " + e);
+    }
+});
+
+router.post('/paciente', async(req,res)=>{
+    try{
+        const { idpersona, numintegrantes, ciudadcontagio} = req.body;
+        newTodo = await pool.query(
+        `INSERT INTO paciente ( idpersona, numintegrantes, ciudadcontagio) 
+        VALUES(${idpersona},${numintegrantes},${ciudadcontagio})`);
+        res.send(newTodo);
+    }catch(e){
+        console.log(e);
+    } 
+  });
+
+  router.post('/registropac/', async (req,res)=>{
+    try{
+        const { idusu, idpaciente, fecha, hora } = req.body;
+        newTodo = await pool.query(
+        `INSERT INTO registropaciente (idusuario, idpaciente, fecha, hora) VALUES(${idusu}, ${idpaciente}, '${fecha}', '${hora}')`);
+        res.json("INSERTADO 7W7");
+    }catch(e){
+        console.log(e);
+    }
+});
+
+//---------------------- Ciudades -----------------------------
+
+router.get('/ciudades', async (req,res)=>{
+    try{
+       
+        const arreglo = await pool.query(`SELECT * FROM ciudades ORDER BY ciudad`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("ciudades: " + e);
+    }
+});
+
+
+//-------------------- registar geolocalizacion ---------------
+
+
+router.post('/geoloca', async(req,res)=>{
+    try{
+        const { idpaciente, latitud , longitud } = req.body;
+        newTodo = await pool.query(
+        `INSERT INTO geolocalizacion (idpaciente, longitud, latitud) VALUES(${idpaciente}, '${longitud}', '${latitud}')`);
+        res.send(newTodo);
+    }catch(e){
+        console.log('geoloca: ' +e);
+    }
+
+});
+
+//------------------- doctor que atiende paciente ----------------------
+
+router.post('/atencion', async(req,res)=>{
+    try{
+        const { idpaciente, iddoctor} = req.body;
+        newTodo = await pool.query(
+        `INSERT INTO atencion (idpaciente, iddoctor) VALUES(${idpaciente}, ${iddoctor})`);
+        res.send(newTodo);
+    }catch(e){
+        console.log('atencion : ' +e);
+    }
+
+});
+
+// ------------------- All Pacientes -------------------------
+
+router.get('/pacientes', async(req,res)=>{
+    try{
+        const arreglo = await pool.query(`select * from pacientes order by idpaciente`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("pacientes: " + e);
+    }
+})
+
+// --------------------- Paciente(Id Paciente) ----------------
+
+
+
+router.get('/pacientesid', async(req,res)=>{
+    try{
+        const arreglo = await pool.query(`SELECT idpaciente FROM paciente ORDER BY idpaciente DESC`);
+        res.send(arreglo.rows[0]);
+    }catch(e){
+        console.log("pacientes: " + e);
+    }
+})
+
+//---------------------------Informes barrio---------------------
+
+router.get('/contxbarrio/',async (req,res)=>{
+    try{
+        const arreglo = await pool.query(`select count (ba.nombre), ba.nombre from paciente pa
+        join persona per on pa.idpersona = per.idpersona
+        join barrio ba on per.barrio = ba.id_barrio group by per.barrio, ba.nombre`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("no hay contagiaos");
+    }
+});
+//---------------------------Informes edad---------------------
+
+router.get('/pacxed/',async (req,res)=>{
+    try{
+        const arreglo = await pool.query(`select personas,CAST(anio AS varchar) from pacxed order by anio`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("no hay contagiaos");
+    }
+});
+//---------------------------Informes visitas---------------------
+
+router.get('/visxanio/:anio/',async (req,res)=>{
+    try{
+        const {anio} = req.params;
+        const arreglo = await pool.query(`select * from infovisitas
+        where to_char(fecha, 'YYYY') = '${anio}'`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("informe visxanio se jodio " + e );
+    }
+});
+
+router.get('/visxmes/:anio/:mes/',async (req,res)=>{
+    try{
+        const {anio, mes} = req.params;
+        const arreglo = await pool.query(`select * from infovisitas
+        where to_char(fecha, 'YYYY') = '${anio}' 
+        and to_char(fecha, 'MM') = '${mes}'`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("informe visxmes se jodio " + e );
+    }
+});
+
+router.get('/visxdia/:anio/:mes/:dia/',async (req,res)=>{
+    try{
+        const {anio, mes, dia} = req.params;
+        const arreglo = await pool.query(`select * from infovisitas
+        where to_char(fecha, 'YYYY') = '${anio}'
+        and to_char(fecha, 'MM') = '${mes}'
+        and to_char(fecha, 'DD') = '${dia}'`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("informe visxdia se jodio " + e );
+    }
+});
+
+
+//---------------------------Informes urgencias---------------------
+
+router.get('/infurg/:idpaciente/',async (req,res)=>{
+    try{
+        const {idpaciente} = req.params;
+        const arreglo = await pool.query(`select * from urginf
+        where idpaciente = ${idpaciente}`);
+        res.send(arreglo.rows);
+    }catch(e){
+        console.log("informe infurg se jodio " + e );
+    }
+});
+
+//------------------- visita ----------------------
+
+router.post('/visita', async(req,res)=>{
+    try{
+        const {idDoc, idPac, fecha, hora, temp, peso, presion, medi, dosis, obs } = req.body;
+        newTodo = await pool.query(
+        `insert into visita (idpaciente, iddoctor, hora, fecha, temperatura, peso, presion, dosis, idmedicamento, observaciones)
+        values(${idPac}, ${idDoc}, '${hora}', '${fecha}', ${temp}, ${peso}, '${presion}', '${dosis}', ${medi}, '${obs}' )`);
+        res.send(newTodo);
+    }catch(e){
+        console.log('visita : ' +e);
+    }
+
+});
+//-------------------Integrantes------------------------------
+
+router.post('/integrantes', async(req,res)=>{
+    try{
+        const {idpac,idper, paren } = req.body;
+        newTodo = await pool.query(`insert into integrante (idpaciente, idpersona, parentesco)
+        values (${idpac}, ${idper}, '${paren}')`);
+        res.send(newTodo);
+    }catch(e){
+        console.log('visita : ' +e);
+    }
+
+});
 
 
 // ------------------------- Conexion --------------------
@@ -497,6 +942,20 @@ module.exports = router;
 router.listen(5000, () => {
     console.log("server has started on port 5000");
   });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /*
