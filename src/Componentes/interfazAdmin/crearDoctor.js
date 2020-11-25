@@ -2659,7 +2659,7 @@ export default class CrearDoctor extends React.Component {
                             <thead>
                                 <tr>
                                     <th className='font-weight-bold'>Id</th>
-                                    <th className='font-weight-bold'>Email</th>
+                                    <th className='font-weight-bold'>Telefono</th>
                                     <th className='font-weight-bold'>Eliminar</th>
                                 </tr>
                             </thead>
