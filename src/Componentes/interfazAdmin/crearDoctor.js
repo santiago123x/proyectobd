@@ -1125,8 +1125,11 @@ export default class CrearDoctor extends React.Component {
                 const ema = { idemail: 0, email: emi, idpersona: this.state.seleccionada }
                 arreglo.push(ema);
                 this.setState({
-                    emailEmer: arreglo
+                    emailEmer: arreglo,
+                    emerEma: ''
                 })
+                document.getElementById('emerEma').value = '';
+
             }else{
                 Swal.fire({
                     icon: 'error',
@@ -1423,7 +1426,8 @@ export default class CrearDoctor extends React.Component {
         this.setState({
             emailEmer: [],
             emailEmerB: [],
-            seleccionada: null
+            seleccionada: null,
+            emerEma: '',
         });
     }
 
