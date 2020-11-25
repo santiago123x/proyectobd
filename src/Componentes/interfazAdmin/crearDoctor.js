@@ -33,6 +33,7 @@ export default class CrearDoctor extends React.Component {
             emailEmer: [],
             emailEmerB: [],
             seleccionada: null,
+            emerEma: '',
             //Parentesco
             paren: null,
             perParen: null,
@@ -985,6 +986,8 @@ export default class CrearDoctor extends React.Component {
 
     }
 
+    // Email Emergencia
+
     async emailEmer(idper) {
 
         const idPer = parseInt(idper);
@@ -1008,37 +1011,60 @@ export default class CrearDoctor extends React.Component {
 
         var arreglo = this.state.emailEmer;
         var index = null;
+        var idemail = null;
         for (var i = 0; i < this.state.emailEmer.length; i++) {
             if (this.state.emailEmer[i].email === x) {
                 index = i;
+                idemail = this.state.emailEmer[i].idemail;
             }
         }
+        var algo = this.state.emailEmerB;
+        algo.push(arreglo[index])
+        
         arreglo.splice(index, 1);
-        this.setState({
-            emailEmer: arreglo,
-            emailEmerB: [...this.state.emailEmerB, arreglo[index]]
-        })
+
+        if (idemail != 0) {
+            this.setState({
+                
+                emailEmerB: algo,
+                emailEmer: arreglo,
+
+            })
+            
+            
+            
+            
+        }else {
+            this.setState({
+                emailEmer: arreglo,
+
+            })
+            
+        }
     }
 
-    async hayemail2(x){
-      var bool = false;
-      await fetch(`http://localhost:5000/emailhay2/${x}`)
-      .then(response => response.json())
-            .then((result) => {
-              if(result != '' ){
-                bool = true
-              }
-            })
 
-            return bool;
+    async hayemail2(x) {
+        var bool = false;
+        
+        await fetch(`http://localhost:5000/emailhay2/${x}`)
+            .then(response => response.json())
+            .then(result => { 
+                if (result.length > 0) {
+                    bool = true
+                }
+            });
+
+        return bool;
     }
 
     async creaEmerEmail() {
 
         if (this.state.emailEmer.length > 0) {
-
+            
             for (var i = 0; i < this.state.emailEmer.length; i++) {
-                if (this.state.emailEmer[i].idemail === 0 && !this.hayemail2(this.state.emailEmer[i].email)) {
+                
+                if (this.state.emailEmer[i].idemail === 0) {
                     var email = this.state.emailEmer[i].email;
                     var idpersona = this.state.emailEmer[i].idpersona;
                     const body = { email, idpersona }
@@ -1050,14 +1076,26 @@ export default class CrearDoctor extends React.Component {
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify(body)
                     });*/
-                }else{
-                  Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: `${this.state.emailEmer[i].email} Este Email ya se Encuentra en la base de Datos`,
-                });
                 }
+                
+            }for (var i = 0; i < this.state.emailEmerB.length; i++) {
+                
+                
+                    var email2 = this.state.emailEmerB[i].email;
+                    var idpersona2 = this.state.emailEmerB[i].idpersona;
+                    const bodyB = { email2, idpersona2 }
+                    console.log(bodyB)
+                    /*
+                    await fetch(`http://localhost:5000/email/`,
+                    {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(body)
+                    });*/
+                
+                
             }
+            this.cancelarEmail();
         } else {
             Swal.fire({
                 icon: 'error',
@@ -1067,16 +1105,35 @@ export default class CrearDoctor extends React.Component {
         }
     }
 
-    emerEmailAgre() {
-        const emi = this.state.emerEma.trim();
+    hayaquiemail(x){
+        var bool = false;
+        for(var i = 0;i<this.state.emailEmer.length;i++){
+            if(this.state.emailEmer.email === x){
+                bool = true;
+            }
+        }
+        return bool;
+    }
 
-        if (emi !== '') {
-            const arreglo = this.state.emailEmer;
-            const ema = { idemail: 0, email: emi, idpersona: this.state.seleccionada }
-            arreglo.push(ema);
-            this.setState({
-                emailEmer: arreglo
-            })
+    async emerEmailAgre() {
+        const emi = this.state.emerEma.trim();
+        
+        if (emi !== '' && emi.includes('@') && (emi.includes('.com')||emi.includes('.co'))) {
+            const bool =  await this.hayemail2(emi)
+            if (!bool && !this.hayaquiemail(emi)) {
+                const arreglo = this.state.emailEmer;
+                const ema = { idemail: 0, email: emi, idpersona: this.state.seleccionada }
+                arreglo.push(ema);
+                this.setState({
+                    emailEmer: arreglo
+                })
+            }else{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Este Email ya esta Registrado en la Base de Datos.',
+                });
+            }
         } else {
             Swal.fire({
                 icon: 'error',
@@ -2327,6 +2384,7 @@ export default class CrearDoctor extends React.Component {
                     <ModalBody>
                         <div className="mb-3" style={{ width: '80%', float: 'left' }} >
                             <FormGroup >
+                                
                                 <InputGroup>
 
                                     <Input
@@ -2337,6 +2395,7 @@ export default class CrearDoctor extends React.Component {
                                         bsSize="md"
                                         type="email"
                                         value={this.state.emerEma}
+                                        required
                                         onChange={this.handleChange}>
 
                                     </Input>
@@ -2346,7 +2405,7 @@ export default class CrearDoctor extends React.Component {
                                     </InputGroupAddon>
 
                                 </InputGroup>
-
+                                
                             </FormGroup>
                         </div>
                         <Table className=' text-center' striped bordered hover>

@@ -419,7 +419,7 @@ router.get('/emailhay2/:email',async (req,res) =>{
         const { email } = req.params;
         const arreglo = await pool.query(`SELECT email FROM email 
         WHERE email ILIKE '${email}'`);
-        res.send(arreglo.rows[0]);
+        res.send(arreglo.rows);
          
     } catch(e){
         console.log("Emailhay2 : "+ e);
