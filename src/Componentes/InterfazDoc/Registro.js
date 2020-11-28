@@ -58,7 +58,7 @@ export default class Registro extends React.Component {
   }
 
   async componentDidMount() {
-    await fetch('http://localhost:5000/medicamentos/')
+    await fetch('/medicamentos/')
       .then(res => res.json())
       .then(
         (result) => {
@@ -68,7 +68,7 @@ export default class Registro extends React.Component {
         }
       )
 
-    await fetch('http://localhost:5000/pacientes/')
+    await fetch('/pacientes/')
       .then(res => res.json())
       .then(
         (result) => {
@@ -161,7 +161,7 @@ export default class Registro extends React.Component {
 
     const body = { idDoc, idPac, fecha, hora, temp, peso, presion, medi, dosis, obs }
 
-    await fetch(`http://localhost:5000/visita/`,
+    await fetch(`/visita/`,
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },

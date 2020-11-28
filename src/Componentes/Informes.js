@@ -139,7 +139,7 @@ export default class Informes extends React.Component {
       const index = document.getElementById('paciente').selectedIndex - 1;
       var idpac = this.state.pacientes[index].idpaciente;
 
-      await fetch(`http://localhost:5000/infurg/${idpac}/`)
+      await fetch(`/infurg/${idpac}/`)
         .then(res => res.json())
         .then(
           (result) => {
@@ -172,7 +172,7 @@ export default class Informes extends React.Component {
 
       if (visita === '1') {
 
-        await fetch(`http://localhost:5000/visxanio/${anio}/`)
+        await fetch(`/visxanio/${anio}/`)
           .then(res => res.json())
           .then(
             (result) => {
@@ -185,7 +185,7 @@ export default class Informes extends React.Component {
 
       } else if (visita === '2') {
 
-        await fetch(`http://localhost:5000/visxmes/${anio}/${mes}/`)
+        await fetch(`/visxmes/${anio}/${mes}/`)
           .then(res => res.json())
           .then(
             (result) => {
@@ -196,7 +196,7 @@ export default class Informes extends React.Component {
           )
       } else if (visita === '3') {
 
-        await fetch(`http://localhost:5000/visxdia/${anio}/${mes}/${dia}/`)
+        await fetch(`/visxdia/${anio}/${mes}/${dia}/`)
           .then(res => res.json())
           .then(
             (result) => {
@@ -223,7 +223,7 @@ export default class Informes extends React.Component {
   }
 
   async componentDidMount() {
-    await fetch('http://localhost:5000/pacientes/')
+    await fetch('/pacientes/')
       .then(res => res.json())
       .then(
         (result) => {
@@ -233,7 +233,7 @@ export default class Informes extends React.Component {
         }
       )
 
-    await fetch(`http://localhost:5000/contxbarrio/`)
+    await fetch(`/contxbarrio/`)
       .then(res => res.json())
       .then(
         (result) => {
@@ -243,7 +243,7 @@ export default class Informes extends React.Component {
         }
       )
 
-    await fetch(`http://localhost:5000/pacxed/`)
+    await fetch(`/pacxed/`)
       .then(res => res.json())
       .then(
         (result) => {
@@ -283,7 +283,7 @@ export default class Informes extends React.Component {
 
   async telEmer(idper) {
 
-    await fetch(`http://localhost:5000/telefono/${idper}`)
+    await fetch(`/telefono/${idper}`)
         .then(response => response.json())
         .then((result) => {
             this.setState({
@@ -299,7 +299,7 @@ async emailEmer(idper) {
   const idPer = parseInt(idper);
 
 
-  await fetch(`http://localhost:5000/email/${idPer}`)
+  await fetch(`/email/${idPer}`)
       .then(response => response.json())
       .then((result) => {
           this.setState({

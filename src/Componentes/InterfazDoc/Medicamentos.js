@@ -44,7 +44,7 @@ export default class Medicamentos extends React.Component {
   }
 
   async componentDidMount() {
-    await fetch(`http://localhost:5000/stock`)
+    await fetch(`/stock`)
       .then(response => response.json())
       .then((result) => {
         this.setState({
@@ -171,7 +171,7 @@ export default class Medicamentos extends React.Component {
 
       const body = { iddoc, idmed, cant, idlab }
 
-      await fetch(`http://localhost:5000/pedido`,
+      await fetch(`/pedido`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

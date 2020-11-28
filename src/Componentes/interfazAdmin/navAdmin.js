@@ -32,7 +32,7 @@ export default class NavAdmin extends React.Component {
 
     async componentDidMount() {
         console.log(this.state.match);
-        await fetch(`http://localhost:5000/usuariopersox/${this.state.match}`)
+        await fetch(`/usuariopersox/${this.state.match}`)
             .then(res => res.json())
             .then(
                 (result) => {

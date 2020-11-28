@@ -40,7 +40,7 @@ export class Login extends React.Component {
         try {
             if (this.state.usuario.length > 0 && this.state.contraseña.length > 0) {
 
-                await fetch(`http://localhost:5000/usuario/${this.state.usuario}`)
+                await fetch(`/usuario/${this.state.usuario}`)
                     .then(response => response.json())
                     .then(usua => {
                         if (usua.length === 0) {

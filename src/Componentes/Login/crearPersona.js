@@ -123,7 +123,7 @@ export class CrearPersona extends React.Component {
     });
   }
   async componentDidMount() {
-    await fetch('http://localhost:5000/tipodoc/')
+    await fetch('/tipodoc/')
       .then(res => res.json())
       .then(
         (result) => {
@@ -133,7 +133,7 @@ export class CrearPersona extends React.Component {
         }
       )
 
-    await fetch('http://localhost:5000/barrio/')
+    await fetch('/barrio/')
       .then(res => res.json())
       .then(
         (result) => {
@@ -143,7 +143,7 @@ export class CrearPersona extends React.Component {
         }
       )
 
-    await fetch('http://localhost:5000/viap/')
+    await fetch('/viap/')
       .then(res => res.json())
       .then(
         (result) => {
@@ -153,7 +153,7 @@ export class CrearPersona extends React.Component {
         }
       )
 
-    await fetch('http://localhost:5000/inmueble/')
+    await fetch('/inmueble/')
       .then(res => res.json())
       .then(
         (result) => {
@@ -163,7 +163,7 @@ export class CrearPersona extends React.Component {
         }
       )
 
-    await fetch('http://localhost:5000/bloque/')
+    await fetch('/bloque/')
       .then(res => res.json())
       .then(
         (result) => {
@@ -202,14 +202,14 @@ export class CrearPersona extends React.Component {
 
     const body = { nombre, apellido, tipodoc, numerodoc, barrio, fechanaci };
     
-    await fetch('http://localhost:5000/persona',
+    await fetch('/persona',
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body)
       });
 
-    await fetch(`http://localhost:5000/personaiden/${numerodoc}`)
+    await fetch(`/personaiden/${numerodoc}`)
       .then(response => response.json())
       .then(usua => {
         this.setState({
@@ -222,7 +222,7 @@ export class CrearPersona extends React.Component {
 
     const bodyD = { idviaprincipal, idpersona, numeroviap, numerovias, numerocasa, idtipoinmueble, idbloqueinterior, numeroinmueble, numerobloque }
 
-    await fetch(`http://localhost:5000/direccion/`, {
+    await fetch(`/direccion/`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(bodyD)
@@ -232,7 +232,7 @@ export class CrearPersona extends React.Component {
       for (var i = 0; i < this.state.email.length; i++) {
         var email = this.state.email[i];
         let body = { email, idpersona }
-        await fetch('http://localhost:5000/email',
+        await fetch('/email',
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -246,7 +246,7 @@ export class CrearPersona extends React.Component {
       for (var i = 0; i < this.state.telefono.length; i++) {
         var telefono = this.state.telefono[i];
         let body = { telefono, idpersona }
-        await fetch('http://localhost:5000/telefono',
+        await fetch('/telefono',
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },

@@ -36,7 +36,7 @@ export default class NavDoc extends React.Component {
   }
 
   async componentDidMount() {
-    await fetch(`http://localhost:5000/usudoctor/${this.state.match}`)
+    await fetch(`/usudoctor/${this.state.match}`)
       .then(res => res.json())
       .then(
         (result) => {

@@ -116,7 +116,7 @@ export default class CrearDoctor extends React.Component {
 
     async componentDidMount() {
 
-        await fetch('http://localhost:5000/persona/')
+        await fetch('/persona/')
             .then(res => res.json())
             .then(
                 (result) => {
@@ -127,7 +127,7 @@ export default class CrearDoctor extends React.Component {
                 }
             )
 
-        await fetch('http://localhost:5000/doctores/')
+        await fetch('/doctores/')
             .then(res => res.json())
             .then(
                 (result) => {
@@ -138,7 +138,7 @@ export default class CrearDoctor extends React.Component {
                 }
             )
 
-        await fetch('http://localhost:5000/universidades/')
+        await fetch('/universidades/')
             .then(res => res.json())
             .then(
                 (result) => {
@@ -148,7 +148,7 @@ export default class CrearDoctor extends React.Component {
 
                 }
             )
-        await fetch('http://localhost:5000/eps/')
+        await fetch('/eps/')
             .then(res => res.json())
             .then(
                 (result) => {
@@ -159,7 +159,7 @@ export default class CrearDoctor extends React.Component {
                 }
             )
 
-        await fetch('http://localhost:5000/tipodoc/')
+        await fetch('/tipodoc/')
             .then(res => res.json())
             .then(
                 (result) => {
@@ -169,7 +169,7 @@ export default class CrearDoctor extends React.Component {
                 }
             )
 
-        await fetch('http://localhost:5000/barrio/')
+        await fetch('/barrio/')
             .then(res => res.json())
             .then(
                 (result) => {
@@ -179,7 +179,7 @@ export default class CrearDoctor extends React.Component {
                 }
             )
 
-        await fetch('http://localhost:5000/viap/')
+        await fetch('/viap/')
             .then(res => res.json())
             .then(
                 (result) => {
@@ -189,7 +189,7 @@ export default class CrearDoctor extends React.Component {
                 }
             )
 
-        await fetch('http://localhost:5000/inmueble/')
+        await fetch('/inmueble/')
             .then(res => res.json())
             .then(
                 (result) => {
@@ -199,7 +199,7 @@ export default class CrearDoctor extends React.Component {
                 }
             )
 
-        await fetch('http://localhost:5000/bloque/')
+        await fetch('/bloque/')
             .then(res => res.json())
             .then(
                 (result) => {
@@ -209,7 +209,7 @@ export default class CrearDoctor extends React.Component {
                 }
             )
 
-        await fetch('http://localhost:5000/ciudades/')
+        await fetch('/ciudades/')
             .then(res => res.json())
             .then(
                 (result) => {
@@ -219,7 +219,7 @@ export default class CrearDoctor extends React.Component {
                 }
             )
 
-        await fetch('http://localhost:5000/pacientes/')
+        await fetch('/pacientes/')
             .then(res => res.json())
             .then(
                 (result) => {
@@ -234,7 +234,7 @@ export default class CrearDoctor extends React.Component {
     // Crear Doctores y Pacientes
 
     async hayDoctor() {
-        await fetch(`http://localhost:5000/doctor/${this.state.persona}`)
+        await fetch(`/doctor/${this.state.persona}`)
             .then(response => response.json())
             .then(result => {
                 if (result.length === 0) {
@@ -251,7 +251,7 @@ export default class CrearDoctor extends React.Component {
     }
 
     async hayPaciente() {
-        await fetch(`http://localhost:5000/paciente/${this.state.persona}`)
+        await fetch(`/paciente/${this.state.persona}`)
             .then(response => response.json())
             .then(result => {
                 if (result.length === 0) {
@@ -291,14 +291,14 @@ export default class CrearDoctor extends React.Component {
 
 
 
-        await fetch(`http://localhost:5000/paciente/`,
+        await fetch(`/paciente/`,
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(body)
             });
 
-        await fetch(`http://localhost:5000/paciente/${idpersona}`)
+        await fetch(`/paciente/${idpersona}`)
             .then(response => response.json())
             .then(result => {
                 idpaciente = result[0].idpaciente;
@@ -307,7 +307,7 @@ export default class CrearDoctor extends React.Component {
 
         const bodyG = { idpaciente, latitud, longitud }
 
-        await fetch(`http://localhost:5000/geoloca/`,
+        await fetch(`/geoloca/`,
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -316,7 +316,7 @@ export default class CrearDoctor extends React.Component {
 
         const bodyD = { idpaciente, iddoctor }
 
-        await fetch(`http://localhost:5000/atencion/`,
+        await fetch(`/atencion/`,
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -326,7 +326,7 @@ export default class CrearDoctor extends React.Component {
         const bodyR = { idusu, idpaciente, fecha, hora }
 
 
-        await fetch(`http://localhost:5000/registropac/`,
+        await fetch(`/registropac/`,
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -367,7 +367,7 @@ export default class CrearDoctor extends React.Component {
             const body = { idpersona, identidadsalud, iduniversidad }
 
 
-            await fetch(`http://localhost:5000/doctor/`,
+            await fetch(`/doctor/`,
                 {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -375,7 +375,7 @@ export default class CrearDoctor extends React.Component {
                 }
             );
 
-            await fetch(`http://localhost:5000/id_doctor/`)
+            await fetch(`/id_doctor/`)
                 .then(response => response.json())
                 .then(result => {
                     iddoc = result[0].iddoctor;
@@ -385,7 +385,7 @@ export default class CrearDoctor extends React.Component {
             const bodyR = { idusu, iddoc, fecha, hora }
 
 
-            await fetch(`http://localhost:5000/registrodoc/`,
+            await fetch(`/registrodoc/`,
                 {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -438,7 +438,7 @@ export default class CrearDoctor extends React.Component {
         const body = { nombre, apellido, tipodoc, numerodoc, barrio, fechanaci }
 
 
-        await fetch(`http://localhost:5000/persona/${idpersona}`,
+        await fetch(`/persona/${idpersona}`,
             {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
@@ -448,7 +448,7 @@ export default class CrearDoctor extends React.Component {
         const bodyD = { identidadsalud, iduniversidad }
 
 
-        await fetch(`http://localhost:5000/doctor/${id}`,
+        await fetch(`/doctor/${id}`,
             {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
@@ -469,7 +469,7 @@ export default class CrearDoctor extends React.Component {
         const bodyDirec = { idviaprincipal, numeroviap, numerovias, numerocasa, idtipoinmueble, idbloqueinterior, numeroinmueble, numerobloque }
 
 
-        fetch(`http://localhost:5000/direccion/${iddireccion}`,
+        fetch(`/direccion/${iddireccion}`,
             {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
@@ -488,7 +488,7 @@ export default class CrearDoctor extends React.Component {
                 var email = this.state.emailAD[i]
                 const body = { email, idpersona }
 
-                await fetch(`http://localhost:5000/email`, {
+                await fetch(`/email`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(body)
@@ -504,7 +504,7 @@ export default class CrearDoctor extends React.Component {
 
                 var email = this.state.emailBAD[i]
 
-                await fetch(`http://localhost:5000/emaildel/${idpersona}/${email}`,
+                await fetch(`/emaildel/${idpersona}/${email}`,
                     {
                         method: "DELETE",
                         headers: { "Content-Type": "application/json" },
@@ -522,7 +522,7 @@ export default class CrearDoctor extends React.Component {
                 var telefono = this.state.telAD[i]
                 const body = { telefono, idpersona }
 
-                await fetch(`http://localhost:5000/telefono`, {
+                await fetch(`/telefono`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(body)
@@ -538,7 +538,7 @@ export default class CrearDoctor extends React.Component {
 
                 var telefono = this.state.telBAD[i]
 
-                await fetch(`http://localhost:5000/teldel/${idpersona}/${telefono}`,
+                await fetch(`/teldel/${idpersona}/${telefono}`,
                     {
                         method: "DELETE",
                         headers: { "Content-Type": "application/json" },
@@ -564,7 +564,7 @@ export default class CrearDoctor extends React.Component {
 
     async hayEmail(idp, email) {
 
-        await fetch(`http://localhost:5000/emailhay/${idp}/${email}`)
+        await fetch(`/emailhay/${idp}/${email}`)
             .then(response => response.json())
             .then(result => {
                 if (result.length === 0) {
@@ -580,7 +580,7 @@ export default class CrearDoctor extends React.Component {
     }
 
     async hayTel(idp, tel) {
-        await fetch(`http://localhost:5000/telhay/${idp}/${tel}`)
+        await fetch(`/telhay/${idp}/${tel}`)
             .then(response => response.json())
             .then(result => {
                 if (result.length === 0) {
@@ -600,7 +600,7 @@ export default class CrearDoctor extends React.Component {
     async cargarDatosActuDoc() {
         const id = document.getElementById('docSelec').value;
 
-        await fetch(`http://localhost:5000/doctorinfo/${id}`)
+        await fetch(`/doctorinfo/${id}`)
             .then(response => response.json())
             .then((result) => {
 
@@ -620,7 +620,7 @@ export default class CrearDoctor extends React.Component {
 
             });
 
-        await fetch(`http://localhost:5000/email/${this.state.idPerDoc}`)
+        await fetch(`/email/${this.state.idPerDoc}`)
             .then(response => response.json())
             .then((result) => {
 
@@ -634,7 +634,7 @@ export default class CrearDoctor extends React.Component {
 
 
 
-        await fetch(`http://localhost:5000/telefono/${this.state.idPerDoc}`)
+        await fetch(`/telefono/${this.state.idPerDoc}`)
             .then(response => response.json())
             .then((result) => {
 
@@ -645,7 +645,7 @@ export default class CrearDoctor extends React.Component {
                 }
             });
 
-        await fetch(`http://localhost:5000/direccion/${this.state.idPerDoc}`)
+        await fetch(`/direccion/${this.state.idPerDoc}`)
             .then(response => response.json())
             .then((result) => {
 
@@ -682,7 +682,7 @@ export default class CrearDoctor extends React.Component {
             confirmButtonText: 'Si, Borrar!'
         }).then(async (result) => {
             if (result.isConfirmed) {
-                await fetch(`http://localhost:5000/doctor/${id}`, {
+                await fetch(`/doctor/${id}`, {
                     method: 'DELETE',
                     headers: { "Content-Type": "application/json" }
                 })
@@ -863,7 +863,7 @@ export default class CrearDoctor extends React.Component {
             var idper = null;
             var paren = '';
 
-            await fetch(`http://localhost:5000/pacientesid`)
+            await fetch(`/pacientesid`)
                 .then(response => response.json())
                 .then((result) => {
                     idpac = parseInt(result.idpaciente);
@@ -875,7 +875,7 @@ export default class CrearDoctor extends React.Component {
 
                 const body = { idpac, idper, paren }
 
-                await fetch(`http://localhost:5000/integrantes`,
+                await fetch(`/integrantes`,
                     {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
@@ -950,7 +950,7 @@ export default class CrearDoctor extends React.Component {
             var idper = null;
             var rela = '';
 
-            await fetch(`http://localhost:5000/pacientesid`)
+            await fetch(`/pacientesid`)
                 .then(response => response.json())
                 .then((result) => {
                     idpac = parseInt(result.idpaciente);
@@ -970,7 +970,7 @@ export default class CrearDoctor extends React.Component {
                     const body = { idper, idpac, rela }
 
                     
-                    await fetch(`http://localhost:5000/emergencias`,
+                    await fetch(`/emergencias`,
                         {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
@@ -1028,7 +1028,7 @@ export default class CrearDoctor extends React.Component {
         const idPer = parseInt(idper);
 
 
-        await fetch(`http://localhost:5000/email/${idPer}`)
+        await fetch(`/email/${idPer}`)
             .then(response => response.json())
             .then((result) => {
                 this.setState({
@@ -1079,7 +1079,7 @@ export default class CrearDoctor extends React.Component {
     async hayemail2(x) {
         var bool = false;
 
-        await fetch(`http://localhost:5000/emailhay2/${x}`)
+        await fetch(`/emailhay2/${x}`)
             .then(response => response.json())
             .then(result => {
                 if (result.length > 0) {
@@ -1102,7 +1102,7 @@ export default class CrearDoctor extends React.Component {
                     const body = { email, idpersona }
 
 
-                    await fetch(`http://localhost:5000/email/`,
+                    await fetch(`/email/`,
                         {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
@@ -1117,7 +1117,7 @@ export default class CrearDoctor extends React.Component {
                 var idpersona2 = this.state.emailEmerB[i].idpersona;
 
 
-                await fetch(`http://localhost:5000/emaildel/${idpersona2}/${email2}`,
+                await fetch(`/emaildel/${idpersona2}/${email2}`,
                     {
                         method: "DELETE",
                         headers: { "Content-Type": "application/json" }
@@ -1187,7 +1187,7 @@ export default class CrearDoctor extends React.Component {
 
     async telEmer(idper) {
 
-        await fetch(`http://localhost:5000/telefono/${idper}`)
+        await fetch(`/telefono/${idper}`)
             .then(response => response.json())
             .then((result) => {
                 this.setState({
@@ -1210,7 +1210,7 @@ export default class CrearDoctor extends React.Component {
                     const body = { telefono, idpersona }
 
 
-                    await fetch(`http://localhost:5000/telefono/`,
+                    await fetch(`/telefono/`,
                         {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
@@ -1226,7 +1226,7 @@ export default class CrearDoctor extends React.Component {
                 console.log(tel2)
                 console.log(idpersona2)
 
-                await fetch(`http://localhost:5000/teldel/${idpersona2}/${tel2}`,
+                await fetch(`/teldel/${idpersona2}/${tel2}`,
                     {
                         method: "DELETE",
                         headers: { "Content-Type": "application/json" }
@@ -1288,7 +1288,7 @@ export default class CrearDoctor extends React.Component {
     async telhay2(x) {
         var bool = false;
 
-        await fetch(`http://localhost:5000/telhay2/${x}`)
+        await fetch(`/telhay2/${x}`)
             .then(response => response.json())
             .then(result => {
                 if (result.length > 0) {
@@ -1342,8 +1342,8 @@ export default class CrearDoctor extends React.Component {
     }
 
     async tieneAlMenosUno(idper) {
-        let email = await fetch(`http://localhost:5000/email/${idper}`).then(response => response.json())
-        let tele = await fetch(`http://localhost:5000/telefono/${idper}`).then(response => response.json())
+        let email = await fetch(`/email/${idper}`).then(response => response.json())
+        let tele = await fetch(`/telefono/${idper}`).then(response => response.json())
         console.log(email)
         console.log(tele)
         if (email.length > 0 || tele.length > 0) {
@@ -1674,7 +1674,7 @@ export default class CrearDoctor extends React.Component {
 
     async recargarP() {
 
-        await fetch('http://localhost:5000/persona/')
+        await fetch('/persona/')
             .then(res => res.json())
             .then(
                 (result) => {
