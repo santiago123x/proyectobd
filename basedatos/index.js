@@ -181,7 +181,7 @@ router.get('/usuariopersox/:idper', async(req,res)=>{
 		FROM usuario usu
 		INNER JOIN persona per
 		ON usu.idpersona=per.idpersona
-		WHERE (per.idpersona= ${idper})`);
+		WHERE (usu.idusuario= ${idper})`);
         res.send(arreglo.rows);
     } catch(e){
         console.log("usuariopersox: " + e);
