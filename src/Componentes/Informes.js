@@ -69,7 +69,10 @@ export default class Informes extends React.Component {
       fechavisi: null,
       modal: false,
       obs: '',
-
+      telEmer: [],
+      emailEmer:[],
+      modalEmail: false,
+      modalTel: false,
       //informe urgencias
       urginf: [],
       pacientes: [],
@@ -278,6 +281,62 @@ export default class Informes extends React.Component {
 
   }
 
+  async telEmer(idper) {
+
+    await fetch(`http://localhost:5000/telefono/${idper}`)
+        .then(response => response.json())
+        .then((result) => {
+            this.setState({
+                telEmer: result,
+                
+            })
+        });
+    this.modalTel();
+}
+
+async emailEmer(idper) {
+
+  const idPer = parseInt(idper);
+
+
+  await fetch(`http://localhost:5000/email/${idPer}`)
+      .then(response => response.json())
+      .then((result) => {
+          this.setState({
+              emailEmer: result,
+             
+          })
+
+      });
+
+  this.modalEmail();
+
+}
+
+modalTel() {
+  this.setState({
+      modalTel: !this.state.modalTel
+  });
+}
+modalEmail() {
+  this.setState({
+      modalEmail: !this.state.modalEmail
+  });
+}
+
+cancelarTel() {
+  this.modalTel();
+  this.setState({
+      telEmer: [],
+  });
+}
+cancelarEmail() {
+  this.modalEmail();
+  this.setState({
+      emailEmer: [],
+  });
+}
+
   onPieEnter = (data, index) => {
     this.setState({
       activeIndex: index,
@@ -331,7 +390,7 @@ export default class Informes extends React.Component {
           <div className='pie' id='pie'>
             <h4 className="text-center mb-2 mt-2 font-weight-bold" >Contagiados por Barrio</h4>
 
-            <PieChart width={800} height={800} className="pr-2">
+            <PieChart width={900} height={800} className="pr-2">
 
               <Pie
                 activeIndex={this.state.activeIndex}
@@ -360,8 +419,8 @@ export default class Informes extends React.Component {
           <div style={{ display: 'none' }} id='edades'>
             <h4 className="text-center mb-5 mt-2 font-weight-bold" >Contagiados por Edad</h4>
             <AreaChart
-              width={500}
-              height={400}
+              width={800}
+              height={450}
               data={this.state.edades}
               margin={{
                 top: 10, right: 30, left: 0, bottom: 0,
@@ -515,13 +574,13 @@ export default class Informes extends React.Component {
                     <td>{urg.relacion}</td>
                     <td>{urg.idpaciente}</td>
                     <td>{urg.nompa}{' '}{urg.apepa}</td>
-                    <td> <Button /*onClick={() => this.toggle(urg.idpersona)}*/ type="button">
-                      <i className="fa fa-commenting" aria-hidden="true"></i>
+                    <td> <Button color="primary" onClick={() => this.telEmer(urg.idpersona)} type="button">
+                    <i class="fa fa-volume-control-phone"  aria-hidden="true"></i>
                     </Button>
 
                     </td>
-                    <td> <Button /*onClick={() => this.toggle(urg.idpersona)}*/ type="button">
-                      <i className="fa fa-commenting" aria-hidden="true"></i>
+                    <td> <Button  color="success" onClick={() => this.emailEmer(urg.idpersona)} type="button">
+                    <i class="fa fa-envelope"  aria-hidden="true"></i>
                     </Button>
 
                     </td>
@@ -535,6 +594,77 @@ export default class Informes extends React.Component {
               </tbody>
             </Table>
           </div>
+
+          {/* Modal Email */}
+
+          <Modal
+                    size="md"
+                    centered isOpen={this.state.modalEmail} id="insertar">
+                    <ModalHeader>
+                        <div><h3>Datos de Emergencia Emails</h3></div>
+                    </ModalHeader>
+                    <ModalBody>
+                       
+                        <Table className=' text-center' striped bordered hover>
+                            <thead>
+                                <tr>
+                                    <th className='font-weight-bold'>Id</th>
+                                    <th className='font-weight-bold'>Email</th>
+                                 
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {this.state.emailEmer.map((ema, index) => (
+                                    <tr>
+                                        <td>{index + 1}</td>
+                                        <td>{ema.email}</td>
+                                        
+                                    </tr>
+                                ))}
+
+                            </tbody>
+                        </Table>
+                    </ModalBody>
+                    <ModalFooter >
+                    
+                        <Button color="danger" onClick={() => this.cancelarEmail()} >Cerrar</Button>
+                    </ModalFooter>
+                </Modal>
+
+
+                {/* Modal Tel */}
+
+                <Modal
+                    size="md"
+                    centered isOpen={this.state.modalTel} id="insertar">
+                    <ModalHeader>
+                        <div><h3>Datos de Emergencia Telefonos</h3></div>
+                    </ModalHeader>
+                    <ModalBody>
+                       
+                        <Table className=' text-center' striped bordered hover>
+                            <thead>
+                                <tr>
+                                    <th className='font-weight-bold'>Id</th>
+                                    <th className='font-weight-bold'>Telefono</th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {this.state.telEmer.map((tel, index) => (
+                                    <tr>
+                                        <td>{index + 1}</td>
+                                        <td>{tel.telefono}</td>
+                                    </tr>
+                                ))}
+
+                            </tbody>
+                        </Table>
+                    </ModalBody>
+                    <ModalFooter >
+                        <Button color="danger" onClick={() => this.cancelarTel()} >Cerrar</Button>
+                    </ModalFooter>
+                </Modal>
 
         </div>
 

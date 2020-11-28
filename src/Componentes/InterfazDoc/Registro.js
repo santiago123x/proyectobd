@@ -440,7 +440,7 @@ export default class Registro extends React.Component {
                             placeholder="Peso Kg"
                             className="form-control"
                             name="peso"
-                            type="text"
+                            type="number"
                             bsSize="md"
                             value={this.state.peso}
                             onChange={this.handleChange} >
