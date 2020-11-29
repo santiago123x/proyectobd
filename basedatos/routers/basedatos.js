@@ -15,6 +15,7 @@ const pool = new Pool({
 
 pool.connect();
 
+
 const router = new Router();
 //middleware
 //router.use(cors());
