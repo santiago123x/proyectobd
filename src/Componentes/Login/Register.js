@@ -37,8 +37,6 @@ export class Register extends React.Component {
     });
   };
 
-
-
   async componentDidMount() {
 
     await fetch('/persona')
