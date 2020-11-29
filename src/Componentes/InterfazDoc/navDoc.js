@@ -119,7 +119,7 @@ export default class NavDoc extends React.Component {
                   <Link className="btn font-weight-bold" to={`/NavDoc/${this.state.id}`} activeClassName="active"> Registrar Visita <i class="fa fa-folder-open-o" aria-hidden="true"></i></Link>
                 </li>
                 <li >
-                  <Link className="btn font-weight-bold" to={`/NavDoc/${match.params.id}/Medicamentos`} activeClassName="active"> Medicamentos <i class="fa fa-heartbeat" aria-hidden="true"></i></Link>
+                  <Link className="btn font-weight-bold" to={`/NavDoc/${this.state.id}/Medicamentos`} activeClassName="active"> Medicamentos <i class="fa fa-heartbeat" aria-hidden="true"></i></Link>
                 </li>
                 <li >
                   <Button color='info' className="btn font-weight-bold ml-2" onClick={() => this.logOut()} activeClassName="active"> LogOut <i class="fa fa-sign-out" aria-hidden="true"></i></Button>
