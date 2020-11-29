@@ -274,6 +274,7 @@ router.post('/persona', async(req,res)=>{
     }catch(e){
         console.log('persona inser' + e);
     }
+});
 
  
 
@@ -843,7 +844,7 @@ router.get('/pacientesid', async(req,res)=>{
     }catch(e){
         console.log("pacientes: " + e);
     }
-})
+});
 
 //---------------------------Informes barrio---------------------
 
@@ -1056,17 +1057,3 @@ const editarPaciente = async()=>{
     }
 }
 */
-
-/*const deletePacientes=async()=>{
-    
-    try{
-        const text = 'DELETE FROM pacientes WHERE numid = $1';
-    const values = ['5555'];
-
-    res = await pool.query(text,values);
-    console.log('F');
-    }catch{
-        console.log(e);
-    }
-
-}*/
