@@ -1,2 +1,2 @@
-web: 'node ./basedatos/index.js' 
-web: 'npm start'
+db: node ./basedatos/index.js
+web: npm start
