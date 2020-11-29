@@ -966,8 +966,11 @@ router.post('/emergencias', async(req,res)=>{
 // ------------------------- Conexion --------------------
 
 module.exports = router;
-router.listen(5000, () => {
-    console.log("server has started on port 5000");
+
+const PORT = process.env.PORT || 3000;
+
+router.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
   });
 
 
