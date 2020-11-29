@@ -44,7 +44,7 @@ export default class Medicamentos extends React.Component {
   }
 
   async componentDidMount() {
-    await fetch(`/stock`)
+    await fetch(`https://dbfuchicovid.herokuapp.com/stock`)
       .then(response => response.json())
       .then((result) => {
         this.setState({
@@ -171,7 +171,7 @@ export default class Medicamentos extends React.Component {
 
       const body = { iddoc, idmed, cant, idlab }
 
-      await fetch(`/pedido`,
+      await fetch(`https://dbfuchicovid.herokuapp.com/pedido`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

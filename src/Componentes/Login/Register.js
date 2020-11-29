@@ -41,7 +41,7 @@ export class Register extends React.Component {
 
   async componentDidMount() {
 
-    await fetch('/persona')
+    await fetch('https://dbfuchicovid.herokuapp.com/persona')
       .then(res => res.json())
       .then(
         (result) => {
@@ -56,7 +56,7 @@ export class Register extends React.Component {
 
   async validainfo() {
 
-    await fetch(`/usuario/${this.state.usuario}`)
+    await fetch(`https://dbfuchicovid.herokuapp.com/usuario/${this.state.usuario}`)
       .then(response => response.json())
       .then(usua => {
         if (usua.length === 0) {
@@ -74,7 +74,7 @@ export class Register extends React.Component {
 
     if (index >= 0) {
       var idpersona = this.state.personas[index].idpersona
-      await fetch(`/usuario2/${idpersona}`)
+      await fetch(`https://dbfuchicovid.herokuapp.com/usuario2/${idpersona}`)
         .then(response => response.json())
         .then(usua => {
           if (usua.length === 0) {
@@ -94,7 +94,7 @@ export class Register extends React.Component {
   }
 
   async recargar(){
-    await fetch('/persona')
+    await fetch('https://dbfuchicovid.herokuapp.com/persona')
       .then(res => res.json())
       .then(
         (result) => {
@@ -123,7 +123,7 @@ export class Register extends React.Component {
 
                 const body = { nickname, contra, idpersona, tipo_usu };
                 console.log(body);
-                await fetch('/usuario',
+                await fetch('https://dbfuchicovid.herokuapp.com/usuario',
                   {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },

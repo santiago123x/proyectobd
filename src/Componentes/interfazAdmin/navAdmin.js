@@ -42,7 +42,7 @@ export default class NavAdmin extends React.Component {
     this.setState({
         id: algo
     })
-    await fetch(`/usuariopersox/${algo}`)
+    await fetch(`https://dbfuchicovid.herokuapp.com/usuariopersox/${algo}`)
         .then(res => res.json())
         .then(
             (result) => {

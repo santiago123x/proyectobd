@@ -58,7 +58,7 @@ export default class Registro extends React.Component {
   }
 
   async componentDidMount() {
-    await fetch('/medicamentos/')
+    await fetch('https://dbfuchicovid.herokuapp.com/medicamentos/')
       .then(res => res.json())
       .then(
         (result) => {
@@ -68,7 +68,7 @@ export default class Registro extends React.Component {
         }
       )
 
-    await fetch('/pacientes/')
+    await fetch('https://dbfuchicovid.herokuapp.com/pacientes/')
       .then(res => res.json())
       .then(
         (result) => {
@@ -161,7 +161,7 @@ export default class Registro extends React.Component {
 
     const body = { idDoc, idPac, fecha, hora, temp, peso, presion, medi, dosis, obs }
 
-    await fetch(`/visita/`,
+    await fetch(`https://dbfuchicovid.herokuapp.com/visita/`,
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },

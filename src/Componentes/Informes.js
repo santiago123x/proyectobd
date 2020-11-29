@@ -139,7 +139,7 @@ export default class Informes extends React.Component {
       const index = document.getElementById('paciente').selectedIndex - 1;
       var idpac = this.state.pacientes[index].idpaciente;
 
-      await fetch(`/infurg/${idpac}/`)
+      await fetch(`https://dbfuchicovid.herokuapp.com/infurg/${idpac}/`)
         .then(res => res.json())
         .then(
           (result) => {
@@ -172,7 +172,7 @@ export default class Informes extends React.Component {
 
       if (visita === '1') {
 
-        await fetch(`/visxanio/${anio}/`)
+        await fetch(`https://dbfuchicovid.herokuapp.com/visxanio/${anio}/`)
           .then(res => res.json())
           .then(
             (result) => {
@@ -185,7 +185,7 @@ export default class Informes extends React.Component {
 
       } else if (visita === '2') {
 
-        await fetch(`/visxmes/${anio}/${mes}/`)
+        await fetch(`https://dbfuchicovid.herokuapp.com/visxmes/${anio}/${mes}/`)
           .then(res => res.json())
           .then(
             (result) => {
@@ -196,7 +196,7 @@ export default class Informes extends React.Component {
           )
       } else if (visita === '3') {
 
-        await fetch(`/visxdia/${anio}/${mes}/${dia}/`)
+        await fetch(`https://dbfuchicovid.herokuapp.com/visxdia/${anio}/${mes}/${dia}/`)
           .then(res => res.json())
           .then(
             (result) => {
@@ -223,7 +223,7 @@ export default class Informes extends React.Component {
   }
 
   async componentDidMount() {
-    await fetch('/pacientes/')
+    await fetch('https://dbfuchicovid.herokuapp.com/pacientes/')
       .then(res => res.json())
       .then(
         (result) => {
@@ -233,7 +233,7 @@ export default class Informes extends React.Component {
         }
       )
 
-    await fetch(`/contxbarrio/`)
+    await fetch(`https://dbfuchicovid.herokuapp.com/contxbarrio/`)
       .then(res => res.json())
       .then(
         (result) => {
@@ -243,7 +243,7 @@ export default class Informes extends React.Component {
         }
       )
 
-    await fetch(`/pacxed/`)
+    await fetch(`https://dbfuchicovid.herokuapp.com/pacxed/`)
       .then(res => res.json())
       .then(
         (result) => {
@@ -283,7 +283,7 @@ export default class Informes extends React.Component {
 
   async telEmer(idper) {
 
-    await fetch(`/telefono/${idper}`)
+    await fetch(`https://dbfuchicovid.herokuapp.com/telefono/${idper}`)
         .then(response => response.json())
         .then((result) => {
             this.setState({
@@ -299,7 +299,7 @@ async emailEmer(idper) {
   const idPer = parseInt(idper);
 
 
-  await fetch(`/email/${idPer}`)
+  await fetch(`https://dbfuchicovid.herokuapp.com/email/${idPer}`)
       .then(response => response.json())
       .then((result) => {
           this.setState({

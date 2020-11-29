@@ -16,7 +16,7 @@ export default class Mapa extends React.Component {
 
     async componentDidMount() {
 
-        await fetch(`http://localhost:5000/geolocalizacion/`)
+        await fetch(`https://dbfuchicovid.herokuapp.com/geolocalizacion/`)
           .then(res => res.json())
           .then(
             (result) => {

@@ -116,7 +116,7 @@ export default class CrearDoctor extends React.Component {
 
     async componentDidMount() {
 
-        await fetch('/persona/')
+        await fetch('https://dbfuchicovid.herokuapp.com/persona/')
             .then(res => res.json())
             .then(
                 (result) => {
@@ -127,7 +127,7 @@ export default class CrearDoctor extends React.Component {
                 }
             )
 
-        await fetch('/doctores/')
+        await fetch('https://dbfuchicovid.herokuapp.com/doctores/')
             .then(res => res.json())
             .then(
                 (result) => {
@@ -138,7 +138,7 @@ export default class CrearDoctor extends React.Component {
                 }
             )
 
-        await fetch('/universidades/')
+        await fetch('https://dbfuchicovid.herokuapp.com/universidades/')
             .then(res => res.json())
             .then(
                 (result) => {
@@ -148,7 +148,7 @@ export default class CrearDoctor extends React.Component {
 
                 }
             )
-        await fetch('/eps/')
+        await fetch('https://dbfuchicovid.herokuapp.com/eps/')
             .then(res => res.json())
             .then(
                 (result) => {
@@ -159,7 +159,7 @@ export default class CrearDoctor extends React.Component {
                 }
             )
 
-        await fetch('/tipodoc/')
+        await fetch('https://dbfuchicovid.herokuapp.com/tipodoc/')
             .then(res => res.json())
             .then(
                 (result) => {
@@ -169,7 +169,7 @@ export default class CrearDoctor extends React.Component {
                 }
             )
 
-        await fetch('/barrio/')
+        await fetch('https://dbfuchicovid.herokuapp.com/barrio/')
             .then(res => res.json())
             .then(
                 (result) => {
@@ -179,7 +179,7 @@ export default class CrearDoctor extends React.Component {
                 }
             )
 
-        await fetch('/viap/')
+        await fetch('https://dbfuchicovid.herokuapp.com/viap/')
             .then(res => res.json())
             .then(
                 (result) => {
@@ -189,7 +189,7 @@ export default class CrearDoctor extends React.Component {
                 }
             )
 
-        await fetch('/inmueble/')
+        await fetch('https://dbfuchicovid.herokuapp.com/inmueble/')
             .then(res => res.json())
             .then(
                 (result) => {
@@ -199,7 +199,7 @@ export default class CrearDoctor extends React.Component {
                 }
             )
 
-        await fetch('/bloque/')
+        await fetch('https://dbfuchicovid.herokuapp.com/bloque/')
             .then(res => res.json())
             .then(
                 (result) => {
@@ -209,7 +209,7 @@ export default class CrearDoctor extends React.Component {
                 }
             )
 
-        await fetch('/ciudades/')
+        await fetch('https://dbfuchicovid.herokuapp.com/ciudades/')
             .then(res => res.json())
             .then(
                 (result) => {
@@ -219,7 +219,7 @@ export default class CrearDoctor extends React.Component {
                 }
             )
 
-        await fetch('/pacientes/')
+        await fetch('https://dbfuchicovid.herokuapp.com/pacientes/')
             .then(res => res.json())
             .then(
                 (result) => {
@@ -234,7 +234,7 @@ export default class CrearDoctor extends React.Component {
     // Crear Doctores y Pacientes
 
     async hayDoctor() {
-        await fetch(`/doctor/${this.state.persona}`)
+        await fetch(`https://dbfuchicovid.herokuapp.com/doctor/${this.state.persona}`)
             .then(response => response.json())
             .then(result => {
                 if (result.length === 0) {
@@ -251,7 +251,7 @@ export default class CrearDoctor extends React.Component {
     }
 
     async hayPaciente() {
-        await fetch(`/paciente/${this.state.persona}`)
+        await fetch(`https://dbfuchicovid.herokuapp.com/paciente/${this.state.persona}`)
             .then(response => response.json())
             .then(result => {
                 if (result.length === 0) {
@@ -291,14 +291,14 @@ export default class CrearDoctor extends React.Component {
 
 
 
-        await fetch(`/paciente/`,
+        await fetch(`https://dbfuchicovid.herokuapp.com/paciente/`,
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(body)
             });
 
-        await fetch(`/paciente/${idpersona}`)
+        await fetch(`https://dbfuchicovid.herokuapp.com/paciente/${idpersona}`)
             .then(response => response.json())
             .then(result => {
                 idpaciente = result[0].idpaciente;
@@ -307,7 +307,7 @@ export default class CrearDoctor extends React.Component {
 
         const bodyG = { idpaciente, latitud, longitud }
 
-        await fetch(`/geoloca/`,
+        await fetch(`https://dbfuchicovid.herokuapp.com/geoloca/`,
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -316,7 +316,7 @@ export default class CrearDoctor extends React.Component {
 
         const bodyD = { idpaciente, iddoctor }
 
-        await fetch(`/atencion/`,
+        await fetch(`https://dbfuchicovid.herokuapp.com/atencion/`,
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -326,7 +326,7 @@ export default class CrearDoctor extends React.Component {
         const bodyR = { idusu, idpaciente, fecha, hora }
 
 
-        await fetch(`/registropac/`,
+        await fetch(`https://dbfuchicovid.herokuapp.com/registropac/`,
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -367,7 +367,7 @@ export default class CrearDoctor extends React.Component {
             const body = { idpersona, identidadsalud, iduniversidad }
 
 
-            await fetch(`/doctor/`,
+            await fetch(`https://dbfuchicovid.herokuapp.com/doctor/`,
                 {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -375,7 +375,7 @@ export default class CrearDoctor extends React.Component {
                 }
             );
 
-            await fetch(`/id_doctor/`)
+            await fetch(`https://dbfuchicovid.herokuapp.com/id_doctor/`)
                 .then(response => response.json())
                 .then(result => {
                     iddoc = result[0].iddoctor;
@@ -385,7 +385,7 @@ export default class CrearDoctor extends React.Component {
             const bodyR = { idusu, iddoc, fecha, hora }
 
 
-            await fetch(`/registrodoc/`,
+            await fetch(`https://dbfuchicovid.herokuapp.com/registrodoc/`,
                 {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -438,7 +438,7 @@ export default class CrearDoctor extends React.Component {
         const body = { nombre, apellido, tipodoc, numerodoc, barrio, fechanaci }
 
 
-        await fetch(`/persona/${idpersona}`,
+        await fetch(`https://dbfuchicovid.herokuapp.com/persona/${idpersona}`,
             {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
@@ -448,7 +448,7 @@ export default class CrearDoctor extends React.Component {
         const bodyD = { identidadsalud, iduniversidad }
 
 
-        await fetch(`/doctor/${id}`,
+        await fetch(`https://dbfuchicovid.herokuapp.com/doctor/${id}`,
             {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
@@ -469,7 +469,7 @@ export default class CrearDoctor extends React.Component {
         const bodyDirec = { idviaprincipal, numeroviap, numerovias, numerocasa, idtipoinmueble, idbloqueinterior, numeroinmueble, numerobloque }
 
 
-        fetch(`/direccion/${iddireccion}`,
+        fetch(`https://dbfuchicovid.herokuapp.com/direccion/${iddireccion}`,
             {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
@@ -488,7 +488,7 @@ export default class CrearDoctor extends React.Component {
                 var email = this.state.emailAD[i]
                 const body = { email, idpersona }
 
-                await fetch(`/email`, {
+                await fetch(`https://dbfuchicovid.herokuapp.com/email`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(body)
@@ -504,7 +504,7 @@ export default class CrearDoctor extends React.Component {
 
                 var email = this.state.emailBAD[i]
 
-                await fetch(`/emaildel/${idpersona}/${email}`,
+                await fetch(`https://dbfuchicovid.herokuapp.com/emaildel/${idpersona}/${email}`,
                     {
                         method: "DELETE",
                         headers: { "Content-Type": "application/json" },
@@ -522,7 +522,7 @@ export default class CrearDoctor extends React.Component {
                 var telefono = this.state.telAD[i]
                 const body = { telefono, idpersona }
 
-                await fetch(`/telefono`, {
+                await fetch(`https://dbfuchicovid.herokuapp.com/telefono`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(body)
@@ -538,7 +538,7 @@ export default class CrearDoctor extends React.Component {
 
                 var telefono = this.state.telBAD[i]
 
-                await fetch(`/teldel/${idpersona}/${telefono}`,
+                await fetch(`https://dbfuchicovid.herokuapp.com/teldel/${idpersona}/${telefono}`,
                     {
                         method: "DELETE",
                         headers: { "Content-Type": "application/json" },
@@ -564,7 +564,7 @@ export default class CrearDoctor extends React.Component {
 
     async hayEmail(idp, email) {
 
-        await fetch(`/emailhay/${idp}/${email}`)
+        await fetch(`https://dbfuchicovid.herokuapp.com/emailhay/${idp}/${email}`)
             .then(response => response.json())
             .then(result => {
                 if (result.length === 0) {
@@ -580,7 +580,7 @@ export default class CrearDoctor extends React.Component {
     }
 
     async hayTel(idp, tel) {
-        await fetch(`/telhay/${idp}/${tel}`)
+        await fetch(`https://dbfuchicovid.herokuapp.com/telhay/${idp}/${tel}`)
             .then(response => response.json())
             .then(result => {
                 if (result.length === 0) {
@@ -600,7 +600,7 @@ export default class CrearDoctor extends React.Component {
     async cargarDatosActuDoc() {
         const id = document.getElementById('docSelec').value;
 
-        await fetch(`/doctorinfo/${id}`)
+        await fetch(`https://dbfuchicovid.herokuapp.com/doctorinfo/${id}`)
             .then(response => response.json())
             .then((result) => {
 
@@ -620,7 +620,7 @@ export default class CrearDoctor extends React.Component {
 
             });
 
-        await fetch(`/email/${this.state.idPerDoc}`)
+        await fetch(`https://dbfuchicovid.herokuapp.com/email/${this.state.idPerDoc}`)
             .then(response => response.json())
             .then((result) => {
 
@@ -634,7 +634,7 @@ export default class CrearDoctor extends React.Component {
 
 
 
-        await fetch(`/telefono/${this.state.idPerDoc}`)
+        await fetch(`https://dbfuchicovid.herokuapp.com/telefono/${this.state.idPerDoc}`)
             .then(response => response.json())
             .then((result) => {
 
@@ -645,7 +645,7 @@ export default class CrearDoctor extends React.Component {
                 }
             });
 
-        await fetch(`/direccion/${this.state.idPerDoc}`)
+        await fetch(`https://dbfuchicovid.herokuapp.com/direccion/${this.state.idPerDoc}`)
             .then(response => response.json())
             .then((result) => {
 
@@ -682,7 +682,7 @@ export default class CrearDoctor extends React.Component {
             confirmButtonText: 'Si, Borrar!'
         }).then(async (result) => {
             if (result.isConfirmed) {
-                await fetch(`/doctor/${id}`, {
+                await fetch(`https://dbfuchicovid.herokuapp.com/doctor/${id}`, {
                     method: 'DELETE',
                     headers: { "Content-Type": "application/json" }
                 })
@@ -863,7 +863,7 @@ export default class CrearDoctor extends React.Component {
             var idper = null;
             var paren = '';
 
-            await fetch(`/pacientesid`)
+            await fetch(`https://dbfuchicovid.herokuapp.com/pacientesid`)
                 .then(response => response.json())
                 .then((result) => {
                     idpac = parseInt(result.idpaciente);
@@ -875,7 +875,7 @@ export default class CrearDoctor extends React.Component {
 
                 const body = { idpac, idper, paren }
 
-                await fetch(`/integrantes`,
+                await fetch(`https://dbfuchicovid.herokuapp.com/integrantes`,
                     {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
@@ -950,7 +950,7 @@ export default class CrearDoctor extends React.Component {
             var idper = null;
             var rela = '';
 
-            await fetch(`/pacientesid`)
+            await fetch(`https://dbfuchicovid.herokuapp.com/pacientesid`)
                 .then(response => response.json())
                 .then((result) => {
                     idpac = parseInt(result.idpaciente);
@@ -970,7 +970,7 @@ export default class CrearDoctor extends React.Component {
                     const body = { idper, idpac, rela }
 
                     
-                    await fetch(`/emergencias`,
+                    await fetch(`https://dbfuchicovid.herokuapp.com/emergencias`,
                         {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
@@ -1028,7 +1028,7 @@ export default class CrearDoctor extends React.Component {
         const idPer = parseInt(idper);
 
 
-        await fetch(`/email/${idPer}`)
+        await fetch(`https://dbfuchicovid.herokuapp.com/email/${idPer}`)
             .then(response => response.json())
             .then((result) => {
                 this.setState({
@@ -1079,7 +1079,7 @@ export default class CrearDoctor extends React.Component {
     async hayemail2(x) {
         var bool = false;
 
-        await fetch(`/emailhay2/${x}`)
+        await fetch(`https://dbfuchicovid.herokuapp.com/emailhay2/${x}`)
             .then(response => response.json())
             .then(result => {
                 if (result.length > 0) {
@@ -1102,7 +1102,7 @@ export default class CrearDoctor extends React.Component {
                     const body = { email, idpersona }
 
 
-                    await fetch(`/email/`,
+                    await fetch(`https://dbfuchicovid.herokuapp.com/email/`,
                         {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
@@ -1117,7 +1117,7 @@ export default class CrearDoctor extends React.Component {
                 var idpersona2 = this.state.emailEmerB[i].idpersona;
 
 
-                await fetch(`/emaildel/${idpersona2}/${email2}`,
+                await fetch(`https://dbfuchicovid.herokuapp.com/emaildel/${idpersona2}/${email2}`,
                     {
                         method: "DELETE",
                         headers: { "Content-Type": "application/json" }
@@ -1187,7 +1187,7 @@ export default class CrearDoctor extends React.Component {
 
     async telEmer(idper) {
 
-        await fetch(`/telefono/${idper}`)
+        await fetch(`https://dbfuchicovid.herokuapp.com/telefono/${idper}`)
             .then(response => response.json())
             .then((result) => {
                 this.setState({
@@ -1210,7 +1210,7 @@ export default class CrearDoctor extends React.Component {
                     const body = { telefono, idpersona }
 
 
-                    await fetch(`/telefono/`,
+                    await fetch(`https://dbfuchicovid.herokuapp.com/telefono/`,
                         {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
@@ -1226,7 +1226,7 @@ export default class CrearDoctor extends React.Component {
                 console.log(tel2)
                 console.log(idpersona2)
 
-                await fetch(`/teldel/${idpersona2}/${tel2}`,
+                await fetch(`https://dbfuchicovid.herokuapp.com/teldel/${idpersona2}/${tel2}`,
                     {
                         method: "DELETE",
                         headers: { "Content-Type": "application/json" }
@@ -1288,7 +1288,7 @@ export default class CrearDoctor extends React.Component {
     async telhay2(x) {
         var bool = false;
 
-        await fetch(`/telhay2/${x}`)
+        await fetch(`https://dbfuchicovid.herokuapp.com/telhay2/${x}`)
             .then(response => response.json())
             .then(result => {
                 if (result.length > 0) {
@@ -1342,8 +1342,8 @@ export default class CrearDoctor extends React.Component {
     }
 
     async tieneAlMenosUno(idper) {
-        let email = await fetch(`/email/${idper}`).then(response => response.json())
-        let tele = await fetch(`/telefono/${idper}`).then(response => response.json())
+        let email = await fetch(`https://dbfuchicovid.herokuapp.com/email/${idper}`).then(response => response.json())
+        let tele = await fetch(`https://dbfuchicovid.herokuapp.com/telefono/${idper}`).then(response => response.json())
         console.log(email)
         console.log(tele)
         if (email.length > 0 || tele.length > 0) {
@@ -1674,7 +1674,7 @@ export default class CrearDoctor extends React.Component {
 
     async recargarP() {
 
-        await fetch('/persona/')
+        await fetch('https://dbfuchicovid.herokuapp.com/persona/')
             .then(res => res.json())
             .then(
                 (result) => {

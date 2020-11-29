@@ -40,7 +40,7 @@ export class Login extends React.Component {
         try {
             if (this.state.usuario.length > 0 && this.state.contraseña.length > 0) {
 
-                await fetch(`/usuario/${this.state.usuario}`)
+                await fetch(`https://dbfuchicovid.herokuapp.com/usuario/${this.state.usuario}`)
                     .then(response => response.json())
                     .then(usua => {
                         if (usua.length === 0) {

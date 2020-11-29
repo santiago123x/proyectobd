@@ -123,7 +123,7 @@ export class CrearPersona extends React.Component {
     });
   }
   async componentDidMount() {
-    await fetch('/tipodoc/')
+    await fetch('https://dbfuchicovid.herokuapp.com/tipodoc/')
       .then(res => res.json())
       .then(
         (result) => {
@@ -133,7 +133,7 @@ export class CrearPersona extends React.Component {
         }
       )
 
-    await fetch('/barrio/')
+    await fetch('https://dbfuchicovid.herokuapp.com/barrio/')
       .then(res => res.json())
       .then(
         (result) => {
@@ -143,7 +143,7 @@ export class CrearPersona extends React.Component {
         }
       )
 
-    await fetch('/viap/')
+    await fetch('https://dbfuchicovid.herokuapp.com/viap/')
       .then(res => res.json())
       .then(
         (result) => {
@@ -153,7 +153,7 @@ export class CrearPersona extends React.Component {
         }
       )
 
-    await fetch('/inmueble/')
+    await fetch('https://dbfuchicovid.herokuapp.com/inmueble/')
       .then(res => res.json())
       .then(
         (result) => {
@@ -163,7 +163,7 @@ export class CrearPersona extends React.Component {
         }
       )
 
-    await fetch('/bloque/')
+    await fetch('https://dbfuchicovid.herokuapp.com/bloque/')
       .then(res => res.json())
       .then(
         (result) => {
@@ -202,14 +202,14 @@ export class CrearPersona extends React.Component {
 
     const body = { nombre, apellido, tipodoc, numerodoc, barrio, fechanaci };
     
-    await fetch('/persona',
+    await fetch('https://dbfuchicovid.herokuapp.com/persona',
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body)
       });
 
-    await fetch(`/personaiden/${numerodoc}`)
+    await fetch(`https://dbfuchicovid.herokuapp.com/personaiden/${numerodoc}`)
       .then(response => response.json())
       .then(usua => {
         this.setState({
@@ -222,7 +222,7 @@ export class CrearPersona extends React.Component {
 
     const bodyD = { idviaprincipal, idpersona, numeroviap, numerovias, numerocasa, idtipoinmueble, idbloqueinterior, numeroinmueble, numerobloque }
 
-    await fetch(`/direccion/`, {
+    await fetch(`https://dbfuchicovid.herokuapp.com/direccion/`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(bodyD)
@@ -232,7 +232,7 @@ export class CrearPersona extends React.Component {
       for (var i = 0; i < this.state.email.length; i++) {
         var email = this.state.email[i];
         let body = { email, idpersona }
-        await fetch('/email',
+        await fetch('https://dbfuchicovid.herokuapp.com/email',
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -246,7 +246,7 @@ export class CrearPersona extends React.Component {
       for (var i = 0; i < this.state.telefono.length; i++) {
         var telefono = this.state.telefono[i];
         let body = { telefono, idpersona }
-        await fetch('/telefono',
+        await fetch('https://dbfuchicovid.herokuapp.com/telefono',
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },

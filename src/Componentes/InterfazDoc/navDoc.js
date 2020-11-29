@@ -47,7 +47,7 @@ export default class NavDoc extends React.Component {
   this.setState({
       id: algo
   })
-    await fetch(`/usudoctor/${algo}`)
+    await fetch(`https://dbfuchicovid.herokuapp.com/usudoctor/${algo}`)
       .then(res => res.json())
       .then(
         (result) => {
