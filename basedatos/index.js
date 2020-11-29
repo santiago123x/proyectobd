@@ -17,17 +17,6 @@ dbRoutes(app);
 
 
 
-app.get('/envia', (req, res) => {
-    res.send('Hola Mundo!');
-  });
-  
-  app.post('/guardar', (req, res) => {
-    console.log('HOLA')
-    console.log(req.body);
-    res.json({ 'res': 'guarda' })
-  
-  
-  });
 
 app.set('port',process.env.PORT || 5000) ;
 

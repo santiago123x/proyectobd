@@ -174,6 +174,7 @@ router.get('/usudoctor/:idusu', async(req,res)=>{
     } 
 });
 
+
 // ------------  Usuario * Persona ------------------------- 
 
 router.get('/usuariopersox/:idper', async(req,res)=>{
@@ -184,7 +185,7 @@ router.get('/usuariopersox/:idper', async(req,res)=>{
 		FROM usuario usu
 		INNER JOIN persona per
 		ON usu.idpersona=per.idpersona
-		WHERE (per.idpersona= ${idper})`);
+		WHERE (usu.idusuario= ${idper})`);
         res.send(arreglo.rows);
     } catch(e){
         console.log("usuariopersox: " + e);
@@ -273,9 +274,6 @@ router.post('/persona', async(req,res)=>{
     }catch(e){
         console.log('persona inser' + e);
     }
-
-      
-  });
 
  
 

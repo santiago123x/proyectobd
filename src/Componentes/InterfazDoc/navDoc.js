@@ -27,6 +27,7 @@ export default class NavDoc extends React.Component {
       numerdD: null,
       idDoc: null,
       eps: null,
+      id: null,
       //
 
 
@@ -36,7 +37,17 @@ export default class NavDoc extends React.Component {
   }
 
   async componentDidMount() {
-    await fetch(`/usudoctor/${this.state.match}`)
+
+    await this.setState({
+      match : this.props.match.params,
+      //id: this.state.match.id
+  })
+  
+  const algo = parseInt(this.state.match.id)
+  this.setState({
+      id: algo
+  })
+    await fetch(`/usudoctor/${algo}`)
       .then(res => res.json())
       .then(
         (result) => {
@@ -75,8 +86,8 @@ export default class NavDoc extends React.Component {
 
 
   render() {
-    const { match } = this.props;
-    this.state.match = match.params.id;
+    //const { match } = this.props;
+    //this.state.match = match.params.id;
 
     if (this.state.redirect) {
 
@@ -99,13 +110,13 @@ export default class NavDoc extends React.Component {
             <div class="collapse navbar-collapse" id="navbarNav">
               <ul class="navbar-nav ml-auto mr-5">
                 <li className="nav-item">
-                  <Link className="btn font-weight-bold" to={`/NavDoc/${match.params.id}/MapaDoc`} activeClassName="active"> Mapa <i class="fa fa-map-marker" aria-hidden="true"></i></Link>
+                  <Link className="btn font-weight-bold" to={`/NavDoc/${this.state.id}/MapaDoc`} activeClassName="active"> Mapa <i class="fa fa-map-marker" aria-hidden="true"></i></Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="btn font-weight-bold" to={`/NavDoc/${match.params.id}/InformesDoc`} activeClassName="active"> Informes <i class="fa fa-info-circle" aria-hidden="true"></i></Link>
+                  <Link className="btn font-weight-bold" to={`/NavDoc/${this.state.id}/InformesDoc`} activeClassName="active"> Informes <i class="fa fa-info-circle" aria-hidden="true"></i></Link>
                 </li>
                 <li >
-                  <Link className="btn font-weight-bold" to={`/NavDoc/${match.params.id}`} activeClassName="active"> Registrar Visita <i class="fa fa-folder-open-o" aria-hidden="true"></i></Link>
+                  <Link className="btn font-weight-bold" to={`/NavDoc/${this.state.id}`} activeClassName="active"> Registrar Visita <i class="fa fa-folder-open-o" aria-hidden="true"></i></Link>
                 </li>
                 <li >
                   <Link className="btn font-weight-bold" to={`/NavDoc/${match.params.id}/Medicamentos`} activeClassName="active"> Medicamentos <i class="fa fa-heartbeat" aria-hidden="true"></i></Link>
