@@ -967,86 +967,8 @@ router.post('/emergencias', async(req,res)=>{
 
 module.exports = router;
 
-const PORT = process.env.PORT || 3000;
+const PORT = 5000;
 
 router.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
   });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-
-
-
-const getPacientes = async () =>{
-    try{
-        const res = await pool.query('SELECT * FROM pacientes');
-        console.log(res.rows);
-         
-    } catch(e){
-        console.log(e);
-    }
-}
-
-*/
-
-
-//insertarPaciente();
-//editarPaciente();
-//deletePacientes();
-//getPacientes();
-
-
- /*const insertarPaciente = async(req,res) =>{
-    try{
-        const text = 'INSERT INTO pacientes(nombre, apellido, numid) VALUES($1, $2, $3) ';
-    const values = ['Pablito3','Clavo3','674378'];
-    res = await pool.query(text,values);
-    console.log('epa');
-    }catch(e){
-        console.log(e);
-    }
-    
-
-}*/
-
-/*
-const editarPaciente = async()=>{
-    try{
-        const text = 'UPDATE pacientes SET nombre = $1, apellido = $2  WHERE numid = $3';
-    const values = ['Andres','Moreno','908'];
-    res = await pool.query(text,values);
-    console.log('F mani');
-    }catch{
-        console.log(e);
-    }
-}
-*/
-
-/*const deletePacientes=async()=>{
-    
-    try{
-        const text = 'DELETE FROM pacientes WHERE numid = $1';
-    const values = ['5555'];
-
-    res = await pool.query(text,values);
-    console.log('F');
-    }catch{
-        console.log(e);
-    }
-
-}*/
