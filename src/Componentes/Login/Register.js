@@ -20,7 +20,8 @@ export class Register extends React.Component {
       personas: [],
       usuexi: false,
       yaregis: false,
-      idperso: ''
+      idperso: '',
+      esdoc: false
 
 
     };
@@ -87,13 +88,28 @@ export class Register extends React.Component {
             });
           }
         });
+
+      await fetch(`https://dbfuchicovid.herokuapp.com/doctor/${idpersona}`)
+        .then(response => response.json())
+        .then(result => {
+          if (result.length === 0) {
+            this.setState({
+              esdoc: false
+            });
+          } else {
+            this.setState({
+              esdoc: true
+            });
+          }
+
+        });
     }
 
 
 
   }
 
-  async recargar(){
+  async recargar() {
     await fetch('https://dbfuchicovid.herokuapp.com/persona')
       .then(res => res.json())
       .then(
@@ -107,7 +123,7 @@ export class Register extends React.Component {
 
   async crearUsuario() {
 
-    this.validainfo();
+    await this.validainfo();
     if (window.confirm(`Desea agregar el Usuario:  ${this.state.usuario}`)) {
       try {
         var index = document.getElementById('personas').selectedIndex - 1;
@@ -116,26 +132,35 @@ export class Register extends React.Component {
           if (index >= 0) {
             if (!this.state.usuexi) {
               if (!this.state.yaregis) {
+                var tipo_usu = document.getElementById('tipousu').value
                 var nickname = this.state.usuario;
                 var contra = this.state.contraseña;
                 var idpersona = document.getElementById('personas').value;
-                var tipo_usu = document.getElementById('tipousu').value
+                if (tipo_usu == 'super' || (tipo_usu == 'doctor' && this.state.esdoc)) {
 
-                const body = { nickname, contra, idpersona, tipo_usu };
-                console.log(body);
-                await fetch('https://dbfuchicovid.herokuapp.com/usuario',
-                  {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(body)
-                  });
-                Swal.fire({
-                  icon: 'success',
-                  title: `Se ha agregado el Usuario con NickName ${this.state.usuario}`,
-                  showConfirmButton: false,
-                  timer: 1500
-                })
-                window.location.reload();
+                  const body = { nickname, contra, idpersona, tipo_usu };
+                  console.log(body);
+                  await fetch('https://dbfuchicovid.herokuapp.com/usuario',
+                    {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify(body)
+                    });
+                  Swal.fire({
+                    icon: 'success',
+                    title: `Se ha agregado el Usuario con NickName ${this.state.usuario}`,
+                    showConfirmButton: false,
+                    timer: 1500
+                  })
+                  window.location.reload();
+
+                } else {
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Este Usuario no es un Doctor, cambia el Tipo usuario.',
+                  })
+                }
               } else {
                 Swal.fire({
                   icon: 'error',
